@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<default>
+<slider>
+	<enabled>
+		<background>
+			<color><r>255</r><g>255</g><b>255</b></color>
+			<width>200</width>
+			<height>20</height>
+			<lineWidth>0</lineWidth>
+		</background>
+		
+		<foreground>
+			<color><r>150</r><g>0</g><b>150</b></color>
+			<width>198</width>
+			<height>18</height>
+			<lineWidth>0</lineWidth>
+		</foreground>
+		
+		<border>
+			<color><r>50</r><g>50</g><b>50</b></color>
+			<width>200</width>
+			<height>20</height>
+			<lineWidth>2</lineWidth>
+		</border>
+		
+		<position><x>30</x><y>30</y></position>
+		
+		<text>
+			<ttf>false</ttf>
+			<position><x>24</x><y>14</y></position>
+			<color><r>0</r><g>0</g><b>0</b></color>
+		</text>
+	</enabled>
+	
+	<focused>
+		<background>
+			<color><r>200</r><g>180</g><b>200</b></color>
+			<width>200</width>
+			<height>20</height>
+			<lineWidth>0</lineWidth>
+		</background>
+		
+		<foreground>
+			<color><r>200</r><g>0</g><b>200</b></color>
+			<width>198</width>
+			<height>18</height>
+			<lineWidth>0</lineWidth>
+		</foreground>
+		
+		<border>
+			<color><r>50</r><g>50</g><b>50</b></color>
+			<width>200</width>
+			<height>20</height>
+			<lineWidth>2</lineWidth>
+		</border>
+		
+		<position><x>30</x><y>30</y></position>
+		
+		<text>
+			<ttf>false</ttf>
+			<position><x>24</x><y>14</y></position>
+			<color><r>0</r><g>0</g><b>0</b></color>
+		</text>
+	</focused>
+
+	<pressed>
+		<background>
+			<color><r>200</r><g>180</g><b>200</b></color>
+			<width>200</width>
+			<height>20</height>
+			<lineWidth>0</lineWidth>
+		</background>
+		
+		<foreground>
+			<color><r>200</r><g>0</g><b>200</b></color>
+			<width>196</width>
+			<height>16</height>
+			<lineWidth>0</lineWidth>
+		</foreground>
+		
+		<border>
+			<color><r>50</r><g>50</g><b>50</b></color>
+			<width>200</width>
+			<height>20</height>
+			<lineWidth>2</lineWidth>
+		</border>
+		
+		<position><x>30</x><y>30</y></position>
+		
+		<text>
+			<ttf>false</ttf>
+			<position><x>24</x><y>14</y></position>
+			<color><r>0</r><g>0</g><b>0</b></color>
+		</text>
+	</pressed>
+</slider>
+
+<button>
+	<enabled>
+		<background>
+			<color><r>255</r><g>255</g><b>255</b></color>
+			<width>20</width>
+			<height>20</height>
+			<lineWidth>0</lineWidth>
+		</background>
+		
+		<foreground>
+			<color><r>255</r><g>255</g><b>255</b></color>
+			<width>20</width>
+			<height>18</height>
+			<lineWidth>0</lineWidth>
+		</foreground>
+		
+		<border>
+			<color><r>50</r><g>50</g><b>50</b></color>
+			<width>20</width>
+			<height>20</height>
+			<lineWidth>2</lineWidth>
+		</border>
+		
+		<position><x>30</x><y>30</y></position>
+		
+		<text>
+			<ttf>true</ttf><font>verdana.ttf</font>
+			<color><r>0</r><g>0</g><b>0</b></color>
+			<position><x>24</x><y>14</y></position>
+		</text>
+	</enabled>
+	
+	<focused>
+		<background>
+			<color><r>255</r><g>255</g><b>255</b></color>
+			<width>20</width>
+			<height>20</height>
+			<lineWidth>0</lineWidth>
+		</background>
+		
+		<foreground>
+			<color><r>200</r><g>180</g><b>200</b></color>
+			<width>16</width>
+			<height>16</height>
+			<lineWidth>0</lineWidth>
+		</foreground>
+		
+		<border>
+			<color><r>50</r><g>50</g><b>50</b></color>
+			<width>20</width>
+			<height>20</height>
+			<lineWidth>2</lineWidth>
+		</border>
+		
+		<position><x>30</x><y>30</y></position>
+		
+		<text>
+			<ttf>true</ttf><font>verdana.ttf</font>
+			<position><x>24</x><y>14</y></position>
+			<color><r>0</r><g>0</g><b>0</b></color>
+		</text>
+	</focused>
+
+	<pressed>
+		<background>
+			<color><r>255</r><g>255</g><b>255</b></color>
+			<width>20</width>
+			<height>20</height>
+			<lineWidth>0</lineWidth>
+		</background>
+		
+		<foreground>
+			<color><r>150</r><g>0</g><b>150</b></color>
+			<width>16</width>
+			<height>16</height>
+			<lineWidth>0</lineWidth>
+		</foreground>
+		
+		<border>
+			<color><r>50</r><g>50</g><b>50</b></color>
+			<width>20</width>
+			<height>20</height>
+			<lineWidth>2</lineWidth>
+		</border>
+		
+		<position><x>30</x><y>30</y></position>
+		
+		<text>
+			<ttf>true</ttf><font>verdana.ttf</font>
+			<position><x>24</x><y>14</y></position>
+			<color><r>0</r><g>0</g><b>0</b></color>
+		</text>
+	</pressed>
+</button>
+		
+
+<frame>
+	<enabled>
+		<width>200</width>
+		<height>670</height>
+		<vSpacing>10</vSpacing>
+		<hSpacing>20</hSpacing>
+		<position><x>700</x><y>20</y></position>
+	
+		<background>
+			<color><r>20</r><g>20</g><b>20</b><a>20</a></color>
+			<!--width>200</width>
+			<height>200</height-->
+			<lineWidth>0</lineWidth>
+		</background>
+		
+		<border>
+			<color><r>0</r><g>0</g><b>0</b></color>
+			<width>200</width>
+			<height>200</height>
+			<lineWidth>1</lineWidth>
+		</border>
+		
+		<text>
+			<ttf>false</ttf><font>verdana.ttf</font>
+			<position><x>24</x><y>14</y></position>
+			<color><r>0</r><g>0</g><b>0</b></color>
+		</text>
+	</enabled>
+</frame>
+</default>

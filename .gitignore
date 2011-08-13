@@ -1,0 +1,6 @@
+*.mode*
+build/
+obj/
+*.o
+*.app/
+
