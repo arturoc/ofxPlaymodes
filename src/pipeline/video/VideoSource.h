@@ -8,7 +8,6 @@
 #ifndef VIDEOSOURCE_H_
 #define VIDEOSOURCE_H_
 
-#include "../Source.h"
 #include "VideoFrame.h"
 #include "VideoEvents.h"
 

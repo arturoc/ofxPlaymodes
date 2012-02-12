@@ -7,12 +7,26 @@
 
 #include "VideoBuffer.h"
 
-VideoBuffer::VideoBuffer(VideoSource * source) {
-	source->addListener(this);
-	this->source=source;
-	fps=source->getFps();
-	totalFrames=0;
+VideoBuffer::VideoBuffer(VideoSource & source, int size) {
+	setup(source,size);
+}
 
+VideoBuffer::VideoBuffer(){
+	source = NULL;
+	fps=0;
+	totalFrames=0;
+	stopped = false;
+	maxSize = 0;
+}
+
+
+void VideoBuffer::setup(VideoSource & source, int size){
+	source.addListener(this);
+	this->source=&source;
+	fps=source.getFps();
+	totalFrames=0;
+	stopped = false;
+	maxSize = size;
 }
 
 VideoBuffer::~VideoBuffer() {
@@ -25,7 +39,7 @@ void VideoBuffer::newVideoFrame(VideoFrame & frame){
     timeMutex.lock();
     frames.push_back(&frame);
     frame.retain();
-    if(size()>VIDEO_BUFFER_NUM_FRAMES){
+    while(size()>maxSize){
         //delete buffer[times.front()];
         //buffer.erase(times.front());
         //cout << "releasing frame release count:"<<frames.front()->_useCountOfThisObject<<"\n";
@@ -47,6 +61,7 @@ pmTimestamp VideoBuffer::getLastTimestamp(){
 pmTimeDiff VideoBuffer::getTotalTime(){
     return getLastTimestamp()-getInitTime();
 }
+
 pmTimestamp VideoBuffer::getInitTime(){
     return initTime;
 }
@@ -54,6 +69,12 @@ pmTimestamp VideoBuffer::getInitTime(){
 unsigned int VideoBuffer::size(){
     return frames.size();
 }
+
+
+unsigned int VideoBuffer::getMaxSize(){
+	return maxSize;
+}
+
 
 int VideoBuffer::getFps(){
     return fps;
@@ -63,7 +84,7 @@ VideoFrame * VideoBuffer::getVideoFrame(pmTimeDiff time){
     VideoFrame *frame=NULL;
     if(size()>0){
         int frameback = CLAMP((int)((float)time/1000000.0*(float)fps),1,size());
-        int currentPos=size()-frameback;
+        int currentPos=CLAMP(size()-frameback,0,size()-1);
         frame= frames[currentPos];
         /*if(((float)time/1000000.0*(float)fps)<size() && ((float)time/1000000.0*(float)fps)>=0)
             frame= frames[frames.size()-1-(int)((float)time/1000000.0*(float)fps)];
@@ -91,12 +112,12 @@ VideoFrame * VideoBuffer::getVideoFrame(int position){
     }
 }
 
-VideoFrame * VideoBuffer::getNextVideoFrame(){
-    return getVideoFrame((int)size()-1);
-}
-
 VideoFrame * VideoBuffer::getVideoFrame(float pct){
     return getVideoFrame(getLastTimestamp()-(getInitTime()+getTotalTime()*pct));
+}
+
+VideoFrame * VideoBuffer::getNextVideoFrame(){
+    return getVideoFrame((int)size()-1);
 }
 
 long VideoBuffer::getTotalFrames(){
@@ -115,11 +136,11 @@ float VideoBuffer::getRealFPS(){
 
 
 void VideoBuffer::draw(){
-    float length = (float)size()/(float)VIDEO_BUFFER_NUM_FRAMES*(float)ofGetWidth();
-    float oneLength=(float)ofGetWidth()/(float)VIDEO_BUFFER_NUM_FRAMES;
+    float length = (float)size()/(float)maxSize*(float)ofGetWidth();
+    float oneLength=(float)ofGetWidth()/(float)maxSize;
     ofLine(0,710,length,710);
     char measureMessage[10];
-    for(int i=0;i<size();i++){
+    for(int i=0;i<(int)size();i++){
        if(i%100==0){
             ofLine(oneLength*i,710,oneLength*i,700);
             sprintf(measureMessage,"%0.2f",(float)(frames[i]->getTimestamp()-initTime)/1000000.0);
@@ -130,9 +151,15 @@ void VideoBuffer::draw(){
 
 
 void VideoBuffer::stop(){
-    ((VideoSource*)source)->removeListener(this);
+    source->removeListener(this);
+    stopped = true;
 }
 
 void VideoBuffer::resume(){
-    ((VideoSource*)source)->addListener(this);
+    source->addListener(this);
+    stopped = false;
+}
+
+bool VideoBuffer::isStopped(){
+	return stopped;
 }

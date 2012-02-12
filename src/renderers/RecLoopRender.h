@@ -12,6 +12,9 @@ class RecLoopRender : public VideoSink
         virtual ~RecLoopRender();
         void draw();
 
+		void stop();
+		void resume();
+
         int alpha;
         int tintR, tintG, tintB;
         bool minmaxBlend;
@@ -21,6 +24,7 @@ class RecLoopRender : public VideoSink
         VideoSource * live;
         ofImage       image;
         bool          imageAllocated;
+        bool		  stopped;
 };
 
 #endif // RECLOOPRENDER_H

@@ -8,7 +8,6 @@
 #ifndef VIDEOFILTER_H_
 #define VIDEOFILTER_H_
 
-#include "BaseFilter.h"
 #include "VideoSource.h"
 #include "VideoSink.h"
 

@@ -9,36 +9,36 @@
 #define VIDEOFRAME_H_
 
 #include "Frame.h"
-#include "ofMain.h"
+#include "ofPixels.h"
+#include "ofTexture.h"
+#include "ofEvents.h"
 
 class VideoFrame:public plFrame, public ofEventArgs {
 public:
-    // create a video frame from a pixels array and with height parameters
-	VideoFrame(unsigned char * videoFrame, int w, int h);
+    // create a video frame from an ofPixels
+	VideoFrame(const ofPixels & videoFrame);
 	VideoFrame(){}
 	virtual ~VideoFrame();
 
-    // called to update the texture before drawing
-	void update(ofEventArgs & args);
 	void release();
 
     // returns pixels array
-	unsigned char * getVideoFrame();
-	ofTexture * getTexture();
+	ofPixels & getPixelsRef();
+	ofTexture & getTextureRef();
 
-    int w;
-    int h;
-
-    bool isTexAllocated();
-    void setTexAllocated(bool isAllocated);
+	int getWidth();
+	int getHeight();
 
 
 private:
-    unsigned char * pixels;
     static int total_num_frames;
-    ofTexture * texture;
-    bool texAllocated;
+    ofPixels pixels;
+    ofTexture texture;
     bool doRelease;
+
+
+    // called to update the texture before drawing
+	void update(ofEventArgs & args);
 };
 
 #endif /* VIDEOFRAME_H_ */

@@ -16,7 +16,6 @@
 #include "map"
 #include "deque"
 
-#define VIDEO_BUFFER_NUM_FRAMES 400
 
 // a buffer can be connected to any source and stores
 // VIDEO_BUFFER_NUM_FRAMES. once the buffer is full
@@ -27,8 +26,11 @@
 
 class VideoBuffer: public Buffer, public VideoSink, public VideoSource {
 public:
-	VideoBuffer(VideoSource * source);
+	VideoBuffer(VideoSource & source, int size);
+	VideoBuffer();
 	virtual ~VideoBuffer();
+
+	void setup(VideoSource & source, int size);
 
     // of working in threaded mode,
     // call buffer->lock() buffer->unlock()
@@ -46,6 +48,7 @@ public:
 	virtual void newVideoFrame(VideoFrame &frame);  // for notification of new frame event
 
 	unsigned int size();                            // total size of the buffer
+	unsigned int getMaxSize();                         // max size of the buffer
 
 	int getFps();                                   // fps of the video source
 
@@ -61,6 +64,7 @@ public:
 
     void stop();                                    // stop receiving new frames
     void resume();                                  // continue receiving new frames
+    bool isStopped();
 
 protected:
     deque<VideoFrame*> frames;
@@ -70,6 +74,9 @@ protected:
     pmTimestamp initTime;
 
     VideoSource* source;
+
+    bool stopped;
+    unsigned int maxSize;
 };
 
 #endif /* VIDEOBUFFER_H_ */

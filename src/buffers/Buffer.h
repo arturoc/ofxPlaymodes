@@ -10,7 +10,6 @@
 
 #include "Poco/Timestamp.h"
 #include "Frame.h"
-#include "Source.h"
 
 class Buffer {
 public:

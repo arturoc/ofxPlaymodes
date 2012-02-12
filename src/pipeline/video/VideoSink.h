@@ -9,7 +9,6 @@
 #define VIDEOSINK_H_
 
 #include "VideoFrame.h"
-#include "Sink.h"
 #include "VideoEvents.h"
 #include "VideoSource.h"
 

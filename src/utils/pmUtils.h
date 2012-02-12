@@ -16,8 +16,6 @@
 typedef Poco::Timestamp pmTimestamp;
 typedef Poco::Timestamp::TimeDiff pmTimeDiff;
 
-typedef Poco::Mutex ofMutex;
-
 typedef Poco::AbstractDelegate<int> pmIntDelegate;
 typedef Poco::AbstractDelegate<float> pmFloatDelegate;
 

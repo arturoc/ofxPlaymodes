@@ -9,62 +9,50 @@
 
 int VideoFrame::total_num_frames=0;
 
-VideoFrame::VideoFrame(unsigned char * videoFrame, int w, int h) {
-    texture = new ofTexture();
-	pixels=new unsigned char[w*h*3];
-	memcpy(pixels,videoFrame,sizeof(unsigned char)*w*h*3);
-	this->w=w;
-	this->h=h;
+VideoFrame::VideoFrame(const ofPixels & videoFrame) {
+	pixels = videoFrame;
 	total_num_frames++;
-    ofAddListener(ofEvents.update,this,&VideoFrame::update);
-	texAllocated=false;
 	doRelease=false;
 	//cout << "total num frames: " << total_num_frames <<"\n";
 
 }
 
 VideoFrame::~VideoFrame() {
+    ofRemoveListener(ofEvents.update,this,&VideoFrame::update);
     total_num_frames--;
-    delete texture;
-	delete[] pixels;
 }
 
 void VideoFrame::update(ofEventArgs & args){
-	ofRemoveListener(ofEvents.update,this,&VideoFrame::update);
-    if(!texAllocated){
-        texture->allocate(w,h,GL_RGB);
-        texture->loadData(pixels,w,h,GL_RGB);
-        texAllocated=true;
-    }
     if(doRelease){
         delete this;
     }
 }
 
 void VideoFrame::release() {
-    ScopedLock<FastMutex>(*mutex);
+    ScopedLock<FastMutex> lock(*mutex);
 	_useCountOfThisObject--;
-	//printf("ofxObjCPointer::release() - Use Count: %i\n", _useCountOfThisObject);
 	if(_useCountOfThisObject == 0) {
-		//printf("    deleting object\n");
 		doRelease=true;
         ofAddListener(ofEvents.update,this,&VideoFrame::update);
 	}
 }
-unsigned char * VideoFrame::getVideoFrame(){
+
+ofPixels & VideoFrame::getPixelsRef(){
     return  pixels;
 }
 
-ofTexture * VideoFrame::getTexture(){
+ofTexture & VideoFrame::getTextureRef(){
+	if(!texture.isAllocated()){
+        texture.allocate(pixels.getWidth(),pixels.getHeight(),GL_RGB);
+        texture.loadData(pixels);
+    }
     return texture;
 }
 
-bool VideoFrame::isTexAllocated(){
-    return texAllocated;
+int VideoFrame::getWidth(){
+	return pixels.getWidth();
 }
 
-void VideoFrame::setTexAllocated(bool isAllocated){
-    texAllocated=isAllocated;
-    /*if(!isAllocated)
-        ofEvents::addUpdateListener(this);*/
+int VideoFrame::getHeight(){
+	return pixels.getHeight();
 }

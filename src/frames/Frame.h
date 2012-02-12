@@ -16,7 +16,6 @@ public:
 	plFrame();
 	virtual ~plFrame();
 
-	void * getFrame();
 	pmTimestamp getTimestamp();
 
 private:

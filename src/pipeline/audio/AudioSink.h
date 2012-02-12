@@ -9,7 +9,6 @@
 #define AUDIOSINK_H_
 
 #include "AudioFrame.h"
-#include "Sink.h"
 #include "AudioEvents.h"
 
 class AudioSink: public AudioFrameListener {

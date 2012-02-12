@@ -7,20 +7,39 @@
 
 #include "VideoHeader.h"
 
-VideoHeader::VideoHeader(VideoBuffer *buffer){
+VideoHeader::VideoHeader(VideoBuffer & buffer){
+	setup(buffer);
+}
+
+VideoHeader::VideoHeader(){
+    fps         = 30;
+    position    = 0;
+    oneFrame    = (pmTimeDiff)round(1000000.0/(float)fps);
+    speed       = 1;
+    prevBufferPos = 0;
+    pct         = 1;
+    pctHasChanged = true;
+    in          = 0;
+    out         = 1;
+    loopMode    = 0;
+    delay       = 0;
+}
+
+
+void VideoHeader::setup(VideoBuffer & buffer){
     //newFrameEvent.init("Playmodes.VideoHeader.newFrame");
-    this->buffer=buffer;
-    fps         =buffer->getFps();
-    position    =buffer->size();
-    oneFrame    =(pmTimeDiff)round(1000000.0/(float)fps);
-    speed       =1;
-    prevBufferPos=0;
-    pct         =1;
-    pctHasChanged=true;
-    in          =0;
-    out         =1;
-    loopMode    =0;
-    delay       =0;
+    this->buffer= &buffer;
+    fps         = buffer.getFps();
+    position    = buffer.size();
+    oneFrame    = (pmTimeDiff)round(1000000.0/(float)fps);
+    speed       = 1;
+    prevBufferPos = 0;
+    pct         = 1;
+    pctHasChanged = true;
+    in          = 0;
+    out         = 1;
+    loopMode    = 0;
+    delay       = 0;
 
 }
 
@@ -28,19 +47,15 @@ VideoHeader::~VideoHeader(){
 }
 
 void VideoHeader::draw(){
-
-    ofSetColor(0,0,0);
-    float currentLength=(float)currentPos/(float)VIDEO_BUFFER_NUM_FRAMES*(float)ofGetWidth();
-    sprintf(msgPos,"%i",currentPos);
+    float currentLength=(float)currentPos/(float)buffer->getMaxSize()*(float)ofGetWidth();
     ofLine(currentLength,680,currentLength,720);
 
-    float inPos  = in*(float)buffer->size()/(float)VIDEO_BUFFER_NUM_FRAMES*(float)ofGetWidth();
-    float outPos = out*(float)buffer->size()/(float)VIDEO_BUFFER_NUM_FRAMES*(float)ofGetWidth();
+    float inPos  = in*(float)buffer->size()/(float)buffer->getMaxSize()*(float)ofGetWidth();
+    float outPos = out*(float)buffer->size()/(float)buffer->getMaxSize()*(float)ofGetWidth();
 
     ofLine(inPos,680,inPos,730);
     ofLine(outPos,680,outPos,730);
     ofLine(inPos,730,outPos,730);
-    //delay=0;
 }
 
 int VideoHeader::getFps(){

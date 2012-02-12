@@ -9,7 +9,6 @@
 #define AUDIOSOURCE_H_
 
 #include "AudioFrame.h"
-#include "Source.h"
 #include "AudioEvents.h"
 
 class AudioSource{

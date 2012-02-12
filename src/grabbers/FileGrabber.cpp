@@ -18,7 +18,7 @@ FileGrabber::~FileGrabber() {
 
 VideoFrame * FileGrabber::getNextVideoFrame(){
     //newFrameEvent.init("PlayModes.VideoGrabber.newFrame");
-    VideoFrame * frame = new VideoFrame(getPixels(),getWidth(),getHeight());
+    VideoFrame * frame = new VideoFrame(getPixelsRef());
     return frame;
 }
 

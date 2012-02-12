@@ -6,7 +6,6 @@
  */
 
 #include "VideoRenderer.h"
-ofEventArgs videoRendererVoidArgs;
 
 VideoRenderer::VideoRenderer(VideoSource * source) {
     this->source=source;
@@ -39,7 +38,7 @@ VideoRenderer::~VideoRenderer() {
 void VideoRenderer::draw(){
     if(isDrawing){
         if(activateShader)
-            shader.setShaderActive(true);
+            shader.begin();
         if(alpha<255){
             ofEnableAlphaBlending();
 
@@ -60,22 +59,20 @@ void VideoRenderer::draw(){
             ofSetColor(tintR,tintG,tintB,alpha);
             /// drawing the video render
             drawNextFrame();
-            ofDisableAlphaBlending();
             glBlendEquationEXT(GL_FUNC_ADD);
+            ofDisableAlphaBlending();
         }else{
             ofSetColor(tintR,tintG,tintB);
             drawNextFrame();
         }
         if(activateShader)
-            shader.setShaderActive(false);
+            shader.end();
     }
 }
 
 void VideoRenderer::drawNextFrame(){
     VideoFrame * frame = source->getNextVideoFrame();
     if(frame!=NULL){
-        if(!frame->isTexAllocated())
-            frame->update(videoRendererVoidArgs);
         glPushMatrix();
         glTranslatef(x,y,z);
         glTranslatef((anchorX*scale+x),(anchorY*scale+y),0);
@@ -83,7 +80,7 @@ void VideoRenderer::drawNextFrame(){
         glRotatef(rotationX,1,0,0);
         glRotatef(rotationY,0,1,0);
         glTranslatef(-(anchorX*scale+x),-(anchorY*scale+y),0);
-        frame->getTexture()->draw(0,0,frame->w*scale,frame->h*scale);
+        frame->getTextureRef().draw(0,0,frame->getWidth()*scale,frame->getHeight()*scale);
         glPopMatrix();
         frame->release();
     }

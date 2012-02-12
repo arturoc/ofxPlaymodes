@@ -13,8 +13,6 @@
 #include "ofMain.h"
 
 
-// the video grabber is by now implemented using ofxAdvVideo
-// until there's a common base for video players/grabbers in of
 class VideoGrabber: public VideoSource, public ofVideoGrabber{
 public:
     VideoGrabber();

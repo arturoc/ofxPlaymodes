@@ -1,0 +1,273 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CodeBlocks_project_file>
+  <FileVersion major="1" minor="6"/>
+  <Project>
+    <Option title="example-basic"/>
+    <Option makefile_is_custom="1"/>
+    <Option pch_mode="2"/>
+    <Option compiler="gcc"/>
+    <Option virtualFolders="addons/;src/;build config/;"/>
+    <Build>
+      <Target title="Debug">
+        <Option output="bin/$(PROJECT_NAME)_debug" prefix_auto="1" extension_auto="1"/>
+        <Option working_dir="bin"/>
+        <Option object_output="obj/Debug/"/>
+        <Option external_deps="../../../libs/openFrameworksCompiled/lib/linux64/libopenFrameworksDebug.a;"/>
+        <Option type="1"/>
+        <Option compiler="gcc"/>
+        <Option projectLinkerOptionsRelation="2"/>
+      </Target>
+      <Target title="Release">
+        <Option output="bin/$(PROJECT_NAME)" prefix_auto="1" extension_auto="1"/>
+        <Option working_dir="bin"/>
+        <Option object_output="obj/Release/"/>
+        <Option external_deps="../../../libs/openFrameworksCompiled/lib/linux64/libopenFrameworks.a;"/>
+        <Option type="1"/>
+        <Option compiler="gcc"/>
+        <Option projectLinkerOptionsRelation="2"/>
+      </Target>
+    </Build>
+    <Unit filename="config.make">
+      <Option virtualFolder="build config"/>
+    </Unit>
+    <Unit filename="src/main.cpp">
+      <Option virtualFolder="src/"/>
+    </Unit>
+    <Unit filename="src/testApp.cpp">
+      <Option virtualFolder="src/"/>
+    </Unit>
+    <Unit filename="src/testApp.h">
+      <Option virtualFolder="src/"/>
+    </Unit>
+    <Extensions>
+      <code_completion/>
+      <envvars/>
+      <debugger/>
+    </Extensions>
+    <Unit filename="../../../addons/ofxOsc/src/ofxOscReceiver.h">
+      <Option virtualFolder="addons/ofxOsc/src"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxOsc/src/ofxOscSender.h">
+      <Option virtualFolder="addons/ofxOsc/src"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxOsc/src/ofxOscSender.cpp">
+      <Option virtualFolder="addons/ofxOsc/src"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxOsc/src/ofxOscArg.h">
+      <Option virtualFolder="addons/ofxOsc/src"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxOsc/src/ofxOscBundle.h">
+      <Option virtualFolder="addons/ofxOsc/src"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxOsc/src/ofxOscMessage.cpp">
+      <Option virtualFolder="addons/ofxOsc/src"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxOsc/src/ofxOscReceiver.cpp">
+      <Option virtualFolder="addons/ofxOsc/src"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxOsc/src/ofxOscMessage.h">
+      <Option virtualFolder="addons/ofxOsc/src"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxOsc/src/ofxOscBundle.cpp">
+      <Option virtualFolder="addons/ofxOsc/src"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxOsc/src/ofxOsc.h">
+      <Option virtualFolder="addons/ofxOsc/src"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/ofxPlaymodes.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/filters/VideoFilter.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/filters"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/filters/VideoFilter.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/filters"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/filters/BaseFilter.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/filters"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/filters/BaseFilter.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/filters"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/grabbers/VideoGrabber.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/grabbers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/grabbers/VideoGrabber.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/grabbers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/grabbers/FileGrabber.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/grabbers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/grabbers/FileGrabber.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/grabbers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/grabbers/AudioGrabber.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/grabbers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/grabbers/AudioGrabber.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/grabbers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/renderers/Renderer.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/renderers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/renderers/MultixRenderer.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/renderers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/renderers/MultixRenderer.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/renderers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/renderers/RecLoopRender.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/renderers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/renderers/VideoRenderer.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/renderers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/renderers/Renderer.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/renderers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/renderers/RecLoopRender.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/renderers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/renderers/BasicVideoRenderer.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/renderers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/renderers/BasicVideoRenderer.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/renderers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/renderers/VideoRenderer.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/renderers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/renderers/AudioRenderer.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/renderers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/renderers/AudioRenderer.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/renderers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/buffers/AudioBuffer.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/buffers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/buffers/Buffer.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/buffers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/buffers/VideoBuffer.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/buffers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/buffers/Buffer.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/buffers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/buffers/VideoBuffer.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/buffers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/buffers/AudioBuffer.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/buffers"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/oscControl/OscInterface.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/oscControl"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/oscControl/OscInterface.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/oscControl"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/frames/AudioFrame.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/frames"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/frames/Frame.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/frames"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/frames/VideoFrame.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/frames"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/frames/AudioFrame.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/frames"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/frames/VideoFrame.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/frames"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/frames/Frame.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/frames"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/frames/envelopes/BaseEnvelope.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/frames/envelopes"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/frames/envelopes/RaisedCosineBellEnvelope.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/frames/envelopes"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/pipeline/Source.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/pipeline"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/pipeline/Sink.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/pipeline"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/pipeline/Source.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/pipeline"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/pipeline/Sink.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/pipeline"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/pipeline/audio/AudioSink.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/pipeline/audio"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/pipeline/audio/AudioSource.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/pipeline/audio"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/pipeline/audio/AudioSource.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/pipeline/audio"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/pipeline/audio/AudioSink.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/pipeline/audio"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/pipeline/events/AudioEvents.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/pipeline/events"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/pipeline/events/VideoEvents.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/pipeline/events"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/pipeline/events/NewFrameListener.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/pipeline/events"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/pipeline/events/NewFrameListener.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/pipeline/events"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/pipeline/video/VideoSource.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/pipeline/video"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/pipeline/video/VideoSink.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/pipeline/video"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/pipeline/video/VideoSource.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/pipeline/video"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/pipeline/video/VideoSink.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/pipeline/video"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/AVHeaders/AudioHeader.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/AVHeaders"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/AVHeaders/VideoHeader.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/AVHeaders"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/AVHeaders/VideoHeader.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/AVHeaders"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/AVHeaders/AudioHeader.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/AVHeaders"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/ofxOscEvents/ofxOscEventsReceiver.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/ofxOscEvents"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/ofxOscEvents/ofxOscEventsReceiver.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/ofxOscEvents"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/utils/ofxObjCPointer.cpp">
+      <Option virtualFolder="addons/ofxPlaymodes/src/utils"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/utils/constants.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/utils"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/utils/pmUtils.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/utils"/>
+    </Unit>
+    <Unit filename="../../../addons/ofxPlaymodes/src/utils/ofxObjCPointer.h">
+      <Option virtualFolder="addons/ofxPlaymodes/src/utils"/>
+    </Unit>
+  </Project>
+</CodeBlocks_project_file>

@@ -44,7 +44,7 @@ MultixRenderer::MultixRenderer(VideoBuffer * buffer, int numHeaders)
     totYRot=0;
 
     for (int i=0;i<numHeaders;i++){
-        videoHeader.push_back( new VideoHeader(buffer) );
+        videoHeader.push_back( new VideoHeader(*buffer) );
         videoRenderer.push_back(new VideoRenderer(videoHeader[i]));
     }
     prevNumHeaders=numHeaders;
@@ -59,7 +59,7 @@ void MultixRenderer::setNumHeaders(int numHeaders){
     int prevNumHeaders = this->numHeaders;
     if(numHeaders>prevNumHeaders){
         for(int i=0;i<numHeaders-prevNumHeaders;i++){
-            videoHeader.push_back( new VideoHeader(videoBuffer) );
+            videoHeader.push_back( new VideoHeader(*videoBuffer) );
             videoRenderer.push_back(new VideoRenderer(videoHeader[prevNumHeaders+i]));
         }
     }else if(numHeaders<prevNumHeaders){
@@ -80,7 +80,7 @@ void MultixRenderer::update(){
     int currNumHeaders = numHeaders;
     if(currNumHeaders>prevNumHeaders){
         for(int i=0;i<currNumHeaders-prevNumHeaders;i++){
-            videoHeader.push_back( new VideoHeader(videoBuffer) );
+            videoHeader.push_back( new VideoHeader(*videoBuffer) );
             videoRenderer.push_back(new VideoRenderer(videoHeader[prevNumHeaders+i]));
         }
     }else if(currNumHeaders<prevNumHeaders){
@@ -136,6 +136,7 @@ void MultixRenderer::update(){
 }
 
 void MultixRenderer::draw(){
+	ofPushStyle();
     if(depthTest)
         glEnable(GL_DEPTH_TEST);
     glPushMatrix();
@@ -153,5 +154,5 @@ void MultixRenderer::draw(){
     glPopMatrix();
     if(depthTest)
         glDisable(GL_DEPTH_TEST);
-
+    ofPopStyle();
 }

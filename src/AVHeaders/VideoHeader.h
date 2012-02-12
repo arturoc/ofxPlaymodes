@@ -18,8 +18,11 @@
 
 class VideoHeader:public VideoSink, public VideoSource{
 public:
-    VideoHeader(VideoBuffer *buffer);
+    VideoHeader(VideoBuffer & buffer);
+    VideoHeader();
     ~VideoHeader();
+
+    void setup(VideoBuffer & buffer);
 
     // draws the state of the header not the frame
     void draw();
