@@ -42,14 +42,12 @@
 
 
 #pragma once
-#include "Poco/Mutex.h"
-using Poco::FastMutex;
-using Poco::ScopedLock;
+#include "ofTypes.h"
 
 class ofxObjCPointer {
 public:
 	ofxObjCPointer();
-	virtual ~ofxObjCPointer() {delete mutex;}
+	virtual ~ofxObjCPointer();
 
 	// use this to indicate you are using the object and want to keep it safe in memory
 	void retain();
@@ -59,5 +57,5 @@ public:
 
 protected:
 	unsigned int _useCountOfThisObject;
-	FastMutex* mutex;
+	ofMutex * mutex;
 };

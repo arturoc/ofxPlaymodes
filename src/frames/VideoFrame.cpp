@@ -6,6 +6,7 @@
  */
 
 #include "VideoFrame.h"
+using Poco::ScopedLock;
 
 int VideoFrame::total_num_frames=0;
 
@@ -29,7 +30,7 @@ void VideoFrame::update(ofEventArgs & args){
 }
 
 void VideoFrame::release() {
-    ScopedLock<FastMutex> lock(*mutex);
+    ScopedLock<ofMutex> lock(*mutex);
 	_useCountOfThisObject--;
 	if(_useCountOfThisObject == 0) {
 		doRelease=true;

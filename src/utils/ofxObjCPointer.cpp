@@ -18,21 +18,27 @@
  ***********************************************************************/
 
 #include "ofxObjCPointer.h"
+using Poco::ScopedLock;
 
 ofxObjCPointer::ofxObjCPointer() {
-    mutex = new FastMutex;
-    ScopedLock<FastMutex>(*mutex);
+	mutex = new ofMutex;
+    ScopedLock<ofMutex> lock(*mutex);
 	_useCountOfThisObject = 1;
 }
 
+ofxObjCPointer::~ofxObjCPointer() {
+    ScopedLock<ofMutex> lock(*mutex);
+	delete mutex;
+}
+
 void ofxObjCPointer::retain() {
-    ScopedLock<FastMutex>(*mutex);
+    ScopedLock<ofMutex> lock(*mutex);
 	_useCountOfThisObject++;
 	//printf("ofxObjCPointer::retain() - Use Count: %i\n", _useCountOfThisObject);
 }
 
 void ofxObjCPointer::release() {
-    ScopedLock<FastMutex>(*mutex);
+    ScopedLock<ofMutex> lock(*mutex);
 	_useCountOfThisObject--;
 	//printf("ofxObjCPointer::release() - Use Count: %i\n", _useCountOfThisObject);
 	if(_useCountOfThisObject == 0) {
