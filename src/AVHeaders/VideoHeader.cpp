@@ -178,6 +178,7 @@ void VideoHeader::setLoopMode(bool loopMode)
 void VideoHeader::setPct(float pct)
 {
     this->pct = pct;
+    pctHasChanged = true;
 }
 
 void VideoHeader::setSpeed(float speed)

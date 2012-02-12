@@ -24,7 +24,7 @@ void testApp::setup(){
 	multix.setDelayOffset (100);
 	multix.setNumHeaders(10);
 	multix.setMinmaxBlend(1);
-	multix.setAlpha(128);
+	multix.setTint(ofColor(255,255,255,128));
 
 
     // init variables

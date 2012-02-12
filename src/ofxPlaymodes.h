@@ -15,9 +15,6 @@
 
 //#include "RaisedCosineBellEnvelope.h"
 
-#include "MultixRenderer.h"
-
-#include "RecLoopRender.h"
 #include "BasicVideoRenderer.h"
 
 #endif

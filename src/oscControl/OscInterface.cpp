@@ -45,8 +45,6 @@ void OscInterface::newOscMessage(ofxOscMessage & message){
                     videoHeaders[header]->setPct(pct);
                 }else if(commands[2]=="speed"){
                     videoHeaders[header]->setSpeed(message.getArgAsFloat(0));
-                }else if(commands[2]=="gate"){
-                    videoRenderers[header]->setDraw((bool)message.getArgAsFloat(0));
                 }
             }else if(commands[0]=="l88p"){
                 if(commands[1]=="freeze"){

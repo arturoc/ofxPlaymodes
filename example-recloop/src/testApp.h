@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxPlaymodes.h"
+#include "RecLoopRender.h"
 
 class testApp : public ofBaseApp{
 

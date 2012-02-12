@@ -5,6 +5,7 @@
 
 #include "ofMain.h"
 #include "ofxPlaymodes.h"
+#include "MultixRenderer.h"
 
 
 class testApp : public ofBaseApp{
