@@ -25,8 +25,8 @@ class testApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 		
 		VideoGrabber grabber;
-		VideoBuffer * vBuffer;
-		vector<VideoHeader *> vHeader;
-		vector<BasicVideoRenderer *> vRenderer;
+		VideoBuffer vBuffer;
+		vector<VideoHeader> vHeader;
+		vector<BasicVideoRenderer> vRenderer;
 
 };

@@ -85,3 +85,177 @@ void VideoRenderer::drawNextFrame(){
         frame->release();
     }
 }
+
+int VideoRenderer::getAlpha() const
+{
+    return alpha;
+}
+
+float VideoRenderer::getAnchorX() const
+{
+    return anchorX;
+}
+
+float VideoRenderer::getRotationZ() const
+{
+    return rotationZ;
+}
+
+float VideoRenderer::getScale() const
+{
+    return scale;
+}
+
+ofShader VideoRenderer::getShader() const
+{
+    return shader;
+}
+
+int VideoRenderer::getTintR() const
+{
+    return tintR;
+}
+
+float VideoRenderer::getX() const
+{
+    return x;
+}
+
+bool VideoRenderer::isActivateShader() const
+{
+    return activateShader;
+}
+
+bool VideoRenderer::isIsDrawing() const
+{
+    return isDrawing;
+}
+
+bool VideoRenderer::isMinmaxBlend() const
+{
+    return minmaxBlend;
+}
+
+void VideoRenderer::setActivateShader(bool activateShader)
+{
+    this->activateShader = activateShader;
+}
+
+void VideoRenderer::setAlpha(int alpha)
+{
+    this->alpha = alpha;
+}
+
+void VideoRenderer::setAnchorX(float anchorX)
+{
+    this->anchorX = anchorX;
+}
+
+void VideoRenderer::setIsDrawing(bool isDrawing)
+{
+    this->isDrawing = isDrawing;
+}
+
+void VideoRenderer::setMinmaxBlend(bool minmaxBlend)
+{
+    this->minmaxBlend = minmaxBlend;
+}
+
+void VideoRenderer::setRotationZ(float rotationZ)
+{
+    this->rotationZ = rotationZ;
+}
+
+void VideoRenderer::setScale(float scale)
+{
+    this->scale = scale;
+}
+
+void VideoRenderer::setShader(ofShader shader)
+{
+    this->shader = shader;
+}
+
+void VideoRenderer::setTintR(int tintR)
+{
+    this->tintR = tintR;
+}
+
+void VideoRenderer::setX(float x)
+{
+    this->x = x;
+}
+
+float VideoRenderer::getAnchorY() const
+{
+    return anchorY;
+}
+
+float VideoRenderer::getRotationX() const
+{
+    return rotationX;
+}
+
+float VideoRenderer::getRotationY() const
+{
+    return rotationY;
+}
+
+int VideoRenderer::getTintB() const
+{
+    return tintB;
+}
+
+int VideoRenderer::getTintG() const
+{
+    return tintG;
+}
+
+float VideoRenderer::getY() const
+{
+    return y;
+}
+
+float VideoRenderer::getZ() const
+{
+    return z;
+}
+
+void VideoRenderer::setAnchorY(float anchorY)
+{
+    this->anchorY = anchorY;
+}
+
+void VideoRenderer::setRotationX(float rotationX)
+{
+    this->rotationX = rotationX;
+}
+
+void VideoRenderer::setRotationY(float rotationY)
+{
+    this->rotationY = rotationY;
+}
+
+void VideoRenderer::setTintB(int tintB)
+{
+    this->tintB = tintB;
+}
+
+void VideoRenderer::setTintG(int tintG)
+{
+    this->tintG = tintG;
+}
+
+void VideoRenderer::setY(float y)
+{
+    this->y = y;
+}
+
+void VideoRenderer::setZ(float z)
+{
+    this->z = z;
+}
+
+
+
+

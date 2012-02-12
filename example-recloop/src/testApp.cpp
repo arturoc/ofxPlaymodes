@@ -3,20 +3,20 @@
 //--------------------------------------------------------------
 void testApp::setup(){
 	grabber.initGrabber(640,480);
-	vBuffer = new VideoBuffer(&grabber);
-	vHeader = new VideoHeader(vBuffer);
-	recloop = new RecLoopRender(vBuffer,vHeader);
+	vBuffer.setup(grabber,400);
+	vHeader.setup(vBuffer);
+	recloop.setup(vBuffer,vHeader);
 
 	ofBackground(0);
 
-	recloop->alpha=127;
-    recloop->tintR=255;
-    recloop->tintG=255;
-    recloop->tintB=255;
-    recloop->minmaxBlend=true;
+	recloop.alpha=127;
+    recloop.tintR=255;
+    recloop.tintG=255;
+    recloop.tintB=255;
+    recloop.minmaxBlend=true;
 
 
-	vHeader->delay = 10*1e6;
+	vHeader.setDelay( 10*1e6 );
 	bFreeze = false;
 }
 
@@ -27,26 +27,26 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-	recloop->draw();
+	recloop.draw();
 
-	vBuffer->draw();
-	vHeader->draw();
+	vBuffer.draw();
+	vHeader.draw();
 }
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
 	if(key==' '){
 		if(bFreeze){
-			vBuffer->resume();
-			recloop->resume();
-			vHeader->delay = 10*1e6;
-			vHeader->loopMode=false;
+			vBuffer.resume();
+			recloop.resume();
+			vHeader.setDelay(10*1e6);
+			vHeader.setLoopMode(false);
 		}else{
-			vHeader->delay = 0;
-			vHeader->setFps(30);
-			vHeader->loopMode=true;
-			vBuffer->stop();
-			recloop->stop();
+			vHeader.setDelay(0);
+			vHeader.setFps(30);
+			vHeader.setLoopMode(true);
+			vBuffer.stop();
+			recloop.stop();
 		}
 	}
 }

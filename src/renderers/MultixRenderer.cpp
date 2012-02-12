@@ -7,10 +7,58 @@
 
 #include "MultixRenderer.h"
 
-MultixRenderer::MultixRenderer(VideoBuffer * buffer, int numHeaders)
+MultixRenderer::MultixRenderer(VideoBuffer & buffer, int numHeaders)
 {
+	setup(buffer,numHeaders);
+}
+
+MultixRenderer::~MultixRenderer()
+{
+    //dtor
+}
+
+MultixRenderer::MultixRenderer(){
+	numHeaders=0;
+	videoBuffer=NULL;
+
+	scale=1;
+	rotationZ=0;
+	rotationX=0;
+	rotationY=0;
+	rotZOffset=0;
+	rotYOffset=0;
+	x=0; y=0; z=0;
+	xOffset=0;
+	yOffset=0;
+	anchorX=0;
+	anchorY=0;
+	anchorZ=0;
+	alpha=255;
+	tintR=255;
+	tintG=255;
+	tintB=255;
+
+	depthTest=0;
+
+	minmaxBlend=0;
+
+	delayOffset=0;
+	speedOffset=0;
+
+	in=0; out=1;
+	loopMode=0;
+
+
+	yRotSpeed=0;
+	totYRot=0;
+
+	prevNumHeaders=numHeaders;
+}
+
+void MultixRenderer::setup(VideoBuffer & buffer, int numHeaders){
+
     this->numHeaders=numHeaders;
-    videoBuffer=buffer;
+    videoBuffer=&buffer;
 
     scale=1;
     rotationZ=0;
@@ -44,15 +92,10 @@ MultixRenderer::MultixRenderer(VideoBuffer * buffer, int numHeaders)
     totYRot=0;
 
     for (int i=0;i<numHeaders;i++){
-        videoHeader.push_back( new VideoHeader(*buffer) );
+        videoHeader.push_back( new VideoHeader(buffer) );
         videoRenderer.push_back(new VideoRenderer(videoHeader[i]));
     }
     prevNumHeaders=numHeaders;
-}
-
-MultixRenderer::~MultixRenderer()
-{
-    //dtor
 }
 
 void MultixRenderer::setNumHeaders(int numHeaders){
@@ -94,42 +137,42 @@ void MultixRenderer::update(){
     prevNumHeaders=currNumHeaders;
 
 
-    videoRenderer[0]->rotationY=rotationY;
+    videoRenderer[0]->setRotationY(rotationY);
     //videoRenderer[0]->rotationX=rotationX;
-    videoRenderer[0]->x=x;
-    videoRenderer[0]->y=y;
-    videoRenderer[0]->z=z;
+    videoRenderer[0]->setX(x);
+    videoRenderer[0]->setY(y);
+    videoRenderer[0]->setZ(z);
 
     //videoRenderer[0]->speed=
     for(int i=currNumHeaders-1; i>=0; i--){
-        videoHeader[i]->in=in;
-        videoHeader[i]->out=out;
-        videoHeader[i]->loopMode=loopMode;
-        videoHeader[i]->delay=delayOffset*1000*i;
-        videoHeader[i]->speed=videoHeader[0]->speed+speedOffset*i;
+        videoHeader[i]->setIn(in);
+        videoHeader[i]->setOut(out);
+        videoHeader[i]->setLoopMode(loopMode);
+        videoHeader[i]->setDelay(delayOffset*1000*i);
+        videoHeader[i]->setSpeed(videoHeader[0]->getSpeed()+speedOffset*i);
 
-        videoRenderer[i]->alpha=alpha;
-        videoRenderer[i]->anchorX=anchorX;
-        videoRenderer[i]->anchorY=anchorY;
-        videoRenderer[i]->rotationZ=rotationZ+rotZOffset*i;
+        videoRenderer[i]->setAlpha(alpha);
+        videoRenderer[i]->setAnchorX(anchorX);
+        videoRenderer[i]->setAnchorY(anchorY);
+        videoRenderer[i]->setRotationZ(rotationZ+rotZOffset*i);
         if(i>0){
-            videoRenderer[i]->rotationY=videoRenderer[i-1]->rotationY;
-            videoRenderer[i]->rotationX=videoRenderer[i-1]->rotationX;
+            videoRenderer[i]->setRotationY(videoRenderer[i-1]->getRotationY());
+            videoRenderer[i]->setRotationX(videoRenderer[i-1]->getRotationX());
         }
-        videoRenderer[i]->scale=scale;
-        videoRenderer[i]->tintR=tintR;
-        videoRenderer[i]->tintG=tintG;
-        videoRenderer[i]->tintB=tintB;
+        videoRenderer[i]->setScale(scale);
+        videoRenderer[i]->setTintR(tintR);
+        videoRenderer[i]->setTintG(tintG);
+        videoRenderer[i]->setTintB(tintB);
 
 
-        videoRenderer[i]->x=videoRenderer[0]->x-xOffset*i;
-        videoRenderer[i]->y=videoRenderer[0]->y-yOffset*i;
+        videoRenderer[i]->setX(videoRenderer[0]->getX()-xOffset*i);
+        videoRenderer[i]->setY(videoRenderer[0]->getY()-yOffset*i);
 
         if(i>0){
-            videoRenderer[i]->z=videoRenderer[i-1]->z;
+            videoRenderer[i]->setZ(videoRenderer[i-1]->getZ());
             //videoRenderer[i]->y=videoRenderer[i-1]->y;
         }
-        videoRenderer[i]->minmaxBlend=minmaxBlend;
+        videoRenderer[i]->setMinmaxBlend(minmaxBlend);
         //videoRenderer[i]->activateShader=activateShader;
     }
     totYRot+=yRotSpeed;
@@ -140,14 +183,14 @@ void MultixRenderer::draw(){
     if(depthTest)
         glEnable(GL_DEPTH_TEST);
     glPushMatrix();
-    glTranslatef(CAPTURE_WIDTH/2+videoRenderer[0]->x,0,videoRenderer[0]->z+anchorZ);
+    glTranslatef(CAPTURE_WIDTH/2+videoRenderer[0]->getX(),0,videoRenderer[0]->getZ()+anchorZ);
     glRotatef(totYRot,0,1,0);
-    glTranslatef(-CAPTURE_WIDTH/2-videoRenderer[0]->x,0,-videoRenderer[0]->z-anchorZ);
+    glTranslatef(-CAPTURE_WIDTH/2-videoRenderer[0]->getX(),0,-videoRenderer[0]->getZ()-anchorZ);
         for(int i =prevNumHeaders-1; i>=0; i--){
         glPushMatrix();
-            glTranslatef(CAPTURE_WIDTH/2+videoRenderer[i]->x,0,videoRenderer[i]->z+anchorZ);
+            glTranslatef(CAPTURE_WIDTH/2+videoRenderer[i]->getX(),0,videoRenderer[i]->getZ()+anchorZ);
             glRotatef(rotYOffset*i,0,1,0);
-            glTranslatef(-CAPTURE_WIDTH/2-videoRenderer[i]->x,0,-videoRenderer[i]->z-anchorZ);
+            glTranslatef(-CAPTURE_WIDTH/2-videoRenderer[i]->getX(),0,-videoRenderer[i]->getZ()-anchorZ);
             videoRenderer[i]->draw();
         glPopMatrix();
         }
@@ -156,3 +199,223 @@ void MultixRenderer::draw(){
         glDisable(GL_DEPTH_TEST);
     ofPopStyle();
 }
+
+int MultixRenderer::getAlpha() const
+{
+    return alpha;
+}
+
+float MultixRenderer::getAnchorX() const
+{
+    return anchorX;
+}
+
+float MultixRenderer::getDelayOffset() const
+{
+    return delayOffset;
+}
+
+int MultixRenderer::getDepthTest() const
+{
+    return depthTest;
+}
+
+float MultixRenderer::getIn() const
+{
+    return in;
+}
+
+int MultixRenderer::getLoopMode() const
+{
+    return loopMode;
+}
+
+int MultixRenderer::getMinmaxBlend() const
+{
+    return minmaxBlend;
+}
+
+float MultixRenderer::getOffset() const
+{
+    return xOffset;
+}
+
+int MultixRenderer::getPrevNumHeaders() const
+{
+    return prevNumHeaders;
+}
+
+float MultixRenderer::getRotSpeed() const
+{
+    return yRotSpeed;
+}
+
+float MultixRenderer::getRotZOffset() const
+{
+    return rotZOffset;
+}
+
+float MultixRenderer::getRotationZ() const
+{
+    return rotationZ;
+}
+
+float MultixRenderer::getScale() const
+{
+    return scale;
+}
+
+float MultixRenderer::getSpeedOffset() const
+{
+    return speedOffset;
+}
+
+int MultixRenderer::getTintR() const
+{
+    return tintR;
+}
+
+float MultixRenderer::getTotYRot() const
+{
+    return totYRot;
+}
+
+VideoBuffer *MultixRenderer::getVideoBuffer() const
+{
+    return videoBuffer;
+}
+
+float MultixRenderer::getX() const
+{
+    return x;
+}
+
+void MultixRenderer::setDepthTest(int depthTest)
+{
+    this->depthTest = depthTest;
+}
+
+void MultixRenderer::setIn(float in)
+{
+    this->in = in;
+}
+
+void MultixRenderer::setLoopMode(int loopMode)
+{
+    this->loopMode = loopMode;
+}
+
+void MultixRenderer::setMinmaxBlend(int minmaxBlend)
+{
+    this->minmaxBlend = minmaxBlend;
+}
+
+void MultixRenderer::setXOffset(float offset)
+{
+    xOffset = offset;
+}
+
+void MultixRenderer::setYOffset(float offset)
+{
+    yOffset = offset;
+}
+
+void MultixRenderer::setPrevNumHeaders(int prevNumHeaders)
+{
+    this->prevNumHeaders = prevNumHeaders;
+}
+
+void MultixRenderer::setRotSpeed(float rotSpeed)
+{
+    yRotSpeed = rotSpeed;
+}
+
+void MultixRenderer::setRotZOffset(float rotZOffset)
+{
+    this->rotZOffset = rotZOffset;
+}
+
+void MultixRenderer::setTintR(int tintR)
+{
+    this->tintR = tintR;
+}
+
+void MultixRenderer::setTotYRot(float totYRot)
+{
+    this->totYRot = totYRot;
+}
+
+void MultixRenderer::setVideoBuffer(VideoBuffer *videoBuffer)
+{
+    this->videoBuffer = videoBuffer;
+}
+
+vector<VideoHeader*> MultixRenderer::getVideoHeaders(){
+	return videoHeader;
+}
+
+vector<VideoRenderer*> MultixRenderer::getVideoRenderers(){
+	return videoRenderer;
+}
+
+VideoHeader * MultixRenderer::getHeader(int header){
+	if(prevNumHeaders){
+		header = CLAMP(header,0,prevNumHeaders-1);
+		return videoHeader[header];
+	}else{
+		return NULL;
+	}
+
+}
+
+VideoRenderer * MultixRenderer::getRenderer(int renderer){
+	if(prevNumHeaders){
+		renderer = CLAMP(renderer,0,prevNumHeaders-1);
+		return videoRenderer[renderer];
+	}else{
+		return NULL;
+	}
+
+}
+
+void MultixRenderer::setAlpha(int alpha)
+{
+    this->alpha = alpha;
+}
+
+void MultixRenderer::setAnchorX(float anchorX)
+{
+    this->anchorX = anchorX;
+}
+
+void MultixRenderer::setDelayOffset(float delayOffset)
+{
+    this->delayOffset = delayOffset;
+}
+
+void MultixRenderer::setOffset(float offset)
+{
+    xOffset = offset;
+}
+
+void MultixRenderer::setRotationZ(float rotationZ)
+{
+    this->rotationZ = rotationZ;
+}
+
+void MultixRenderer::setScale(float scale)
+{
+    this->scale = scale;
+}
+
+void MultixRenderer::setSpeedOffset(float speedOffset)
+{
+    this->speedOffset = speedOffset;
+}
+
+void MultixRenderer::setX(float x)
+{
+    this->x = x;
+}
+
+

@@ -125,3 +125,65 @@ int VideoHeader::getNextPosition(){
     return nextPos;
 }
 
+VideoBuffer *VideoHeader::getBuffer() const
+{
+    return buffer;
+}
+
+int VideoHeader::getDelay() const
+{
+    return delay;
+}
+
+float VideoHeader::getIn() const
+{
+    return in;
+}
+
+float VideoHeader::getPct() const
+{
+    return pct;
+}
+
+float VideoHeader::getSpeed() const
+{
+    return speed;
+}
+
+bool VideoHeader::isLoopMode() const
+{
+    return loopMode;
+}
+
+void VideoHeader::setDelay(int delay)
+{
+    this->delay = delay;
+}
+
+void VideoHeader::setIn(float in)
+{
+    this->in = in;
+}
+
+void VideoHeader::setOut(float out)
+{
+    this->out = out;
+}
+
+void VideoHeader::setLoopMode(bool loopMode)
+{
+    this->loopMode = loopMode;
+}
+
+void VideoHeader::setPct(float pct)
+{
+    this->pct = pct;
+}
+
+void VideoHeader::setSpeed(float speed)
+{
+    this->speed = speed;
+}
+
+
+

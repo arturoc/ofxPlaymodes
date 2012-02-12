@@ -7,24 +7,28 @@
 
 class RecLoopRender : public VideoSink
 {
-    public:
-        RecLoopRender(VideoSource * bufferSource, VideoSource * liveSource);
-        virtual ~RecLoopRender();
-        void draw();
+public:
+	RecLoopRender();
+	RecLoopRender(VideoSource & bufferSource, VideoSource & liveSource);
+	virtual ~RecLoopRender();
 
-		void stop();
-		void resume();
+	void setup(VideoSource & bufferSource, VideoSource & liveSource);
 
-        int alpha;
-        int tintR, tintG, tintB;
-        bool minmaxBlend;
-    protected:
-    private:
-        VideoSource * buffer;
-        VideoSource * live;
-        ofImage       image;
-        bool          imageAllocated;
-        bool		  stopped;
+	void draw();
+
+	void stop();
+	void resume();
+
+	int alpha;
+	int tintR, tintG, tintB;
+	bool minmaxBlend;
+protected:
+private:
+	VideoSource * buffer;
+	VideoSource * live;
+	ofImage       image;
+	bool          imageAllocated;
+	bool		  stopped;
 };
 
 #endif // RECLOOPRENDER_H

@@ -3,15 +3,17 @@
 //--------------------------------------------------------------
 void testApp::setup(){
 	grabber.initGrabber(640,480);
-	vBuffer = new VideoBuffer(&grabber);
-	for(int i=0;i<5;i++){
-		vHeader.push_back(new VideoHeader(vBuffer));
-		vHeader[i]->delay = 500000*i;
-	}
-	for(int i=0;i<5;i++){
-		vRenderer.push_back(new BasicVideoRenderer(vHeader[i]));
+	vBuffer.setup(grabber,400);
+	vHeader.resize(5);
+	vRenderer.resize(5);
+	for(int i=0;i<(int)vHeader.size();i++){
+		vHeader[i].setup(vBuffer);
+		vHeader[i].setDelay(500000*i);
+		vRenderer[i].setup(vHeader[i]);
 	}
 	ofEnableAlphaBlending();
+	ofSetVerticalSync(true);
+	ofBackground(0);
 }
 
 //--------------------------------------------------------------
@@ -21,12 +23,12 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-	vBuffer->draw();
+	vBuffer.draw();
 	for(int i=0;i<5;i++){
-		vHeader[i]->draw();
+		vHeader[i].draw();
 
 	    ofSetColor(255,255,255,255/5);
-		vRenderer[i]->draw();
+		vRenderer[i].draw();
 	}
 }
 

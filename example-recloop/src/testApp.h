@@ -21,8 +21,8 @@ class testApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 		
 		VideoGrabber grabber;
-		VideoBuffer * vBuffer;
-		VideoHeader * vHeader;
-		RecLoopRender * recloop;
+		VideoBuffer vBuffer;
+		VideoHeader vHeader;
+		RecLoopRender recloop;
 		bool bFreeze;
 };

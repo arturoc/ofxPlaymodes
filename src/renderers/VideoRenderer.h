@@ -19,49 +19,69 @@ public:
 	virtual ~VideoRenderer();
 
 	void draw();
+    int getAlpha() const;
+    float getAnchorX() const;
+    float getRotationZ() const;
+    float getScale() const;
+    ofShader getShader() const;
+    int getTintR() const;
+    float getX() const;
+    bool isActivateShader() const;
+    bool isIsDrawing() const;
+    bool isMinmaxBlend() const;
+    void setActivateShader(bool activateShader);
+    void setAlpha(int alpha);
+    void setAnchorX(float anchorX);
+    void setIsDrawing(bool isDrawing);
+    void setMinmaxBlend(bool minmaxBlend);
+    void setRotationZ(float rotationZ);
+    void setScale(float scale);
+    void setShader(ofShader shader);
+    void setTintR(int tintR);
+    void setX(float x);
+    float getAnchorY() const;
+    float getRotationX() const;
+    float getRotationY() const;
+    int getTintB() const;
+    int getTintG() const;
+    float getY() const;
+    float getZ() const;
+    void setAnchorY(float anchorY);
+    void setRotationX(float rotationX);
+    void setRotationY(float rotationY);
+    void setTintB(int tintB);
+    void setTintG(int tintG);
+    void setY(float y);
+    void setZ(float z);
+    void setDraw(bool isDrawing)
+    {
+        this->isDrawing = isDrawing;
+    }
 
-
-	float scale;
-	float rotationZ, rotationX, rotationY;
-	float x, y, z;
-	float anchorX, anchorY;
-	int alpha;
-	int tintR, tintG, tintB;
-
-	bool minmaxBlend;
-	bool activateShader;
-
-	void setDraw(bool isDrawing){
-	    this->isDrawing = isDrawing;
-	}
-
-    void	setZ(const void * sender,float & Z){
-		z=Z;
-	}
-	void	setX(const void * sender,float & X){
-		x=X;
-	}
-	void	setY(const void * sender,float & Y){
-		y=Y;
-	}
-	void	setRX(const void * sender,float & RX){
-		rotationX=RX;
-	}
-	void	setRY(const void * sender,float & RY){
-		rotationY=RY;
-	}
-	void	setRZ(const void * sender,float & RZ){
-		rotationZ=RZ;
-	}
 private:
     void drawNextFrame();
-
-    VideoSource * source;
-    //ofTexture texture;
-    //bool texAllocated;
+    VideoSource *source;
     ofShader shader;
 
     bool isDrawing;
+
+
+	float scale;
+	float rotationZ;
+	float rotationX;
+	float rotationY;
+	float x;
+	float y;
+	float z;
+	float anchorX;
+	float anchorY;
+	int alpha;
+	int tintR;
+	int tintG;
+	int tintB;
+
+	bool minmaxBlend;
+	bool activateShader;
 };
 
 #endif /* VIDEORENDERER_H_ */

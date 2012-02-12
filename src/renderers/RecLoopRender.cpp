@@ -8,13 +8,17 @@
 #include "RecLoopRender.h"
 #include "VideoFrame.h"
 
-RecLoopRender::RecLoopRender(VideoSource * bufferSource, VideoSource * liveSource)
+RecLoopRender::RecLoopRender(VideoSource & bufferSource, VideoSource & liveSource)
 {
-    this->buffer=bufferSource;
-    this->live=liveSource;
-    imageAllocated=false;
-    image.setUseTexture(false);
-    stopped = false;
+    setup(bufferSource,liveSource);
+}
+
+RecLoopRender::RecLoopRender(){
+	buffer=NULL;
+	live=NULL;
+	imageAllocated=false;
+	image.setUseTexture(false);
+	stopped = false;
 }
 
 RecLoopRender::~RecLoopRender()
@@ -22,6 +26,13 @@ RecLoopRender::~RecLoopRender()
     //dtor
 }
 
+void RecLoopRender::setup(VideoSource & bufferSource, VideoSource & liveSource){
+    buffer=&bufferSource;
+    live=&liveSource;
+    imageAllocated=false;
+    image.setUseTexture(false);
+    stopped = false;
+}
 
 void RecLoopRender::draw(){
     VideoFrame * bufferFrame = buffer->getNextVideoFrame();

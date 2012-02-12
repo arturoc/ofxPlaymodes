@@ -23,60 +23,44 @@ public:
     ~VideoHeader();
 
     void setup(VideoBuffer & buffer);
-
-    // draws the state of the header not the frame
     void draw();
-
 
     int getFps();
     void setFps(int fps);
 
-    VideoFrame * getNextVideoFrame();
+    VideoFrame *getNextVideoFrame();
     int getNextPosition();
 
-    float speed;
-    int delay;
+    VideoBuffer *getBuffer() const;
+    int getDelay() const;
+    float getIn() const;
+    float getPct() const;
+    float getSpeed() const;
+    bool isLoopMode() const;
 
-    void setPct(float & pct){
-        this->pct=pct;
-        pctHasChanged=true;
-    }
-    void incrPct(float & incr){
-        this->pct+=incr;
-        pctHasChanged=true;
-    }
-    void setIn(float & in){
-        this->in=in;
-    }
-    void setOut(float & out){
-        this->out=out;
-    }
-    void setLoopMode(int & loopMode){
-        this->loopMode=loopMode;
-    }
-    float in, out;
-    bool loopMode;
-
+    void setDelay(int delay);
+    void setIn(float in);
+    void setOut(float out);
+    void setLoopMode(bool loopMode);
+    void setPct(float pct);
+    void setSpeed(float speed);
 protected:
-    VideoBuffer * buffer;
+    VideoBuffer *buffer;
     int fps;
-
-    //------------------------
-    // speed control
     float position;
     int prevBufferPos;
     pmTimestamp positionTS;
     pmTimeDiff oneFrame;
-
-    //-----------------------
-    // header draw
     char msgPos[5];
     int currentPos;
-
-    //------------------------
-    // external control
     bool pctHasChanged;
     float pct;
+
+
+    float speed;
+    int delay;
+    float in, out;
+    bool loopMode;
 };
 
 #endif // VIDEOHEADER_H_INCLUDED

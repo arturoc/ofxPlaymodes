@@ -25,21 +25,20 @@ public:
 
 	
 
-    VideoGrabber videoInput;
-
-    VideoBuffer * videoBuffer;
+    VideoGrabber 	videoInput;
+    VideoBuffer 	videoBuffer;
+	MultixRenderer 	multix;
 
     float vFPS;
     float appFPS;
     int updateStats;
 
-    char msg[1024];
+    string msg;
 
     int background;
 
     bool drawStats;
     
-	MultixRenderer * multix;
 };
 
 	

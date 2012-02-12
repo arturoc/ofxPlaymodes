@@ -44,7 +44,7 @@ void OscInterface::newOscMessage(ofxOscMessage & message){
                     float pct = message.getArgAsFloat(0);
                     videoHeaders[header]->setPct(pct);
                 }else if(commands[2]=="speed"){
-                    videoHeaders[header]->speed=message.getArgAsFloat(0);
+                    videoHeaders[header]->setSpeed(message.getArgAsFloat(0));
                 }else if(commands[2]=="gate"){
                     videoRenderers[header]->setDraw((bool)message.getArgAsFloat(0));
                 }

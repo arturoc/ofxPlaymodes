@@ -14,17 +14,17 @@ void testApp::setup(){
 
     // create the buffer that receive data
     // from videoInput
-    videoBuffer=new VideoBuffer(&videoInput);
+    videoBuffer.setup(videoInput,400);
 
 
     // create a multix renderer over the videoBuffer with 10 headers
-    multix = new MultixRenderer(videoBuffer,10);
+    multix.setup(videoBuffer,10);
 
 
-	multix->delayOffset = 100;
-	multix->numHeaders = 10;
-	multix->minmaxBlend = 1;
-	multix->alpha = 128;
+	multix.setDelayOffset (100);
+	multix.setNumHeaders(10);
+	multix.setMinmaxBlend(1);
+	multix.setAlpha(128);
 
 
     // init variables
@@ -32,7 +32,7 @@ void testApp::setup(){
     appFPS      = 0;
     updateStats = 0;
     background  = 0;
-    sprintf(msg,"");
+
     ofBackground(255,255,255);
     drawStats=true;
 }
@@ -49,15 +49,15 @@ void testApp::update(){
 	videoInput.update();
 
     // update the multix state
-    multix->update();
+    multix.update();
 
     // update the msg every 100 frames
     if(updateStats%100==0){
-        vFPS=videoBuffer->getRealFPS();
+        vFPS=videoBuffer.getRealFPS();
         appFPS=ofGetFrameRate();
     }
     updateStats++;
-    sprintf(msg,"video real fps: %f, app fps:%f",vFPS,appFPS);
+    msg = "video real fps: " + ofToString(vFPS) + ", app fps:" + ofToString(appFPS);
 
     ofBackground(background,background,background);
 }
@@ -67,18 +67,18 @@ void testApp::draw(){
 
 	ofSetColor(255,255,255);
     // draw the multix or rec loop renderers
-    multix->draw();
+    multix.draw();
 
 
     if(drawStats){
         // draw the representation of the headers and buffers
-        videoBuffer->draw();
+        videoBuffer.draw();
 
         ofDrawBitmapString(msg,20,620);
 
         // draw the multix headers state
-        for(int i=0; i < multix->numHeaders; i++){
-            VideoHeader * header = multix->getHeader(i);
+        for(int i=0; i < multix.getNumHeaders(); i++){
+            VideoHeader * header = multix.getHeader(i);
             if(header!=NULL)
                 header->draw();
         }
@@ -131,8 +131,8 @@ void testApp::keyReleased  (int key){
 
 //--------------------------------------------------------------
 void testApp::mouseMoved(int x, int y ){
-	multix->numHeaders = ofMap(y,0,ofGetHeight(),1,100);
-	multix->delayOffset = ofMap(x,0,ofGetWidth(),0,1000);
+	multix.setNumHeaders(ofMap(y,0,ofGetHeight(),1,100));
+	multix.setDelayOffset(ofMap(x,0,ofGetWidth(),0,1000));
 }
 
 //--------------------------------------------------------------
