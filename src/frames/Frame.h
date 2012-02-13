@@ -11,15 +11,19 @@
 #include "pmUtils.h"
 #include "ofxObjCPointer.h"
 
-class plFrame: public ofxObjCPointer {
+namespace ofxPm{
+class Frame: public ofxObjCPointer {
 public:
-	plFrame();
-	virtual ~plFrame();
+	Frame();
+	virtual ~Frame();
 
-	pmTimestamp getTimestamp();
+	Timestamp getTimestamp();
+
+protected:
+	void refreshTimestamp();
 
 private:
-    pmTimestamp timestamp;
+    Timestamp timestamp;
 };
-
+}
 #endif /* FRAME_H_ */

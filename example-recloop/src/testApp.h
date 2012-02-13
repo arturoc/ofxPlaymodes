@@ -21,9 +21,9 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
-		VideoGrabber grabber;
-		VideoBuffer vBuffer;
-		VideoHeader vHeader;
+		ofxPm::VideoGrabber grabber;
+		ofxPm::VideoBuffer vBuffer;
+		ofxPm::VideoHeader vHeader;
 		RecLoopRender recloop;
 		bool bFreeze;
 };

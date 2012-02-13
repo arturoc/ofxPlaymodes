@@ -7,6 +7,7 @@
 
 #include "AudioGrabber.h"
 
+namespace ofxPm{
 AudioGrabber::AudioGrabber() {
 	//ofEvents::addAudioReceivedListener(this);
 
@@ -23,4 +24,5 @@ void AudioGrabber::audioReceived(float * input, int bufferSize, int nChannels){
 
 float AudioGrabber::getFps(){
     return 44100.0/1024.0;
+}
 }

@@ -7,6 +7,7 @@
 
 #include "VideoSink.h"
 
+namespace ofxPm{
 VideoSink::VideoSink() {
 
 
@@ -14,4 +15,5 @@ VideoSink::VideoSink() {
 
 VideoSink::~VideoSink() {
 
+}
 }

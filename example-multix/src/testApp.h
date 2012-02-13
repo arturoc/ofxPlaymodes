@@ -26,8 +26,8 @@ public:
 
 	
 
-    VideoGrabber 	videoInput;
-    VideoBuffer 	videoBuffer;
+    ofxPm::VideoGrabber 	videoInput;
+    ofxPm::VideoBuffer 	videoBuffer;
 	MultixRenderer 	multix;
 
     float vFPS;

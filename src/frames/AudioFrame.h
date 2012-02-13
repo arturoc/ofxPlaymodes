@@ -12,7 +12,8 @@
 #include "pmUtils.h"
 #include "ofMain.h"
 
-class AudioFrame:public plFrame {
+namespace ofxPm{
+class AudioFrame:public Frame {
 public:
 	AudioFrame(float * audioFrame, int bufferSize, int channels);
 	AudioFrame(){};
@@ -30,5 +31,5 @@ private:
 	int channels;
 	float averageValue;
 };
-
+}
 #endif /* AUDIOFRAME_H_ */

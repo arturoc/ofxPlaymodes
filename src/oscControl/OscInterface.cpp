@@ -7,6 +7,7 @@
 
 #include "OscInterface.h"
 
+namespace ofxPm{
 OscInterface::OscInterface(vector<VideoHeader*> videoHeaders, vector<VideoRenderer*> videoRenderers, VideoBuffer * videoBuffer){
     receiver.setup(OSC_INTERFACE_PORT);
     this->videoHeaders=videoHeaders;
@@ -22,10 +23,10 @@ void OscInterface::mapMessage(string property,float *value){
     floats.insert(make_pair(property,value));
 }
 
-void OscInterface::mapMessage(string property,pmIntDelegate* setter){
+void OscInterface::mapMessage(string property,IntDelegate* setter){
     intSetters.insert(make_pair(property,setter));
 }
-void OscInterface::mapMessage(string property,pmFloatDelegate* setter){
+void OscInterface::mapMessage(string property,FloatDelegate* setter){
     floatSetters.insert(make_pair(property,setter));
 }
 
@@ -67,7 +68,7 @@ void OscInterface::newOscMessage(ofxOscMessage & message){
                 if(command=="get")
                     cout << property << ": " << *var << "\n";
             }else if(intSetters.find(property)!=intSetters.end()){
-                pmIntDelegate * delegate=intSetters[property];
+                IntDelegate * delegate=intSetters[property];
                 if(command=="set"){
                     int value=message.getArgAsInt32(0);
                     delegate->notify(this,value);
@@ -90,7 +91,7 @@ void OscInterface::newOscMessage(ofxOscMessage & message){
 
                 cout << command << " " << property << ": " << message.getArgAsFloat(0) <<"\n";
             }else if(floatSetters.find(property)!=floatSetters.end()){
-                pmFloatDelegate * delegate=floatSetters[property];
+                FloatDelegate * delegate=floatSetters[property];
                 if(command=="set"){
                     float value=message.getArgAsFloat(0);
                     delegate->notify(this,value);
@@ -98,4 +99,5 @@ void OscInterface::newOscMessage(ofxOscMessage & message){
             }
         }
     }
+}
 }

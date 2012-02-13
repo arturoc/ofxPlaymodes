@@ -7,6 +7,7 @@
 
 #include "VideoBuffer.h"
 
+namespace ofxPm{
 VideoBuffer::VideoBuffer(VideoSource & source, int size) {
 	setup(source,size);
 }
@@ -21,12 +22,11 @@ VideoBuffer::VideoBuffer(){
 
 
 void VideoBuffer::setup(VideoSource & source, int size){
-	source.addListener(this);
 	this->source=&source;
 	fps=source.getFps();
 	totalFrames=0;
-	stopped = false;
 	maxSize = size;
+	resume();
 }
 
 VideoBuffer::~VideoBuffer() {
@@ -51,18 +51,18 @@ void VideoBuffer::newVideoFrame(VideoFrame & frame){
 
 }
 
-pmTimestamp VideoBuffer::getLastTimestamp(){
+Timestamp VideoBuffer::getLastTimestamp(){
     if(size()>0)
         return frames.back()->getTimestamp();
     else
-        return pmTimestamp();
+        return Timestamp();
 }
 
-pmTimeDiff VideoBuffer::getTotalTime(){
+TimeDiff VideoBuffer::getTotalTime(){
     return getLastTimestamp()-getInitTime();
 }
 
-pmTimestamp VideoBuffer::getInitTime(){
+Timestamp VideoBuffer::getInitTime(){
     return initTime;
 }
 
@@ -80,7 +80,7 @@ int VideoBuffer::getFps(){
     return fps;
 }
 
-VideoFrame * VideoBuffer::getVideoFrame(pmTimeDiff time){
+VideoFrame * VideoBuffer::getVideoFrame(TimeDiff time){
     VideoFrame *frame=NULL;
     if(size()>0){
         int frameback = CLAMP((int)((float)time/1000000.0*(float)fps),1,size());
@@ -151,15 +151,16 @@ void VideoBuffer::draw(){
 
 
 void VideoBuffer::stop(){
-    source->removeListener(this);
+	ofRemoveListener(source->newFrameEvent,this,&VideoBuffer::newVideoFrame);
     stopped = true;
 }
 
 void VideoBuffer::resume(){
-    source->addListener(this);
+	ofAddListener(source->newFrameEvent,this,&VideoBuffer::newVideoFrame);
     stopped = false;
 }
 
 bool VideoBuffer::isStopped(){
 	return stopped;
+}
 }

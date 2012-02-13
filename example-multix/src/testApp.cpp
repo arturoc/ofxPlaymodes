@@ -1,5 +1,5 @@
 #include "testApp.h"
-
+using namespace ofxPm;
 
 //--------------------------------------------------------------
 void testApp::setup(){
@@ -9,7 +9,7 @@ void testApp::setup(){
     //ofSetLogLevel(OF_LOG_VERBOSE);
 	videoInput.listDevices();
 	videoInput.setDeviceID(0);
-	videoInput.initGrabber(CAPTURE_WIDTH,CAPTURE_HEIGHT);
+	videoInput.initGrabber(640,480);
 	videoInput.setUseTexture(false);
 
     // create the buffer that receive data

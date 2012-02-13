@@ -1,4 +1,5 @@
 #include "testApp.h"
+using namespace ofxPm;
 
 //--------------------------------------------------------------
 void testApp::setup(){
@@ -21,6 +22,7 @@ void testApp::draw(){
 
 	header.draw();
 	buffer.draw();
+	ofDrawBitmapString("VideoFrame pool size: " + ofToString(VideoFrame::getPoolSize(VideoFormat(640,480,3))),20,ofGetHeight()-20);
 }
 
 //--------------------------------------------------------------

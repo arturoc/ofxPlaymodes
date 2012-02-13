@@ -7,6 +7,7 @@
 
 #include "AudioSource.h"
 
+namespace ofxPm{
 AudioSource::AudioSource() {
 
 }
@@ -15,4 +16,4 @@ AudioSource::~AudioSource() {
 
 }
 
-
+}

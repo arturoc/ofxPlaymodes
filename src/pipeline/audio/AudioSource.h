@@ -9,22 +9,16 @@
 #define AUDIOSOURCE_H_
 
 #include "AudioFrame.h"
-#include "AudioEvents.h"
 
+namespace ofxPm{
 class AudioSource{
 public:
 	AudioSource();
 	virtual ~AudioSource();
 
-	void addListener(AudioFrameListener * listener){
-	    //ofAddListenerMethod(newFrameEvent,listener,&AudioFrameListener::newAudioFrame);
-	}
-    void removeListener(AudioFrameListener * listener){
-	    //ofRemoveListenerMethod(newFrameEvent,listener,&AudioFrameListener::newAudioFrame);
-    }
     virtual float getFps()=0;
 
     ofEvent<AudioFrame> newFrameEvent;
 };
-
+}
 #endif /* AUDIOSOURCE_H_ */

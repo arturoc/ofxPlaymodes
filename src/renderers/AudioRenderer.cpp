@@ -7,6 +7,7 @@
 
 #include "AudioRenderer.h"
 
+namespace ofxPm{
 AudioRenderer::AudioRenderer() {
 
 
@@ -14,4 +15,5 @@ AudioRenderer::AudioRenderer() {
 
 AudioRenderer::~AudioRenderer() {
 
+}
 }

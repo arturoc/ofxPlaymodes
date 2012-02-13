@@ -10,10 +10,11 @@
 
 #include "AudioSink.h"
 
+namespace ofxPm{
 class AudioRenderer: public AudioSink {
 public:
 	AudioRenderer();
 	virtual ~AudioRenderer();
 };
-
+}
 #endif /* AUDIORENDERER_H_ */

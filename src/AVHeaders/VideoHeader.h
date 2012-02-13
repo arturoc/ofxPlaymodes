@@ -16,6 +16,7 @@
 // controls the position in a buffer
 // based on speed, delay, fps and loop in/out
 
+namespace ofxPm{
 class VideoHeader:public VideoSink, public VideoSource{
 public:
     VideoHeader(VideoBuffer & buffer);
@@ -49,8 +50,8 @@ protected:
     int fps;
     float position;
     int prevBufferPos;
-    pmTimestamp positionTS;
-    pmTimeDiff oneFrame;
+    Timestamp positionTS;
+    TimeDiff oneFrame;
     char msgPos[5];
     int currentPos;
     bool pctHasChanged;
@@ -62,5 +63,5 @@ protected:
     float in, out;
     bool loopMode;
 };
-
+}
 #endif // VIDEOHEADER_H_INCLUDED

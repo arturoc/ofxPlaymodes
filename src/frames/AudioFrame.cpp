@@ -8,6 +8,7 @@
 
 
 
+namespace ofxPm{
 int AudioFrame::numInstances=0;
 
 AudioFrame::AudioFrame(float * audioFrame, int bufferSize, int channels) {
@@ -47,4 +48,5 @@ int AudioFrame::getChannels(){
 
 float   AudioFrame::getAverageValue(){
     return averageValue;
+}
 }

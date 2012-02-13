@@ -7,6 +7,7 @@
 
 #include "Buffer.h"
 
+namespace ofxPm{
 Buffer::Buffer() {
 
 }
@@ -22,4 +23,4 @@ void Buffer::unlock(){
     timeMutex.unlock();
 }
 
-
+}

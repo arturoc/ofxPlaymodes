@@ -12,6 +12,7 @@
 #include "ofMain.h"
 
 
+namespace ofxPm{
 class FileGrabber: public VideoSource, public ofVideoPlayer {
 public:
 	FileGrabber();
@@ -23,5 +24,5 @@ public:
     void update();
 
 };
-
+}
 #endif /* FILEGRABBER_H_ */

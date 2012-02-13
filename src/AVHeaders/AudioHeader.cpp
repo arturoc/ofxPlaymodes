@@ -7,12 +7,13 @@
 
 #include "AudioHeader.h"
 
- AudioHeader::AudioHeader(myAudioBuffer *buffer)
+namespace ofxPm{
+ AudioHeader::AudioHeader(AudioBuffer *buffer)
 {
     this->buffer=buffer;
     fps=buffer->getFps();
     position=0;
-    oneFrame=(pmTimeDiff)round(1000000.0/(float)fps);
+    oneFrame=(TimeDiff)round(1000000.0/(float)fps);
     speed=1;
     prevBufferPos=0;
     density=0;
@@ -130,7 +131,7 @@ AudioFrame * AudioHeader::getAudioFrame(int position,float density){
 //------------------------------------------
 // returns the real position in the buffer
 int AudioHeader::getNextPosition(){
-    oneFrame=(pmTimeDiff)(1000000.0/fps/speed);
+    oneFrame=(TimeDiff)(1000000.0/fps/speed);
     if((float)positionTS.elapsed()+(position-floor(position))*(float)abs(oneFrame)>=abs(oneFrame)){
         if(oneFrame!=0){
             position+=(float)positionTS.elapsed()/(float)oneFrame;
@@ -151,3 +152,4 @@ int AudioHeader::getNextPosition(){
     return buffer_size-backpos;
 }
 
+}

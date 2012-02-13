@@ -7,6 +7,7 @@
 
 #include "FileGrabber.h"
 
+namespace ofxPm{
 FileGrabber::FileGrabber() {
 
 
@@ -18,7 +19,7 @@ FileGrabber::~FileGrabber() {
 
 VideoFrame * FileGrabber::getNextVideoFrame(){
     //newFrameEvent.init("PlayModes.VideoGrabber.newFrame");
-    VideoFrame * frame = new VideoFrame(getPixelsRef());
+    VideoFrame * frame = VideoFrame::newVideoFrame(getPixelsRef());
     return frame;
 }
 
@@ -33,4 +34,5 @@ void FileGrabber::update(){
 
 int FileGrabber::getFps(){
     return 25;
+}
 }

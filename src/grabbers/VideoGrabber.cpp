@@ -7,6 +7,7 @@
 
 #include "VideoGrabber.h"
 
+namespace ofxPm{
 VideoGrabber::VideoGrabber(){
 }
 
@@ -30,7 +31,7 @@ bool VideoGrabber::initGrabber(int w, int h){
 
 VideoFrame * VideoGrabber::getNextVideoFrame(){
     //newFrameEvent.init("PlayModes.VideoGrabber.newFrame");
-    VideoFrame * frame = new VideoFrame(getPixelsRef());
+    VideoFrame * frame = VideoFrame::newVideoFrame(getPixelsRef());
     return frame;
 }
 
@@ -46,11 +47,12 @@ void VideoGrabber::update(){
 }
 
 void VideoGrabber::newFrame(ofPixels & pixels){
-	VideoFrame * frame = new VideoFrame(pixels);
+	VideoFrame * frame = VideoFrame::newVideoFrame(pixels);
 	newFrameEvent.notify(this,*frame);
 	frame->release();
 }
 
 int VideoGrabber::getFps(){
     return 30;
+}
 }

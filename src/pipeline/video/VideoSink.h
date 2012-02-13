@@ -9,15 +9,16 @@
 #define VIDEOSINK_H_
 
 #include "VideoFrame.h"
-#include "VideoEvents.h"
 #include "VideoSource.h"
 
-class VideoSink: public VideoFrameListener {
+namespace ofxPm{
+class VideoSink{
 public:
 	VideoSink();
 	virtual ~VideoSink();
 
 	virtual void newVideoFrame(VideoFrame & frame){};
 };
+}
 
 #endif /* VIDEOSINK_H_ */

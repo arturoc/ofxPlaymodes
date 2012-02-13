@@ -5,14 +5,14 @@
 #include <VideoSource.h>
 
 
-class RecLoopRender : public VideoSink
+class RecLoopRender : public ofxPm::VideoSink
 {
 public:
 	RecLoopRender();
-	RecLoopRender(VideoSource & bufferSource, VideoSource & liveSource);
+	RecLoopRender(ofxPm::VideoSource & bufferSource, ofxPm::VideoSource & liveSource);
 	virtual ~RecLoopRender();
 
-	void setup(VideoSource & bufferSource, VideoSource & liveSource);
+	void setup(ofxPm::VideoSource & bufferSource, ofxPm::VideoSource & liveSource);
 
 	void draw();
 
@@ -24,8 +24,8 @@ public:
 	bool minmaxBlend;
 protected:
 private:
-	VideoSource * buffer;
-	VideoSource * live;
+	ofxPm::VideoSource * buffer;
+	ofxPm::VideoSource * live;
 	ofImage       image;
 	bool          imageAllocated;
 	bool		  stopped;

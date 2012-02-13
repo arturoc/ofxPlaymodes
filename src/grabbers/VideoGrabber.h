@@ -13,6 +13,7 @@
 #include "ofMain.h"
 
 
+namespace ofxPm{
 class VideoGrabber: public VideoSource, public ofVideoGrabber{
 public:
     VideoGrabber();
@@ -31,6 +32,6 @@ public:
 private:
     void newFrame(ofPixels & frame);
 };
-
+}
 
 #endif // VIDEOGRABBER_H_INCLUDED

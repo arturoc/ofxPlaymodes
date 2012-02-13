@@ -10,9 +10,10 @@
 
 #include "VideoSink.h"
 #include "VideoSource.h"
-#include "constants.h"
 #include "ofShader.h"
 
+
+namespace ofxPm{
 class VideoRenderer: public VideoSink {
 public:
 	VideoRenderer(VideoSource * source);
@@ -40,5 +41,6 @@ private:
 	bool minmaxBlend;
 	bool shaderActive;
 };
+}
 
 #endif /* VIDEORENDERER_H_ */

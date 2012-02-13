@@ -6,6 +6,7 @@
  */
 
 #include "MultixRenderer.h"
+using namespace ofxPm;
 
 MultixRenderer::MultixRenderer(VideoBuffer & buffer, int numHeaders)
 {
@@ -53,22 +54,9 @@ void MultixRenderer::setup(VideoBuffer & buffer, int numHeaders){
 }
 
 void MultixRenderer::setNumHeaders(int numHeaders){
-    int prevNumHeaders = this->numHeaders;
-    if(numHeaders>prevNumHeaders){
-        for(int i=0;i<numHeaders-prevNumHeaders;i++){
-            videoHeader.push_back( new VideoHeader(*videoBuffer) );
-            videoRenderer.push_back(new VideoRenderer(videoHeader[prevNumHeaders+i]));
-        }
-    }else if(numHeaders<prevNumHeaders){
-        for(int i=0;i<prevNumHeaders-numHeaders;i++){
-            delete videoHeader.back();
-            videoHeader.pop_back();
-            delete videoRenderer.back();
-            videoRenderer.pop_back();
-        }
-    }
     this->numHeaders=numHeaders;
 }
+
 int MultixRenderer::getNumHeaders(){
     return prevNumHeaders;
 }
@@ -105,7 +93,7 @@ void MultixRenderer::update(){
 }
 
 void MultixRenderer::draw(){
-	for(int i =prevNumHeaders-1; i>=0; i--){
+	for(int i = videoRenderer.size()-1; i>=0; i--){
 		videoRenderer[i]->draw();
 	}
 }

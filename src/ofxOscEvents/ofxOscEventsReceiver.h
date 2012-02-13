@@ -14,6 +14,7 @@
 #include "ofxOscReceiver.h"
 #include "ofxOscMessage.h"
 
+namespace ofxPm{
 class ofxOscEventsReceiver : public ofxOscReceiver
 {
 public:
@@ -26,5 +27,5 @@ protected:
 	virtual void ProcessMessage( const osc::ReceivedMessage &m, const IpEndpointName& remoteEndpoint );
 
 };
-
+}
 #endif

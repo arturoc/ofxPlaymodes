@@ -13,12 +13,13 @@
 #include "Poco/AbstractDelegate.h"
 #include "ofMain.h"
 
-typedef Poco::Timestamp pmTimestamp;
-typedef Poco::Timestamp::TimeDiff pmTimeDiff;
 
-typedef Poco::AbstractDelegate<int> pmIntDelegate;
-typedef Poco::AbstractDelegate<float> pmFloatDelegate;
+namespace ofxPm{
+typedef Poco::Timestamp Timestamp;
+typedef Poco::Timestamp::TimeDiff TimeDiff;
 
-
+typedef Poco::AbstractDelegate<int> IntDelegate;
+typedef Poco::AbstractDelegate<float> FloatDelegate;
+}
 
 #endif // PMUTILS_H_INCLUDED

@@ -8,6 +8,7 @@
 #include "BasicVideoRenderer.h"
 #include "VideoFrame.h"
 
+namespace ofxPm{
 BasicVideoRenderer::BasicVideoRenderer(VideoSource & source) {
 	this->source = &source;
 }
@@ -31,4 +32,4 @@ void BasicVideoRenderer::draw(){
 		frame->release();
 	}
 }
-
+}

@@ -9,6 +9,7 @@
 #include "ofxOscEventsReceiver.h"
 
 
+namespace ofxPm{
 ofxOscEventsReceiver::ofxOscEventsReceiver()
 {
 
@@ -25,4 +26,5 @@ void ofxOscEventsReceiver::ProcessMessage( const osc::ReceivedMessage &m, const 
 	ofxOscMessage message;
 	getNextMessage(&message);
 	ofNotifyEvent(newOscMessage,message);
+}
 }

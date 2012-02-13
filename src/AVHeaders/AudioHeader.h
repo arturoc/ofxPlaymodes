@@ -13,15 +13,16 @@
 #include "AudioBuffer.h"
 
 
+namespace ofxPm{
 class AudioHeader:public AudioSink, public AudioSource{
 public:
-    AudioHeader(myAudioBuffer *buffer);
+    AudioHeader(AudioBuffer *buffer);
     ~AudioHeader();
 
     // draws the state of the header
     void draw();
 
-    pmTimeDiff delay;
+    TimeDiff delay;
 
 
     float getFps();
@@ -45,15 +46,15 @@ public:
         pctHasChanged=true;
     }
 protected:
-    myAudioBuffer * buffer;
+    AudioBuffer * buffer;
     float fps;
 
     //------------------------
     // speed control
     float position;
     int prevBufferPos;
-    pmTimestamp positionTS;
-    pmTimeDiff oneFrame;
+    Timestamp positionTS;
+    TimeDiff oneFrame;
 
     //-----------------------
     // header draw
@@ -65,5 +66,5 @@ protected:
     bool pctHasChanged;
     float pct;
 };
-
+}
 #endif // AUDIOHEADER_H_INCLUDED

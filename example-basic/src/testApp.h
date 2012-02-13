@@ -24,9 +24,9 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
-		VideoGrabber grabber;
-		VideoBuffer vBuffer;
-		vector<VideoHeader> vHeader;
-		vector<BasicVideoRenderer> vRenderer;
+		ofxPm::VideoGrabber grabber;
+		ofxPm::VideoBuffer vBuffer;
+		vector<ofxPm::VideoHeader> vHeader;
+		vector<ofxPm::BasicVideoRenderer> vRenderer;
 
 };

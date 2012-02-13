@@ -7,28 +7,29 @@
 
 #include "AudioBuffer.h"
 
-myAudioBuffer::myAudioBuffer(AudioSource * source) {
-	source->addListener(this);
+namespace ofxPm{
+AudioBuffer::AudioBuffer(AudioSource * source) {
 	this->source=source;
     fps=source->getFps();
     totalFrames=0;
+    resume();
 }
 
-myAudioBuffer::~myAudioBuffer() {
+AudioBuffer::~AudioBuffer() {
 
 }
 
-unsigned int myAudioBuffer::size(){
+unsigned int AudioBuffer::size(){
     return frames.size();
 }
 
-void myAudioBuffer::newAudioFrame(AudioFrame *frame){
-    if(size()==0)initTime=frame->getTimestamp();
+void AudioBuffer::newAudioFrame(AudioFrame &frame){
+    if(size()==0)initTime=frame.getTimestamp();
     totalFrames++;
     //buffer.insert(make_pair(frame->getTimestamp(),frame));
    // times.push(frame->getTimestamp());
-    frames.push_back(frame);
-    frame->retain();
+    frames.push_back(&frame);
+    frame.retain();
 
     if(size()>AUDIO_BUFFER_NUM_FRAMES){
         //delete buffer[times.front()];
@@ -37,11 +38,11 @@ void myAudioBuffer::newAudioFrame(AudioFrame *frame){
         frames.front()->release();
         frames.erase(frames.begin());
     }
-    newFrameEvent.notify(this,*frame);
+    newFrameEvent.notify(this,frame);
 }
 
 
-AudioFrame * myAudioBuffer::getAudioFrame(int position){
+AudioFrame * AudioBuffer::getAudioFrame(int position){
     if(size()){
         position = CLAMP(position,0,size());
         frames[position]->retain();
@@ -52,7 +53,7 @@ AudioFrame * myAudioBuffer::getAudioFrame(int position){
     }
 }
 
-AudioFrame * myAudioBuffer::getAudioFrame(pmTimeDiff time){
+AudioFrame * AudioBuffer::getAudioFrame(TimeDiff time){
     AudioFrame * frame = NULL;
     if(size()>0){
         int frameback = CLAMP((int)((float)time/1000000.0*(float)fps),1,size());
@@ -69,39 +70,39 @@ AudioFrame * myAudioBuffer::getAudioFrame(pmTimeDiff time){
     }
     return frame;
 }
-AudioFrame * myAudioBuffer::getAudioFrame(float pct){
+AudioFrame * AudioBuffer::getAudioFrame(float pct){
     return getAudioFrame(getLastTimestamp()-(getInitTime()+getTotalTime()*pct));
 }
-float myAudioBuffer::getFps(){
+float AudioBuffer::getFps(){
     return fps;
 }
 
-pmTimestamp myAudioBuffer::getLastTimestamp(){
+Timestamp AudioBuffer::getLastTimestamp(){
     if(size()>0)
         return frames.back()->getTimestamp();
     else
-        return pmTimestamp();
+        return Timestamp();
 }
 
-pmTimeDiff myAudioBuffer::getTotalTime(){
+TimeDiff AudioBuffer::getTotalTime(){
     return getLastTimestamp()-getInitTime();
 }
-pmTimestamp myAudioBuffer::getInitTime(){
+Timestamp AudioBuffer::getInitTime(){
     return initTime;
 }
 
-long myAudioBuffer::getTotalFrames(){
+long AudioBuffer::getTotalFrames(){
     return totalFrames;
 }
 
-float myAudioBuffer::getRealFPS(){
+float AudioBuffer::getRealFPS(){
      if(size()>10)
         return 10.0/(float)(frames.back()->getTimestamp()-frames[size()-11]->getTimestamp())*1000000.0;
     else
         return 0;
 }
 
-void myAudioBuffer::draw(){
+void AudioBuffer::draw(){
     float length = (float)size()/(float)AUDIO_BUFFER_NUM_FRAMES*(float)ofGetWidth();
     float oneLength=(float)ofGetWidth()/(float)AUDIO_BUFFER_NUM_FRAMES;
     //ofLine(0,650,length,650);
@@ -116,10 +117,11 @@ void myAudioBuffer::draw(){
     }
 }
 
-void myAudioBuffer::stop(){
-    ((AudioSource*)source)->removeListener(this);
+void AudioBuffer::stop(){
+	ofRemoveListener(source->newFrameEvent,this,&AudioBuffer::newAudioFrame);
 }
 
-void myAudioBuffer::resume(){
-    ((AudioSource*)source)->addListener(this);
+void AudioBuffer::resume(){
+	ofAddListener(source->newFrameEvent,this,&AudioBuffer::newAudioFrame);
+}
 }

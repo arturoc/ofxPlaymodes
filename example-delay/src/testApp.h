@@ -20,9 +20,9 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
-		VideoGrabber grabber;
-		VideoBuffer buffer;
-		VideoHeader header;
-		BasicVideoRenderer renderer;
+		ofxPm::VideoGrabber grabber;
+		ofxPm::VideoBuffer buffer;
+		ofxPm::VideoHeader header;
+		ofxPm::BasicVideoRenderer renderer;
 
 };

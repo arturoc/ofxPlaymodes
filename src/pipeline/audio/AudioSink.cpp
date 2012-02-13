@@ -7,10 +7,12 @@
 
 #include "AudioSink.h"
 
+namespace ofxPm{
 AudioSink::AudioSink() {
 
 }
 
 AudioSink::~AudioSink() {
 
+}
 }

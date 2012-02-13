@@ -11,6 +11,7 @@
 #include "VideoSource.h"
 #include "VideoSink.h"
 
+namespace ofxPm{
 class VideoFilter : public VideoSink, public VideoSource {
 public:
 
@@ -21,5 +22,5 @@ public:
     virtual int getFps()=0;
 
 };
-
+}
 #endif /* VIDEOFILTER_H_ */

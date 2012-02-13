@@ -7,6 +7,7 @@
 
 #include "VideoSource.h"
 
+namespace ofxPm{
 VideoSource::VideoSource() {
 	//newFrameEvent.init("PlayModes.VideoSource.newFrameEvent");
 
@@ -14,4 +15,4 @@ VideoSource::VideoSource() {
 
 VideoSource::~VideoSource() {
 }
-
+}

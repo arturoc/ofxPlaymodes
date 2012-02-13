@@ -12,12 +12,16 @@
 #include "ofPixels.h"
 #include "ofTexture.h"
 #include "ofEvents.h"
+#include "VideoFormat.h"
+#include <map>
 
-class VideoFrame:public plFrame, public ofEventArgs {
-public:
+namespace ofxPm{
+class VideoFrame:public ofxPm::Frame, public ofEventArgs {
     // create a video frame from an ofPixels
 	VideoFrame(const ofPixels & videoFrame);
 	VideoFrame(){}
+public:
+	static VideoFrame * newVideoFrame(const ofPixels & videoFrame);
 	virtual ~VideoFrame();
 
 	void release();
@@ -29,16 +33,16 @@ public:
 	int getWidth();
 	int getHeight();
 
+	static int getPoolSize(const VideoFormat & format);
 
 private:
     static int total_num_frames;
+    static map<VideoFormat,vector<VideoFrame *> > pool;
+    static ofMutex poolMutex;
+
     ofPixels pixels;
     ofTexture texture;
-    bool doRelease;
-
-
-    // called to update the texture before drawing
-	void update(ofEventArgs & args);
+    bool pixelsChanged;
 };
-
+}
 #endif /* VIDEOFRAME_H_ */

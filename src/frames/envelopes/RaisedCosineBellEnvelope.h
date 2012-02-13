@@ -10,6 +10,7 @@
 
 #include "BaseEnvelope.h"
 
+namespace ofxPm{
 class RaisedCosineBellEnvelope:public BaseEnvelope{
 public:
     RaisedCosineBellEnvelope(){
@@ -56,5 +57,5 @@ public:
     float attackPct;
     float decayPct;
 };
-
+}
 #endif // RAISEDCOSINEBELLENVELOPE_H_INCLUDED

@@ -7,6 +7,7 @@
 
 #include "VideoFilter.h"
 
+namespace ofxPm{
 //----------------------------------------------------------
 VideoFilter::VideoFilter() {
 }
@@ -16,3 +17,4 @@ VideoFilter::VideoFilter() {
 VideoFilter::~VideoFilter() {
 }
 
+}

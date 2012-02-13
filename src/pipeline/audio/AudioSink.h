@@ -9,9 +9,9 @@
 #define AUDIOSINK_H_
 
 #include "AudioFrame.h"
-#include "AudioEvents.h"
 
-class AudioSink: public AudioFrameListener {
+namespace ofxPm{
+class AudioSink {
 public:
 	AudioSink();
 	virtual ~AudioSink();
@@ -19,5 +19,5 @@ public:
     virtual void newAudioFrame(AudioFrame *frame){};
 
 };
-
+}
 #endif /* AUDIOSINK_H_ */

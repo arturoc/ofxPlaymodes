@@ -7,6 +7,7 @@
 
 #include "VideoHeader.h"
 
+namespace ofxPm{
 VideoHeader::VideoHeader(VideoBuffer & buffer){
 	setup(buffer);
 }
@@ -14,7 +15,7 @@ VideoHeader::VideoHeader(VideoBuffer & buffer){
 VideoHeader::VideoHeader(){
     fps         = 30;
     position    = 0;
-    oneFrame    = (pmTimeDiff)round(1000000.0/(float)fps);
+    oneFrame    = (TimeDiff)round(1000000.0/(float)fps);
     speed       = 1;
     prevBufferPos = 0;
     pct         = 1;
@@ -31,7 +32,7 @@ void VideoHeader::setup(VideoBuffer & buffer){
     this->buffer= &buffer;
     fps         = buffer.getFps();
     position    = buffer.size();
-    oneFrame    = (pmTimeDiff)round(1000000.0/(float)fps);
+    oneFrame    = (TimeDiff)round(1000000.0/(float)fps);
     speed       = 1;
     prevBufferPos = 0;
     pct         = 1;
@@ -93,7 +94,7 @@ int VideoHeader::getNextPosition(){
     // calculate the next position in frames
     // from the beginning of the recording
     // based on speed
-    oneFrame=(pmTimeDiff)(1000000.0/fps/speed);
+    oneFrame=(TimeDiff)(1000000.0/fps/speed);
     if((float)positionTS.elapsed()+(position-floor(position))*(float)abs(oneFrame)>=abs(oneFrame)){
         if(oneFrame!=0){
             position+=(float)positionTS.elapsed()/(float)oneFrame;
@@ -185,6 +186,6 @@ void VideoHeader::setSpeed(float speed)
 {
     this->speed = speed;
 }
-
+}
 
 

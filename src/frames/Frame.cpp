@@ -7,15 +7,21 @@
 
 #include "Frame.h"
 
-plFrame::plFrame() {
+namespace ofxPm{
+Frame::Frame() {
 
 
 }
 
-plFrame::~plFrame() {
+Frame::~Frame() {
 }
 
 
-pmTimestamp plFrame::getTimestamp(){
+Timestamp Frame::getTimestamp(){
     return timestamp;
+}
+
+void Frame::refreshTimestamp(){
+	timestamp.update();
+}
 }

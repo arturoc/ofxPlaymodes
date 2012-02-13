@@ -11,6 +11,7 @@
 #include "Poco/Timestamp.h"
 #include "Frame.h"
 
+namespace ofxPm{
 class Buffer {
 public:
 	Buffer();
@@ -26,5 +27,5 @@ public:
 protected:
    ofMutex timeMutex;
 };
-
+}
 #endif /* BUFFER_H_ */

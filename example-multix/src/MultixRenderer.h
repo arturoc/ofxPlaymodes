@@ -19,11 +19,11 @@ class MultixRenderer
 {
 public:
 	MultixRenderer();
-	MultixRenderer(VideoBuffer & buffer, int numHeaders=10);
+	MultixRenderer(ofxPm::VideoBuffer & buffer, int numHeaders=10);
 
 	virtual ~MultixRenderer();
 
-	void setup(VideoBuffer & buffer, int numHeaders=10);
+	void setup(ofxPm::VideoBuffer & buffer, int numHeaders=10);
 
 	void    setNumHeaders(int numHeaders);
 	int     getNumHeaders();
@@ -36,11 +36,11 @@ public:
 		setNumHeaders(f);
 	}
 
-	vector<VideoHeader*> getVideoHeaders();
-	vector<VideoRenderer*> getVideoRenderers();
+	vector<ofxPm::VideoHeader*> getVideoHeaders();
+	vector<ofxPm::VideoRenderer*> getVideoRenderers();
 
-	VideoHeader * getHeader(int header);
-	VideoRenderer * getRenderer(int renderer);
+	ofxPm::VideoHeader * getHeader(int header);
+	ofxPm::VideoRenderer * getRenderer(int renderer);
     float getDelayOffset() const;
     float getIn() const;
     int getLoopMode() const;
@@ -48,9 +48,9 @@ public:
     int getPrevNumHeaders() const;
     float getSpeedOffset() const;
     ofColor getTint() const;
-    VideoBuffer *getVideoBuffer() const;
-    vector<VideoHeader*> getVideoHeader() const;
-    vector<VideoRenderer*> getVideoRenderer() const;
+    ofxPm::VideoBuffer *getVideoBuffer() const;
+    vector<ofxPm::VideoHeader*> getVideoHeader() const;
+    vector<ofxPm::VideoRenderer*> getVideoRenderer() const;
     bool isMinmaxBlend() const;
     void setDelayOffset(float delayOffset);
     void setIn(float in);
@@ -60,14 +60,14 @@ public:
     void setPrevNumHeaders(int prevNumHeaders);
     void setSpeedOffset(float speedOffset);
     void setTint(ofColor tint);
-    void setVideoBuffer(VideoBuffer *videoBuffer);
-    void setVideoHeader(vector<VideoHeader*> videoHeader);
-    void setVideoRenderer(vector<VideoRenderer*> videoRenderer);
+    void setVideoBuffer(ofxPm::VideoBuffer *videoBuffer);
+    void setVideoHeader(vector<ofxPm::VideoHeader*> videoHeader);
+    void setVideoRenderer(vector<ofxPm::VideoRenderer*> videoRenderer);
 
 protected:
-	vector<VideoHeader*>    videoHeader;
-	vector<VideoRenderer*>  videoRenderer;
-	VideoBuffer *           videoBuffer;
+	vector<ofxPm::VideoHeader*>    videoHeader;
+	vector<ofxPm::VideoRenderer*>  videoRenderer;
+	ofxPm::VideoBuffer *           videoBuffer;
 
 	int                     prevNumHeaders;
 

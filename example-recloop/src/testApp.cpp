@@ -1,4 +1,5 @@
 #include "testApp.h"
+using namespace ofxPm;
 
 //--------------------------------------------------------------
 void testApp::setup(){

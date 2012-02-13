@@ -8,6 +8,7 @@
 #ifndef BASEENVELOPE_H_INCLUDED
 #define BASEENVELOPE_H_INCLUDED
 
+namespace ofxPm{
 // base envelope class used to create diferent
 // envelopes to be applied to audio grains
 class BaseEnvelope{
@@ -21,5 +22,5 @@ class BaseEnvelope{
     // % of the end of the frame considered as decay
     virtual void setDecay(float pct)=0;
 };
-
+}
 #endif // BASEENVELOPE_H_INCLUDED

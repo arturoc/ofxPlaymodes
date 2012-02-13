@@ -8,6 +8,8 @@
 #include "RecLoopRender.h"
 #include "VideoFrame.h"
 
+using namespace ofxPm;
+
 RecLoopRender::RecLoopRender(VideoSource & bufferSource, VideoSource & liveSource)
 {
     setup(bufferSource,liveSource);

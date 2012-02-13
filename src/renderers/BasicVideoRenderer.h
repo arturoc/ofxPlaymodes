@@ -11,6 +11,8 @@
 #include "VideoSink.h"
 #include "VideoSource.h"
 
+
+namespace ofxPm{
 class BasicVideoRenderer: public VideoSink {
 public:
 	BasicVideoRenderer();
@@ -24,5 +26,5 @@ public:
 private:
 	VideoSource * source;
 };
-
+}
 #endif /* BASICVIDEORENDERER_H_ */

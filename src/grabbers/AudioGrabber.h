@@ -11,6 +11,7 @@
 #include "AudioSource.h"
 #include "ofMain.h"
 
+namespace ofxPm{
 class AudioGrabber: public AudioSource{
 public:
     AudioGrabber();
@@ -18,5 +19,5 @@ public:
 	void audioReceived(float * input, int bufferSize, int nChannels);
 	float getFps();
 };
-
+}
 #endif // AUDIOGRABBER_H_INCLUDED

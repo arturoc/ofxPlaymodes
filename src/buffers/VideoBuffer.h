@@ -24,6 +24,7 @@
 // but doesn't do any time control, that is responsability
 // of the headers
 
+namespace ofxPm{
 class VideoBuffer: public Buffer, public VideoSink, public VideoSource {
 public:
 	VideoBuffer(VideoSource & source, int size);
@@ -36,7 +37,7 @@ public:
     // call buffer->lock() buffer->unlock()
     // to call this methods thread sage
 	VideoFrame * getVideoFrame(int position);       // frame number in the buffer
-	VideoFrame * getVideoFrame(pmTimeDiff time);    // frame at n microseconds from the end of the buffer
+	VideoFrame * getVideoFrame(TimeDiff time);    // frame at n microseconds from the end of the buffer
 	VideoFrame * getVideoFrame(float pct);          // % of the buffer
 
 	VideoFrame * getNextVideoFrame();               // the last video frame in the buffer
@@ -52,9 +53,9 @@ public:
 
 	int getFps();                                   // fps of the video source
 
-    pmTimestamp getLastTimestamp();                 // timestamp for the last frame
-	pmTimeDiff getTotalTime();                      // total time of the buffer in microseconds
-	pmTimestamp getInitTime();                      // time of the first frame in the recording
+    Timestamp getLastTimestamp();                 // timestamp for the last frame
+	TimeDiff getTotalTime();                      // total time of the buffer in microseconds
+	Timestamp getInitTime();                      // time of the first frame in the recording
 
     long getTotalFrames();                          // total frames since the beginning of the recording
 	float getRealFPS();                             // aprox fps from source
@@ -71,12 +72,12 @@ protected:
     int     fps;
 
     long    totalFrames;
-    pmTimestamp initTime;
+    Timestamp initTime;
 
     VideoSource* source;
 
     bool stopped;
     unsigned int maxSize;
 };
-
+}
 #endif /* VIDEOBUFFER_H_ */

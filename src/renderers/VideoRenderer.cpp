@@ -7,6 +7,8 @@
 
 #include "VideoRenderer.h"
 
+
+namespace ofxPm{
 VideoRenderer::VideoRenderer(VideoSource * source) {
     this->source=source;
 
@@ -100,7 +102,7 @@ void VideoRenderer::setTint(ofColor tint)
 }
 
 
-
+}
 
 
 
