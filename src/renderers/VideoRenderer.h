@@ -16,8 +16,11 @@
 namespace ofxPm{
 class VideoRenderer: public VideoSink {
 public:
-	VideoRenderer(VideoSource * source);
+	VideoRenderer();
+	VideoRenderer(VideoSource & source);
 	virtual ~VideoRenderer();
+
+	void setup(VideoSource & source);
 
 	void draw();
 

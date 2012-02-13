@@ -9,14 +9,26 @@
 
 
 namespace ofxPm{
-VideoRenderer::VideoRenderer(VideoSource * source) {
-    this->source=source;
-
+VideoRenderer::VideoRenderer(){
+    source=NULL;
 	minmaxBlend=false;
 	shaderActive=false;
+
+}
+
+VideoRenderer::VideoRenderer(VideoSource & source) {
+	setup(source);
 }
 
 VideoRenderer::~VideoRenderer() {
+}
+
+
+void VideoRenderer::setup(VideoSource & source){
+    this->source=&source;
+
+	minmaxBlend=false;
+	shaderActive=false;
 }
 
 void VideoRenderer::draw(){
