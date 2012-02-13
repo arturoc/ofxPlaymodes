@@ -18,11 +18,18 @@ public:
     VideoGrabber();
     virtual ~VideoGrabber();
 
+    bool initGrabber(int w, int h);
+
 	VideoFrame * getNextVideoFrame();
     int getFps();
 
     void update();
 
+
+
+
+private:
+    void newFrame(ofPixels & frame);
 };
 
 
