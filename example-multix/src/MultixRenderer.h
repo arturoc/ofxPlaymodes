@@ -31,33 +31,22 @@ public:
 	void update();
 	void draw();
 
-	void sliderValueChanged(int f){
-		cout<<f<<"\n";
-		setNumHeaders(f);
-	}
-
-	vector<ofxPm::VideoHeader*> getVideoHeaders();
-	vector<ofxPm::VideoRenderer*> getVideoRenderers();
-
 	ofxPm::VideoHeader * getHeader(int header);
 	ofxPm::VideoRenderer * getRenderer(int renderer);
     float getDelayOffset() const;
     float getIn() const;
     int getLoopMode() const;
     float getOut() const;
-    int getPrevNumHeaders() const;
     float getSpeedOffset() const;
     ofColor getTint() const;
     ofxPm::VideoBuffer *getVideoBuffer() const;
-    vector<ofxPm::VideoHeader*> getVideoHeader() const;
-    vector<ofxPm::VideoRenderer*> getVideoRenderer() const;
     bool isMinmaxBlend() const;
+
     void setDelayOffset(float delayOffset);
     void setIn(float in);
     void setLoopMode(int loopMode);
     void setMinmaxBlend(bool minmaxBlend);
     void setOut(float out);
-    void setPrevNumHeaders(int prevNumHeaders);
     void setSpeedOffset(float speedOffset);
     void setTint(ofColor tint);
     void setVideoBuffer(ofxPm::VideoBuffer *videoBuffer);
@@ -65,11 +54,10 @@ public:
     void setVideoRenderer(vector<ofxPm::VideoRenderer*> videoRenderer);
 
 protected:
-	vector<ofxPm::VideoHeader*>    videoHeader;
-	vector<ofxPm::VideoRenderer*>  videoRenderer;
-	ofxPm::VideoBuffer *           videoBuffer;
+	vector<ofxPm::VideoHeader>    videoHeader;
+	vector<ofxPm::VideoRenderer>  videoRenderer;
+	ofxPm::VideoBuffer *          videoBuffer;
 
-	int                     prevNumHeaders;
 
 private:
 	ofColor tint;
@@ -82,8 +70,7 @@ private:
 	float in;
 	float out;
 	int loopMode;
-
-	float numHeaders;
+	int numHeaders;
 };
 
 #endif // MULTIXRENDERER_H

@@ -19,9 +19,6 @@ MultixRenderer::~MultixRenderer()
 }
 
 MultixRenderer::MultixRenderer(){
-	numHeaders=0;
-	videoBuffer=NULL;
-
 	minmaxBlend=0;
 
 	delayOffset=0;
@@ -30,12 +27,11 @@ MultixRenderer::MultixRenderer(){
 	in=0; out=1;
 	loopMode=0;
 
-	prevNumHeaders=numHeaders;
+	numHeaders=0;
 }
 
 void MultixRenderer::setup(VideoBuffer & buffer, int numHeaders){
 
-    this->numHeaders=numHeaders;
     videoBuffer=&buffer;
 
     minmaxBlend=0;
@@ -46,11 +42,13 @@ void MultixRenderer::setup(VideoBuffer & buffer, int numHeaders){
     in=0; out=1;
     loopMode=0;
 
+    videoHeader.resize(numHeaders);
+    videoRenderer.resize(numHeaders);
     for (int i=0;i<numHeaders;i++){
-        videoHeader.push_back( new VideoHeader(buffer) );
-        videoRenderer.push_back(new VideoRenderer(videoHeader[i]));
+        videoHeader[i].setup(buffer);
+        videoRenderer[i].setup(videoHeader[i]);
     }
-    prevNumHeaders=numHeaders;
+    this->numHeaders=numHeaders;
 }
 
 void MultixRenderer::setNumHeaders(int numHeaders){
@@ -58,43 +56,37 @@ void MultixRenderer::setNumHeaders(int numHeaders){
 }
 
 int MultixRenderer::getNumHeaders(){
-    return prevNumHeaders;
+    return videoHeader.size();
 }
 
 void MultixRenderer::update(){
-    int currNumHeaders = numHeaders;
-    if(currNumHeaders>prevNumHeaders){
-        for(int i=0;i<currNumHeaders-prevNumHeaders;i++){
-            videoHeader.push_back( new VideoHeader(*videoBuffer) );
-            videoRenderer.push_back(new VideoRenderer(videoHeader[prevNumHeaders+i]));
-        }
-    }else if(currNumHeaders<prevNumHeaders){
-        for(int i=0;i<prevNumHeaders-currNumHeaders;i++){
-            delete videoHeader.back();
-            videoHeader.pop_back();
-            delete videoRenderer.back();
-            videoRenderer.pop_back();
-        }
+    int currNumHeaders = videoHeader.size();
+    if(currNumHeaders!=numHeaders){
+		videoHeader.resize(numHeaders);
+		videoRenderer.resize(numHeaders);
+		for(int i=0;i<numHeaders;i++){
+			videoHeader[i].setup(*videoBuffer);
+			videoRenderer[i].setup(videoHeader[i]);
+		}
     }
-    prevNumHeaders=currNumHeaders;
 
     //videoRenderer[0]->speed=
-    for(int i=currNumHeaders-1; i>=0; i--){
-        videoHeader[i]->setIn(in);
-        videoHeader[i]->setOut(out);
-        videoHeader[i]->setLoopMode(loopMode);
-        videoHeader[i]->setDelay(delayOffset*1000*i);
-        videoHeader[i]->setSpeed(videoHeader[0]->getSpeed()+speedOffset*i);
+    for(int i=videoRenderer.size()-1; i>=0; i--){
+        videoHeader[i].setIn(in);
+        videoHeader[i].setOut(out);
+        videoHeader[i].setLoopMode(loopMode);
+        videoHeader[i].setDelay(delayOffset*1000*i);
+        videoHeader[i].setSpeed(videoHeader[0].getSpeed()+speedOffset*i);
 
-        videoRenderer[i]->setTint(tint);
-        videoRenderer[i]->setMinmaxBlend(minmaxBlend);
-        //videoRenderer[i]->activateShader=activateShader;
+        videoRenderer[i].setTint(tint);
+        videoRenderer[i].setMinmaxBlend(minmaxBlend);
+        //videoRenderer[i].activateShader=activateShader;
     }
 }
 
 void MultixRenderer::draw(){
 	for(int i = videoRenderer.size()-1; i>=0; i--){
-		videoRenderer[i]->draw();
+		videoRenderer[i].draw();
 	}
 }
 
@@ -118,11 +110,6 @@ float MultixRenderer::getOut() const
     return out;
 }
 
-int MultixRenderer::getPrevNumHeaders() const
-{
-    return prevNumHeaders;
-}
-
 float MultixRenderer::getSpeedOffset() const
 {
     return speedOffset;
@@ -136,16 +123,6 @@ ofColor MultixRenderer::getTint() const
 VideoBuffer *MultixRenderer::getVideoBuffer() const
 {
     return videoBuffer;
-}
-
-vector<VideoHeader*> MultixRenderer::getVideoHeader() const
-{
-    return videoHeader;
-}
-
-vector<VideoRenderer*> MultixRenderer::getVideoRenderer() const
-{
-    return videoRenderer;
 }
 
 bool MultixRenderer::isMinmaxBlend() const
@@ -178,11 +155,6 @@ void MultixRenderer::setOut(float out)
     this->out = out;
 }
 
-void MultixRenderer::setPrevNumHeaders(int prevNumHeaders)
-{
-    this->prevNumHeaders = prevNumHeaders;
-}
-
 void MultixRenderer::setSpeedOffset(float speedOffset)
 {
     this->speedOffset = speedOffset;
@@ -198,21 +170,11 @@ void MultixRenderer::setVideoBuffer(VideoBuffer *videoBuffer)
     this->videoBuffer = videoBuffer;
 }
 
-void MultixRenderer::setVideoHeader(vector<VideoHeader*> videoHeader)
-{
-    this->videoHeader = videoHeader;
-}
-
-void MultixRenderer::setVideoRenderer(vector<VideoRenderer*> videoRenderer)
-{
-    this->videoRenderer = videoRenderer;
-}
-
 
 VideoHeader * MultixRenderer::getHeader(int header){
-	return videoHeader[header];
+	return &videoHeader[header];
 }
 
 VideoRenderer * MultixRenderer::getRenderer(int renderer){
-	return videoRenderer[renderer];
+	return &videoRenderer[renderer];
 }
