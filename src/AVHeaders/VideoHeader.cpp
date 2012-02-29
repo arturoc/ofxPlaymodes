@@ -24,7 +24,7 @@ VideoHeader::VideoHeader(){
     delay       = 0;
 	opacity		= 255;
 	loopStart	= false;
-	loopMode	= OF_LOOP_NORMAL;
+	loopMode	= OF_LOOP_NONE;
 }
 
 
@@ -42,7 +42,7 @@ void VideoHeader::setup(VideoBuffer & buffer){
     delay       = 0;
 	opacity		= 255;
 	loopStart	= false;
-	loopMode	= OF_LOOP_NORMAL;
+	loopMode	= OF_LOOP_NONE;
 }
 
 //------------------------------------------------------
@@ -52,48 +52,25 @@ VideoHeader::~VideoHeader(){
 //------------------------------------------------------
 void VideoHeader::draw(){
 
-	ofSetColor(255,128,0);
-    //float length = (float(size())/float(maxSize))*(ofGetWidth()-(PMDRAWSPACING));
-    float oneLength=(float)(ofGetWidth()-PMDRAWSPACING*2)/(float)(buffer->getMaxSize());
-
-    float currentLength=float(currentPos+1)/((float)this->buffer->getMaxSize())*(float)(ofGetWidth()-PMDRAWSPACING*2);
-	// draw header line
-	ofPushStyle();
-    ofSetLineWidth(1);
 	
+    float oneLength=(float)(ofGetWidth()-PMDRAWSPACING*2)/(float)(buffer->getMaxSize());
+    float currentLength=float(currentPos+1)/((float)this->buffer->getMaxSize())*(float)(ofGetWidth()-PMDRAWSPACING*2);
+	
+	// draw header line
+    ofSetLineWidth(1);
+	if(playing) ofSetColor(0,200,0);
+	else ofSetColor(255,128,0);
+
 	ofRect(currentLength+PMDRAWSPACING-oneLength,PMDRAWELEMENTSY+30,oneLength,10);
 	ofDrawBitmapString(ofToString(buffer->size()-1-currentPos),ofPoint(currentLength+PMDRAWSPACING-(oneLength/2),PMDRAWELEMENTSY+25));
-	/*
-	ofLine(int(currentLength)+PMDRAWSPACING,680,int(currentLength)+PMDRAWSPACING,720);
 
-	// draw header triangle
-	ofBeginShape();
-		ofVertex(int(currentLength)+PMDRAWSPACING,710);
-		ofVertex(int(currentLength-5)+PMDRAWSPACING,710+5);
-		ofVertex(int(currentLength+5)+PMDRAWSPACING,710+5);
-	ofEndShape();
-	ofPopStyle();
-	*/
+	ofSetColor(255,128,0);
 	
-	//ofDrawBitmapString(ofToString(this->delay/1000000.0f),ofPoint(currentLength,650.0));
-	//ofDrawBitmapString("Position : "+ofToString(position),ofPoint(currentLength,635.0));
-	//ofDrawBitmapString("Delay  : "+ofToString(this->delay),ofPoint(currentLength,650.0));
-	
-    //int inPos  = int(in*(float)buffer->size()/(float)this->buffer->getMaxSize()*(float)(ofGetWidth()));
-    //int outPos = int(out*(float)buffer->size()/(float)this->buffer->getMaxSize()*(float)(ofGetWidth()));
-	// from 1 to size !
 	int	inFrame  = int(float(buffer->size()-1)*(in));
 	int outFrame = int(float(buffer->size()-1)*(out));
-	
-	//int inPos = ((int((1.0-in)*(float)buffer->size()-1)+1)*oneLength)-oneLength/2;
-	//int outPos = ((int((1.0-out)*(float)buffer->size()-1)+1)*oneLength)-oneLength/2;
-	
-	//int inPos	= ((ofGetWidth() - PMDRAWSPACING) - ((inFrame) * oneLength) - oneLength/2);
-	//int outPos	= ((ofGetWidth() - PMDRAWSPACING) - ((outFrame) * oneLength) - oneLength/2);
 	int inPos = PMDRAWSPACING + ((buffer->size()-1-inFrame) * oneLength) + oneLength/2;
 	int outPos = PMDRAWSPACING + ((buffer->size()-1-outFrame) * oneLength) + oneLength/2;
-	
-	
+		
 	// draw in & out lines
 	ofSetLineWidth(1.0);
 	ofLine(inPos,PMDRAWELEMENTSY+10,inPos,PMDRAWELEMENTSY+60);
@@ -107,9 +84,9 @@ void VideoHeader::draw(){
 	ofEndShape();
 	// draw outPos triangle
 	ofBeginShape();
-	ofVertex(outPos,PMDRAWELEMENTSY+10);
-	ofVertex(outPos-5,PMDRAWELEMENTSY+5);
-	ofVertex(outPos,PMDRAWELEMENTSY);
+		ofVertex(outPos,PMDRAWELEMENTSY+10);
+		ofVertex(outPos-5,PMDRAWELEMENTSY+5);
+		ofVertex(outPos,PMDRAWELEMENTSY);
 	ofEndShape();
 	
 	ofDrawBitmapString("[ " + ofToString(inFrame),ofPoint(inPos+0,PMDRAWELEMENTSY+75));
@@ -132,11 +109,8 @@ void VideoHeader::setFps(int fps){
 VideoFrame * VideoHeader::getVideoFrame(int index)
 {
 	buffer->lock();
-	//indexFrame = buffer->size()-1;
-	int indexFrame=getNextPosition();
-	indexFrame = CLAMP(index,0,buffer->size()-1);
-	indexFrame = buffer->size()-10;
-	VideoFrame * frame = buffer->getVideoFrame(indexFrame);
+		int indexFrame = CLAMP(index,0,buffer->size()-1);
+		VideoFrame * frame = buffer->getVideoFrame(indexFrame);
 	buffer->unlock();
 	return frame;
 }
@@ -145,30 +119,11 @@ VideoFrame * VideoHeader::getVideoFrame(int index)
 VideoFrame * VideoHeader::getNextVideoFrame(){
 
         buffer->lock();
-			// **
 			currentPos=getNextPosition();
 			VideoFrame * frame = buffer->getVideoFrame(currentPos);
-        buffer->unlock();
-	
+        buffer->unlock();	
         return frame;
-	
-	// taken out from here **
-	/*        if(pctHasChanged && buffer->size()){
-	 pct=CLAMP(pct,0,1);
-	 //cout << "vheader pct: "<< pct<< "\n";
-	 currentPos=pct*(buffer->size()-1);
-	 positionTS.update();
-	 position=buffer->getTotalFrames()-(buffer->size()-currentPos);
-	 pctHasChanged=false;
-	 printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-	 }else {
-	 currentPos=getNextPosition();
-	 pct=(float)currentPos/(float)buffer->size();
-	 }
-	 */
-	
 }
-
 
 //------------------------------------------------------
 int VideoHeader::getNextPosition(){
@@ -176,13 +131,8 @@ int VideoHeader::getNextPosition(){
     // from the beginning of the recording based on speed    
 	// position expresses number of frames since start
 	
-	// when we're not in playing speed doesn't make too much sense ?¿
-    /*
-	// this option with getRealFPS makes wobbling delay ... not good.
-	if(loopMode) oneFrame=(TimeDiff)(1000000.0/buffer->getRealFPS()/speed);
-	else oneFrame=(TimeDiff)(1000000.0/buffer->getRealFPS()/1.0);
-	*/
-	
+	// calculate how much microseconds is a frame
+	// if we're playing, speed has sense, if not not ?
 	if(playing) oneFrame=(TimeDiff)(1000000.0/fps/speed);
 	else oneFrame=(TimeDiff)(1000000.0/fps/1.0);
 	
@@ -202,6 +152,7 @@ int VideoHeader::getNextPosition(){
 		   outAbsFrame,totalNumFr-outAbsFrame,
 		   position, int(position));
 */	
+	
 	// if time spend since last positionTS.update() + portion to next frame is >= oneFrame
 	// means that we need to update the position !!
 	if((float)positionTS.elapsed()+(position-floor(position))*(float)abs(oneFrame)>=abs(oneFrame))
@@ -214,55 +165,56 @@ int VideoHeader::getNextPosition(){
         positionTS.update();		
     }
 
-	// if under playing loopStart is requested, set position to inPoint !
+	// if header is playing and loopStart is requested, set position to inPoint or outPoint depending on speed's sign !
 	if(playing && loopStart)
 	{
-		position=float(inAbsFrame);
+		if(speed>0.0) position=float(inAbsFrame);
+		else position=float(outAbsFrame);
 		loopStart=false;
 	}
-	//printf("(%d) < pos %f < (%d) \n",inAbsFrame,position,outAbsFrame);
 		
-    // if we're in playing :: calculates the absolute position in frames for all the duration
+    // if we're playing in loop and we're reaching the outpoint
 	if(playing && (int(position) > (outAbsFrame)))
 	{
-		// detect loop cylce on forward speed
-		//printf("out !! \n");
-		position = float(inAbsFrame);
+		if(loopMode==OF_LOOP_NORMAL) position = float(inAbsFrame);
+		else if (loopMode==OF_LOOP_NONE)
+		{
+			setPlaying(false);
+		}
+		else if (loopMode==OF_LOOP_PALINDROME) 
+		{
+			speed=-speed;
+		}
 	}
+    // if we're in playing in loop and we're reaching the inpoint (while speed is negative probably)
     else if(playing && (int(position) < (inAbsFrame)))
 	{
-		// detect loop cylce on backward speed
-		position=float(outAbsFrame);
-		//printf("in NEW pos = %f !! \n",position);
+		if(loopMode==OF_LOOP_NORMAL) position = float(outAbsFrame);
+		else if (loopMode==OF_LOOP_NONE) setPlaying(false);
+		else if (loopMode==OF_LOOP_PALINDROME) 
+		{
+			speed=-speed;
+		}
 	}
 	
 	// clamp position to it's limits ...
-	/*
-    if(loopMode) position=CLAMP(position,float(inAbsFrame),float(outAbsFrame));
+    if(playing) position=CLAMP(position,float(inAbsFrame),float(outAbsFrame));
     else position=CLAMP(position,float(lastAbsFrame),float(totalNumFr));
-	*/
+	
 	
 	// backpos
 	int backpos=0;	
 	if (!playing) backpos=0;
 	else {
 		backpos=int(buffer->getTotalFrames()-int(position));
-		//printf("BACKPos %d \n",backpos);
 		backpos=CLAMP(backpos,0,buffer_size-1);
 	}
 	
-    // original int nextPos=buffer_size-backpos-delay/oneFrame;
 	int nextPos;
-	if (playing)
-	{ 
-			nextPos=(buffer_size-1)-backpos;
-	}
-	else nextPos = (buffer_size-1) - delay/oneFrame;
-	
+	if (playing) nextPos= (buffer_size-1) - backpos;
+	else		 nextPos= (buffer_size-1) - (delay/oneFrame);
 	
 	nextPos = CLAMP(nextPos,0,buffer_size-1);
-
-	//printf("__________________________________________back %d >> %d\n\n",backpos,nextPos);
 
     return nextPos;
 }
@@ -413,17 +365,19 @@ bool VideoHeader::isPlaying() const
 {
 	return playing;
 }
-
 //------------------------------------------------------
-void VideoHeader::setPlaying(bool isPlaying)
+void VideoHeader::setPlaying(bool isPlaying, float speed)
 {
-	if(playing)
+	this->speed = speed;
+	if(isPlaying)
 	{
 		// if we're entering loop mode move position to in point
-		// this behaviour is to sync entering loop mode with starting at inPoint
+		// this behaviour is to sync entering loop mode with starting at inPoint or outPoint depending on speed
 		this->playing = isPlaying;
-		int	inFrame  = int(float(buffer->size()-1)*(in));
-		int	inAbsFrame  = buffer->getTotalFrames() -  inFrame;
+		int	loopFrame;
+		if(speed>0.0f) loopFrame = int(float(buffer->size()-1)*(in));
+		else loopFrame = int(float(buffer->size()-1)*(out));
+		int	inAbsFrame  = buffer->getTotalFrames() -  loopFrame;
 		position = inAbsFrame; 
 	}
 	else
@@ -432,11 +386,15 @@ void VideoHeader::setPlaying(bool isPlaying)
 		// this behaviour is to let the header (set by delay on no loop) where the loop was when deactivated
 		// other beahaviour could be to let the header on delay / inPoint / outPoint position when loop is turned off
 		this->playing = isPlaying;
-		float	actualFrame  = float(buffer->getTotalFrames()) - (position);
+		float	actualFrame  = float(buffer->getTotalFrames()-1) - (position);
 		TimeDiff oneFrame=(TimeDiff)(1000000.0/fps/1.0);		
-		delay = actualFrame*oneFrame;
+		delay = (actualFrame-1)*oneFrame;
 	}
-	
+}		
+//------------------------------------------------------
+void VideoHeader::setPlaying(bool isPlaying)
+{
+	this->setPlaying(isPlaying,1.0);	
 }
 	
 

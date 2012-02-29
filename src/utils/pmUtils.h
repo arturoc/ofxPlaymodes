@@ -15,7 +15,7 @@
 
 
 #define PMDRAWSPACING 25	
-#define PMDRAWELEMENTSY 570	
+#define PMDRAWELEMENTSY 700	
 
 namespace ofxPm{
 	

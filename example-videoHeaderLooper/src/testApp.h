@@ -23,9 +23,7 @@ class testApp : public ofBaseApp{
 		
 		ofxPm::VideoGrabber			grabber;
 		ofxPm::VideoBuffer			buffer;
-		//ofxPm::VideoHeader			header;
-		//ofxPm::BasicVideoRenderer	renderer;
-		ofxPm::HeaderLooperRenderer	renderer2;
+		ofxPm::HeaderLooperRenderer	renderer;
 
 	//---------------------------------------------------
 	// testApp var's

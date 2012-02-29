@@ -58,6 +58,7 @@ public:
 	void	setLoopMode(int loop);
 	bool	isPlaying() const;
 	void	setPlaying(bool loopMode);
+	void	setPlaying(bool loopMode, float speed);
 	void	setLoopToStart();
 	
 	// 
