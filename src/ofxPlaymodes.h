@@ -12,6 +12,7 @@
 #include "AudioHeader.h"
 
 #include "OscInterface.h"
+#include "HeaderLooperRenderer.h"
 
 //#include "RaisedCosineBellEnvelope.h"
 

@@ -52,7 +52,16 @@ void VideoGrabber::newFrame(ofPixels & pixels){
 	frame->release();
 }
 
+//------------------------------------------------------
 int VideoGrabber::getFps(){
-    return 30;
+	return fps;
 }
+	
+//------------------------------------------------------
+void VideoGrabber::setFps(int fps){
+	this->fps = fps;
+}
+	
+	;
+	
 }

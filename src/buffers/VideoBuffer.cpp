@@ -124,28 +124,53 @@ long VideoBuffer::getTotalFrames(){
     return totalFrames;
 }
 
-
-
-
 float VideoBuffer::getRealFPS(){
     if(size()>10)
         return 10.0/(float)(frames.back()->getTimestamp()-frames[size()-11]->getTimestamp())*1000000.0;
+        //eloi : return 10.0/(float)(frames.back()->getTimestamp()-frames[size()-1]->getTimestamp())*1000000.0;
     else
         return 0;
 }
 
 
 void VideoBuffer::draw(){
-    float length = (float)size()/(float)maxSize*(float)ofGetWidth();
-    float oneLength=(float)ofGetWidth()/(float)maxSize;
-    ofLine(0,710,length,710);
+	
+    float length = (float(size())/float(maxSize))*(ofGetWidth()-(PMDRAWSPACING));
+    float oneLength=(float)(ofGetWidth()-PMDRAWSPACING*2)/(float)(maxSize);
+	int drawBufferY = PMDRAWELEMENTSY+40;
+    if(stopped) ofSetColor(255,0,0);
+	else ofSetColor(255);
+	ofLine(0+PMDRAWSPACING,drawBufferY,length,drawBufferY);
+	ofSetColor(255);
+	
     char measureMessage[10];
-    for(int i=0;i<(int)size();i++){
+    for(int i=0;i<(int)size()+1;i++){
+		/*
        if(i%100==0){
             ofLine(oneLength*i,710,oneLength*i,700);
             sprintf(measureMessage,"%0.2f",(float)(frames[i]->getTimestamp()-initTime)/1000000.0);
             ofDrawBitmapString(measureMessage,oneLength*i,695);
         }
+		 */
+		if(i%fps==0) 
+		//if(true)
+		{
+			ofSetLineWidth(2.0);
+			ofSetColor(255);
+			if(i!=int(size()))ofDrawBitmapString(ofToString(int(size()-i-1)),oneLength*(i)+PMDRAWSPACING + oneLength/2,PMDRAWELEMENTSY+25);
+			else 
+			{
+				ofSetColor(50);
+				ofDrawBitmapString(ofToString(getTotalFrames()),oneLength*(i)+PMDRAWSPACING - 10,PMDRAWELEMENTSY+55); 
+			}
+			//if(i!=int(size())) ofDrawBitmapString(ofToString(getTotalFrames()-i),ofGetWidth()-PMDRAWSPACING-(oneLength*(i+1)) + oneLength/2,drawBufferY-15);
+        }
+		else 
+		{
+			ofSetLineWidth(1.0);
+			ofSetColor(150);
+		}
+		ofLine(oneLength*(i)+PMDRAWSPACING,drawBufferY,oneLength*(i)+PMDRAWSPACING,drawBufferY-10);
     }
 }
 

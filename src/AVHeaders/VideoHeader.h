@@ -19,49 +19,75 @@
 namespace ofxPm{
 class VideoHeader:public VideoSink, public VideoSource{
 public:
+	
     VideoHeader(VideoBuffer & buffer);
     VideoHeader();
     ~VideoHeader();
 
     void setup(VideoBuffer & buffer);
     void draw();
-
-    int getFps();
-    void setFps(int fps);
-
     VideoFrame *getNextVideoFrame();
+	VideoFrame *getVideoFrame(int index);
     int getNextPosition();
-
     VideoBuffer *getBuffer() const;
-    int getDelay() const;
-    float getIn() const;
-    float getPct() const;
-    float getSpeed() const;
-    bool isLoopMode() const;
 
-    void setDelay(int delay);
-    void setIn(float in);
-    void setOut(float out);
-    void setLoopMode(bool loopMode);
-    void setPct(float pct);
-    void setSpeed(float speed);
+
+    void setFps(int fps);
+	// delay
+    int		getDelayMs() const;
+    int		getDelayFrames() const;
+    float	getDelayPct() const;
+    void	setDelayMs(int delay);
+    void	setDelayFrames(int delay);
+    void	setDelayPct(float pct);
+	// in 
+    float	getIn() const;
+    void	setInMs(int in);
+    void	setInFrames(int in);
+    void	setInPct(float in);
+	// out 
+    float	getOut() const;	
+    void	setOutMs(int out);
+    void	setOutFrames(int out);
+    void	setOutPct(float out);
+	// speed
+    float	getSpeed() const;
+    void	setSpeed(float speed);
+	// loop mode
+	int		getLoopMode();
+	void	setLoopMode(int loop);
+	bool	isPlaying() const;
+	void	setPlaying(bool loopMode);
+	void	setLoopToStart();
+	
+	// 
+	int		getOpacity() const;
+	void	setOpacity(int opacity);
+    int		getFps();
+
 protected:
-    VideoBuffer *buffer;
-    int fps;
-    float position;
-    int prevBufferPos;
-    Timestamp positionTS;
-    TimeDiff oneFrame;
-    char msgPos[5];
-    int currentPos;
-    bool pctHasChanged;
-    float pct;
+    VideoBuffer		*buffer;			// pointer to the buffer of video frames
+    int				fps;				// framerate
+    float			position;			// position expresses number of frames since start
+
+    Timestamp		positionTS;
+    TimeDiff		oneFrame;
+
+    int				currentPos;
+    bool			pctHasChanged;
+	int				opacity;
 
 
     float speed;
     int delay;
     float in, out;
-    bool loopMode;
+
+	//	OF_LOOP_NONE=0x01,
+	//	OF_LOOP_PALINDROME=0x02,
+	//	OF_LOOP_NORMAL=0x03
+    bool	playing;
+	int		loopMode;
+	bool	loopStart;
 };
 }
 #endif // VIDEOHEADER_H_INCLUDED

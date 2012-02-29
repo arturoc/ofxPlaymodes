@@ -18,7 +18,6 @@ public:
 
 	virtual VideoFrame * getNextVideoFrame()=0;
     virtual int getFps()=0;
-
     ofEvent<VideoFrame> newFrameEvent;
 };
 }

@@ -1,12 +1,6 @@
-/*
- * AudioBuffer.h
- *
- *  Created on: 09-oct-2008
- *      Author: arturo castro
- */
 
-#ifndef AUDIOBUFFER_H_
-#define AUDIOBUFFER_H_
+#ifndef AUDIOBUFFER2_H_
+#define AUDIOBUFFER2_H_
 
 #include "ofMain.h"
 

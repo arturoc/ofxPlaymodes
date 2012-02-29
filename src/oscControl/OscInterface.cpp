@@ -43,7 +43,7 @@ void OscInterface::newOscMessage(ofxOscMessage & message){
                 int header=atoi(commands[1].c_str());
                 if(commands[2]=="pos"){
                     float pct = message.getArgAsFloat(0);
-                    videoHeaders[header]->setPct(pct);
+                    //videoHeaders[header]->setPct(pct);
                 }else if(commands[2]=="speed"){
                     videoHeaders[header]->setSpeed(message.getArgAsFloat(0));
                 }

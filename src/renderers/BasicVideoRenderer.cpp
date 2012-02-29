@@ -32,4 +32,15 @@ void BasicVideoRenderer::draw(){
 		frame->release();
 	}
 }
+	
+void BasicVideoRenderer::draw(int x,int y,int w,int h){
+	VideoFrame * frame = source->getNextVideoFrame();
+	if(frame!=NULL){
+		frame->getTextureRef().draw(x,y,w,h);
+		frame->release();
+	}
+}
+	
+
+	
 }
