@@ -8,30 +8,47 @@
 #include "AudioBuffer.h"
 
 namespace ofxPm{
-AudioBuffer::AudioBuffer(AudioSource * source) {
-	this->source=source;
-    fps=source->getFps();
+AudioBuffer::AudioBuffer(AudioSource & source, int size) {
+	setup(source,size);
+}
+
+AudioBuffer::AudioBuffer() {
+	source = NULL;
+	fps=0;
+	totalFrames=0;
+}
+
+	
+AudioBuffer::~AudioBuffer() 
+{
+
+}
+
+void AudioBuffer::setup(AudioSource & source,int size)
+{
+	this->source=&source;
+    fps=source.getFps();
     totalFrames=0;
-    resume();
+	maxSize = size;
+    resume();	
 }
-
-AudioBuffer::~AudioBuffer() {
-
-}
-
+	
 unsigned int AudioBuffer::size(){
     return frames.size();
 }
-
+unsigned int AudioBuffer::getMaxSize(){
+	return maxSize;
+}
+	
 void AudioBuffer::newAudioFrame(AudioFrame &frame){
     if(size()==0)initTime=frame.getTimestamp();
     totalFrames++;
     //buffer.insert(make_pair(frame->getTimestamp(),frame));
-   // times.push(frame->getTimestamp());
+    //times.push(frame->getTimestamp());
     frames.push_back(&frame);
     frame.retain();
-
-    if(size()>AUDIO_BUFFER_NUM_FRAMES){
+	
+    if(size()>maxSize){
         //delete buffer[times.front()];
         //buffer.erase(times.front());
         //times.pop();
@@ -103,16 +120,17 @@ float AudioBuffer::getRealFPS(){
 }
 
 void AudioBuffer::draw(){
-    float length = (float)size()/(float)AUDIO_BUFFER_NUM_FRAMES*(float)ofGetWidth();
-    float oneLength=(float)ofGetWidth()/(float)AUDIO_BUFFER_NUM_FRAMES;
+    float length = (float)size()/((float)maxSize*(float)ofGetWidth()-PMDRAWSPACING);
+    float oneLength=((float)ofGetWidth()-float(2*PMDRAWSPACING))/(float)maxSize;
     //ofLine(0,650,length,650);
     char measureMessage[10];
     for(int i=0;i<size();i++){
-        ofRect(oneLength*i,650-frames[i]->getAverageValue()*150,oneLength,frames[i]->getAverageValue()*150+1);
+		ofSetColor(255,255,0);
+        ofRect((oneLength*i)+PMDRAWSPACING,650-frames[i]->getAverageValue()*150,oneLength,(frames[i]->getAverageValue()*350+1));
         if(i%100==0){
-            ofLine(oneLength*i,650,oneLength*i,640);
+            ofLine((oneLength*i)+PMDRAWSPACING,650,(oneLength*i)+PMDRAWSPACING,640);
             sprintf(measureMessage,"%0.2f",(float)(frames[i]->getTimestamp()-initTime)/1000000.0);
-            ofDrawBitmapString(measureMessage,oneLength*i,635);
+            ofDrawBitmapString(measureMessage,(oneLength*i)+PMDRAWSPACING,635);
         }
     }
 }

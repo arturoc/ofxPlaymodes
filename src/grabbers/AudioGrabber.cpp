@@ -18,8 +18,6 @@ void AudioGrabber::audioReceived(float * input, int bufferSize, int nChannels){
     AudioFrame * frame = new AudioFrame(input,bufferSize,nChannels);
     newFrameEvent.notify(this,*frame);
     frame->release();
-
-    //cout << "audio: " << frame.getTimestamp().epochTime() << "\n";
 }
 
 float AudioGrabber::getFps(){

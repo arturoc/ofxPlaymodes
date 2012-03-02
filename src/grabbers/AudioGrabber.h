@@ -12,7 +12,7 @@
 #include "ofMain.h"
 
 namespace ofxPm{
-class AudioGrabber: public AudioSource{
+class AudioGrabber: public AudioSource, public ofBaseSoundInput{
 public:
     AudioGrabber();
     virtual ~AudioGrabber();

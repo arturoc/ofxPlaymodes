@@ -16,8 +16,11 @@
 namespace ofxPm{
 class AudioHeader:public AudioSink, public AudioSource{
 public:
-    AudioHeader(AudioBuffer *buffer);
+    AudioHeader(AudioBuffer &buffer);
+    AudioHeader();
     ~AudioHeader();
+
+	void setup(AudioBuffer & buffer);
 
     // draws the state of the header
     void draw();

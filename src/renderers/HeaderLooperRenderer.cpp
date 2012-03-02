@@ -46,6 +46,8 @@ namespace ofxPm
 
 	void HeaderLooperRenderer::draw(int x,int y,int w,int h)
 	{
+		
+		
 		VideoFrame * frame = vHeader.getNextVideoFrame();
 		//VideoFrame * frame2;
 		//if(vBuffer->size()>174) 

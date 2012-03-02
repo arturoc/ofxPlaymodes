@@ -8,10 +8,10 @@
 #include "AudioHeader.h"
 
 namespace ofxPm{
- AudioHeader::AudioHeader(AudioBuffer *buffer)
+ AudioHeader::AudioHeader(AudioBuffer &buffer)
 {
-    this->buffer=buffer;
-    fps=buffer->getFps();
+    this->buffer=&buffer;
+    fps=buffer.getFps();
     position=0;
     oneFrame=(TimeDiff)round(1000000.0/(float)fps);
     speed=1;
@@ -21,22 +21,49 @@ namespace ofxPm{
     pctHasChanged=false;
 }
 
-
+AudioHeader::AudioHeader()
+{
+    position=0;
+    oneFrame=0;
+    speed=1;
+    prevBufferPos=0;
+    density=0;
+    currentPos=0;
+    pctHasChanged=false;
+}
+	
+	
  AudioHeader::~AudioHeader()
 {
+	
 
+}
+
+void AudioHeader::setup(AudioBuffer & buffer)
+{
+	
+	this->buffer= &buffer;
+	fps=buffer.getFps();
+	position=0;
+	oneFrame=(TimeDiff)round(1000000.0/(float)fps);
+	speed=1;
+	prevBufferPos=0;
+	density=0;
+	currentPos=0;
+	pctHasChanged=false;
+	
 }
 
 
 void AudioHeader::draw()
 {
     ofSetColor(0,0,0);
-    float currentLength=(float)currentPos/(float)AUDIO_BUFFER_NUM_FRAMES*(float)ofGetWidth();
+    float currentLength=(float)currentPos/(float)buffer->getMaxSize()*(float)ofGetWidth();
     sprintf(msgPos,"%i",currentPos);
     ofLine(currentLength,620,currentLength,660);
     ofSetColor(50,50,50);
-    ofLine(currentLength-density/(float)AUDIO_BUFFER_NUM_FRAMES*(float)ofGetWidth(),630,currentLength-density/(float)AUDIO_BUFFER_NUM_FRAMES*(float)ofGetWidth(),650);
-    ofLine(currentLength+density/(float)AUDIO_BUFFER_NUM_FRAMES*(float)ofGetWidth(),630,currentLength+density/(float)AUDIO_BUFFER_NUM_FRAMES*(float)ofGetWidth(),650);
+    ofLine(currentLength-density/(float)buffer->getMaxSize()*(float)ofGetWidth(),630,currentLength-density/(float)buffer->getMaxSize()*(float)ofGetWidth(),650);
+    ofLine(currentLength+density/(float)buffer->getMaxSize()*(float)ofGetWidth(),630,currentLength+density/(float)buffer->getMaxSize()*(float)ofGetWidth(),650);
 
 
     ofDrawBitmapString(msgPos,currentLength,615);
