@@ -21,6 +21,7 @@ public:
 	AudioFrame(){};
 	virtual ~AudioFrame();
 	float * getAudioFrame();
+	void release();
 
 	int         getBufferSize();
 	int         getChannels();

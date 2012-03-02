@@ -14,7 +14,8 @@ void testApp::setup()
 	aHeader.setup(aBuffer);
 	
 	soundStream.listDevices();
-	soundStream.setup(0,2,aSampleRate,aBufferSize,2);
+//	soundStream.setDeviceID(0);
+	soundStream.setup(2,2,aSampleRate,aBufferSize,2);
 	soundStream.setInput(this);
 	
 	// video pipeline
@@ -51,7 +52,7 @@ void testApp::draw(){
 	buffer.draw();
 	aBuffer.draw();
 	ofSetColor(255,128,0);
-	ofDrawBitmapString("FPS: " + ofToString(int(ofGetFrameRate())),20,ofGetHeight()-20);
+	ofDrawBitmapString("FPS: " + ofToString(int(ofGetFrameRate())) + " | " ,20,ofGetHeight()-20);
 }
 
 //--------------------------------------------------------------
@@ -181,3 +182,17 @@ void testApp::audioIn(float * input, int bufferSize, int nChannels)
 {  
 	aGrabber.audioReceived(input,bufferSize,nChannels);
 }
+//--------------------------------------------------------------
+
+void testApp::audioOut(float *output, int bufferSize, int nChannels, int deviceID, long unsigned long tickCount)
+{
+    // get the next audio frame, apply a cosine envelope
+    // and copy to the sound card buffer
+    AudioFrame * frame= aHeader.getNextFrame();
+    float speed=aHeader.speed;
+	memcpy(output,frame->getAudioFrame(),sizeof(float)*bufferSize*nChannels);
+    frame->release();
+}
+	
+	
+

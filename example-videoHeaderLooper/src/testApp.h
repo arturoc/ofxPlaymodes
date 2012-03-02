@@ -31,10 +31,12 @@ class testApp : public ofBaseApp{
 	ofxPm::AudioHeader aHeader;
 	int aBufferSize;
 	int aSampleRate;
-	
+	int aNumChannels;
 	ofSoundStream	soundStream;
 	//void audioIn(float * input, int bufferSize, int nChannels); 
 	void audioIn(float * input, int bufferSize, int nChannels);
+	//void audioOut (float * output, int bufferSize, int nChannels, );
+	void audioOut(float *output, int bufferSize, int nChannels, int deviceID, long unsigned long tickCount);
 	//---------------------------------------------------
 	// testApp var's
 	bool					freeze;

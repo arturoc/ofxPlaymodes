@@ -28,6 +28,25 @@ AudioFrame::AudioFrame(float * audioFrame, int bufferSize, int channels) {
     numInstances++;
 }
 
+	
+void AudioFrame::release() {
+	
+// VideoFrame release() code
+/*	ScopedLock<ofMutex> lock(*mutex);
+	_useCountOfThisObject--;
+	if(_useCountOfThisObject == 0) {
+		VideoFormat format(pixels);
+		poolMutex.lock();
+		pool[format].push_back(this);
+		poolMutex.unlock();
+	}
+*/
+}
+	
+	
+	
+	
+	
 AudioFrame::~AudioFrame() {
 	delete[] data;
 	numInstances--;
