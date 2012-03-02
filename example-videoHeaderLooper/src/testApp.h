@@ -24,7 +24,17 @@ class testApp : public ofBaseApp{
 		ofxPm::VideoGrabber			grabber;
 		ofxPm::VideoBuffer			buffer;
 		ofxPm::HeaderLooperRenderer	renderer;
-
+	
+	// audio
+	ofxPm::AudioGrabber	aGrabber;
+	ofxPm::AudioBuffer aBuffer;
+	ofxPm::AudioHeader aHeader;
+	int aBufferSize;
+	int aSampleRate;
+	
+	ofSoundStream	soundStream;
+	//void audioIn(float * input, int bufferSize, int nChannels); 
+	void audioIn(float * input, int bufferSize, int nChannels);
 	//---------------------------------------------------
 	// testApp var's
 	bool					freeze;

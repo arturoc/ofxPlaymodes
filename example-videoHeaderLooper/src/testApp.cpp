@@ -4,14 +4,28 @@ using namespace ofxPm;
 //--------------------------------------------------------------
 void testApp::setup()
 {	
+	// audio pipeline 
+	aBufferSize=512;
+	aSampleRate=44100;
+
+//#define AUDIO_BUFFER_NUM_FRAMES 
+
+	aBuffer.setup(aGrabber,7*44100/aBufferSize);
+	aHeader.setup(aBuffer);
+	
+	soundStream.listDevices();
+	soundStream.setup(0,2,aSampleRate,aBufferSize,2);
+	soundStream.setInput(this);
+	
+	// video pipeline
 	grabber.initGrabber(1280,720);
-	grabber.setDeviceID(22);
+	//grabber.setDeviceID(22);
 	// need to override like this to have deisred effect
 	grabber.setFps(25);
-	
 	buffer.setup(grabber, 175);	
 	renderer.setup(buffer);
 	
+	// general stuff
 	ofBackground(0);
 	ofSetVerticalSync(true);
 	
@@ -35,6 +49,7 @@ void testApp::draw(){
 	ofSetColor(255,255,255);	
 	renderer.draw(0,0,1245,700);
 	buffer.draw();
+	aBuffer.draw();
 	ofSetColor(255,128,0);
 	ofDrawBitmapString("FPS: " + ofToString(int(ofGetFrameRate())),20,ofGetHeight()-20);
 }
@@ -159,4 +174,10 @@ void testApp::updateOsc()
 			}
 		}
 	}
+}
+
+//--------------------------------------------------------------
+void testApp::audioIn(float * input, int bufferSize, int nChannels)
+{  
+	aGrabber.audioReceived(input,bufferSize,nChannels);
 }
