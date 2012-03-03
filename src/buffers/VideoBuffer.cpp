@@ -163,4 +163,14 @@ void VideoBuffer::resume(){
 bool VideoBuffer::isStopped(){
 	return stopped;
 }
+
+void VideoBuffer::clear(){
+    while(!frames.empty()){
+        //delete buffer[times.front()];
+        //buffer.erase(times.front());
+        //cout << "releasing frame release count:"<<frames.front()->_useCountOfThisObject<<"\n";
+        frames.front()->release();
+        frames.erase(frames.begin());
+    }
+}
 }

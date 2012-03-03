@@ -67,6 +67,8 @@ public:
     void resume();                                  // continue receiving new frames
     bool isStopped();
 
+    void clear();
+
 protected:
     deque<VideoFrame*> frames;
     int     fps;
