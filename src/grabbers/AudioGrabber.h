@@ -17,7 +17,11 @@ public:
     AudioGrabber();
     virtual ~AudioGrabber();
 	void audioReceived(float * input, int bufferSize, int nChannels);
-	float getFps();
+
+	float	getFps();
+	void	setFps(float f);
+	
+	float fps;
 };
 }
 #endif // AUDIOGRABBER_H_INCLUDED

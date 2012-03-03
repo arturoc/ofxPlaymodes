@@ -107,7 +107,7 @@ AudioBuffer::AudioBuffer(AudioSource & source, int size) {
 		return getAudioFrame(getLastTimestamp()-(getInitTime()+getTotalTime()*pct));
 	}
 	float AudioBuffer::getFps(){
-		return fps;
+		return this->fps;
 	}
 
 	//------------------------------------------------------
@@ -146,18 +146,22 @@ AudioBuffer::AudioBuffer(AudioSource & source, int size) {
 	//------------------------------------------------------
 
 	void AudioBuffer::draw(){
-		float length = (float)size()/((float)maxSize*(float)ofGetWidth()-PMDRAWSPACING);
-		float oneLength=((float)ofGetWidth()-float(2*PMDRAWSPACING))/(float)maxSize;
-		//ofLine(0,650,length,650);
-		char measureMessage[10];
+		float length=float(size())/((float)maxSize)*(float)(ofGetWidth()-PMDRAWSPACING*2);
+		float oneLength=(float)(ofGetWidth()-PMDRAWSPACING*2)/(float)(maxSize);
+		
+		//		float length = (float)size()/((float)maxSize*(float)ofGetWidth()-PMDRAWSPACING);
+		//float oneLength=((float)ofGetWidth()-float(2*PMDRAWSPACING))/(float)maxSize;
+
+		ofLine(PMDRAWSPACING,650,length,650);
 		for(int i=0;i<size();i++){
 			ofSetColor(0,120,255);
-			if(i%2==0) ofRect((oneLength*i)+PMDRAWSPACING,650-frames[i]->getAverageValue()*150,oneLength*2,(frames[i]->getAverageValue()*250+1));
-			if(i%100==0){
+			// draw wave
+			if(i%2==0) ofRect((oneLength*i)+PMDRAWSPACING,650-frames[i]->getAverageValue()*150,oneLength*2,(frames[i]->getAverageValue()*450+1));
+			// draw grid
+			if(i%int(fps)==0){
 				ofSetColor(255,255,255);
 				ofLine((oneLength*i)+PMDRAWSPACING,650,(oneLength*i)+PMDRAWSPACING,640);
-				sprintf(measureMessage,"%0.2f",(float)(frames[i]->getTimestamp()-initTime)/1000000.0);
-				ofDrawBitmapString(measureMessage,(oneLength*i)+PMDRAWSPACING,635);
+				ofDrawBitmapString(ofToString(float(size()-i-1)/100) + " s",(oneLength*i)+PMDRAWSPACING,635);
 			}
 		}
 	}
@@ -171,4 +175,7 @@ AudioBuffer::AudioBuffer(AudioSource & source, int size) {
 	void AudioBuffer::resume(){
 		ofAddListener(source->newFrameEvent,this,&AudioBuffer::newAudioFrame);
 	}
+
+	
+	
 }

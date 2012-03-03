@@ -20,11 +20,12 @@ VideoHeader::VideoHeader(){
     speed       = 1;
     in          = 1;
     out         = 0;
-    playing    = false;
     delay       = 0;
 	opacity		= 255;
+
+    playing    = false;
 	loopStart	= false;
-	loopMode	= OF_LOOP_NONE;
+	loopMode	= OF_LOOP_NORMAL;
 }
 
 
@@ -42,7 +43,7 @@ void VideoHeader::setup(VideoBuffer & buffer){
     delay       = 0;
 	opacity		= 255;
 	loopStart	= false;
-	loopMode	= OF_LOOP_NONE;
+	loopMode	= OF_LOOP_NORMAL;
 }
 
 //------------------------------------------------------

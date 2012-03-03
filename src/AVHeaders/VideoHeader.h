@@ -30,9 +30,7 @@ public:
 	VideoFrame *getVideoFrame(int index);
     int getNextPosition();
     VideoBuffer *getBuffer() const;
-
-
-    void setFps(int fps);
+	
 	// delay
     int		getDelayMs() const;
     int		getDelayFrames() const;
@@ -65,27 +63,26 @@ public:
 	int		getOpacity() const;
 	void	setOpacity(int opacity);
     int		getFps();
+    void	setFps(int fps);
 
 protected:
     VideoBuffer		*buffer;			// pointer to the buffer of video frames
-    int				fps;				// framerate
-    float			position;			// position expresses number of frames since start
 
     Timestamp		positionTS;
     TimeDiff		oneFrame;
 
+    int				fps;				// framerate
+    float			position;			// position expresses number of frames since start
     int				currentPos;
-    bool			pctHasChanged;
-	int				opacity;
-
-
     float speed;
     int delay;
     float in, out;
+	int	opacity;
 
 	//	OF_LOOP_NONE=0x01,
 	//	OF_LOOP_PALINDROME=0x02,
 	//	OF_LOOP_NORMAL=0x03
+
     bool	playing;
 	int		loopMode;
 	bool	loopStart;

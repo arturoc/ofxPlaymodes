@@ -32,11 +32,11 @@ class testApp : public ofBaseApp{
 	int aBufferSize;
 	int aSampleRate;
 	int aNumChannels;
+	bool audioSetupFinished;
 	ofSoundStream	soundStream;
-	//void audioIn(float * input, int bufferSize, int nChannels); 
-	void audioIn(float * input, int bufferSize, int nChannels);
-	//void audioOut (float * output, int bufferSize, int nChannels, );
-	void audioOut(float *output, int bufferSize, int nChannels, int deviceID, long unsigned long tickCount);
+	void audioReceived(float * input, int bufferSize, int nChannels);
+	//void audioOut (float * output, int bufferSize, int nChannels);
+	void audioRequested (float * output, int bufferSize, int nChannels);
 	//---------------------------------------------------
 	// testApp var's
 	bool					freeze;

@@ -21,53 +21,70 @@ public:
     ~AudioHeader();
 
 	void setup(AudioBuffer & buffer);
-
-    // draws the state of the header
     void draw();
-
-    TimeDiff delay;
-
-
-    float getFps();
-    void setFps(float fps);
-
-    AudioFrame * getNextFrame();
-    AudioFrame * getAudioFrame(int position,float density);
-
-
+    AudioFrame * getNextAudioFrame();
+    AudioFrame * getAudioFrame(int position);
     int getNextPosition();
+	
 
-    float speed;
-    float density;
-
-    void setPct(float & pct){
-        this->pct=pct;
-        pctHasChanged=true;
-    }
-    void incrPct(float & incr){
-        this->pct+=incr;
-        pctHasChanged=true;
-    }
+	// delay
+    int		getDelayMs() const;
+    int		getDelayFrames() const;
+    float	getDelayPct() const;
+    void	setDelayMs(int delay);
+    void	setDelayFrames(int delay);
+    void	setDelayPct(float pct);
+	// in 
+    float	getIn() const;
+    void	setInMs(int in);
+    void	setInFrames(int in);
+    void	setInPct(float in);
+	// out 
+    float	getOut() const;	
+    void	setOutMs(int out);
+    void	setOutFrames(int out);
+    void	setOutPct(float out);
+	// speed
+    float	getSpeed() const;
+    void	setSpeed(float speed);
+	// loop mode
+	int		getLoopMode();
+	void	setLoopMode(int loop);
+	bool	isPlaying() const;
+	void	setPlaying(bool loopMode);
+	void	setPlaying(bool loopMode, float speed);
+	void	setLoopToStart();
+	
+	// others
+    float	getFps();
+    void	setFps(float fps);
+	
 protected:
+	
     AudioBuffer * buffer;
-    float fps;
 
-    //------------------------
-    // speed control
     float position;
-    int prevBufferPos;
-    Timestamp positionTS;
-    TimeDiff oneFrame;
-
-    //-----------------------
-    // header draw
     int currentPos;
-    char msgPos[5];
 
-    //------------------------
-    // external control
-    bool pctHasChanged;
-    float pct;
+    Timestamp positionTS;
+	TimeDiff oneFrame;
+
+	//TimeDiff delay;	
+	int	delay;
+	float in;
+	float out;
+    float fps;
+	float speed;
+	
+	bool	playing;	
+	int		loopMode;
+	bool	loopStart;
+
+	
+//    //------------------------
+//    // external control
+//    bool pctHasChanged;
+//    float pct;
 };
 }
 #endif // AUDIOHEADER_H_INCLUDED
