@@ -97,11 +97,11 @@ void VideoHeader::draw(){
 }
 
 //------------------------------------------------------
-int VideoHeader::getFps(){
+float VideoHeader::getFps(){
     return fps;
 }
 //------------------------------------------------------
-void VideoHeader::setFps(int fps){
+void VideoHeader::setFps(float fps){
     this->fps=fps;
 }
 
@@ -144,15 +144,17 @@ int VideoHeader::getNextPosition(){
 	int outFrame = int(float(buffer_size-1)*(out));
 	int	inAbsFrame  = totalNumFr -  inFrame;
 	int	outAbsFrame = totalNumFr - outFrame;
-/*
-	printf("-------------------------------\nTOTAL : %d\nSIZE : %d \nLAST : %d\n IN : %d / %d \n OUT : %d / %d \nPOSITION : %f %d\n",
-		   totalNumFr,
-		   buffer_size,
-		   lastAbsFrame,
-		   inAbsFrame,totalNumFr-inAbsFrame,
-		   outAbsFrame,totalNumFr-outAbsFrame,
-		   position, int(position));
-*/	
+
+//	printf("VIDEOVIDEOVIDEOVIDEO______________________________\n\n");
+//	printf("-------------------------------\nTOTAL : %d\nSIZE : %d \nLAST : %d\n IN : %d / %d \n OUT : %d / %d \nPOSITION : %f %d\n",
+//		   totalNumFr,
+//		   buffer_size,
+//		   lastAbsFrame,
+//		   inAbsFrame,totalNumFr-inAbsFrame,
+//		   outAbsFrame,totalNumFr-outAbsFrame,
+//		   position, int(position));
+//
+//	printf("VIDEOVIDEOVIDEOVIDEO______________________________\n\n");
 	
 	// if time spend since last positionTS.update() + portion to next frame is >= oneFrame
 	// means that we need to update the position !!
@@ -300,9 +302,10 @@ float VideoHeader::getIn() const
 //------------------------------------------------------
 void VideoHeader::setInMs(int in)
 {
-	float oneFrameMs=(TimeDiff)(1000.0/fps/1.0);
-	this->setInPct(float(in) / (oneFrameMs*float(buffer->size())));
-	printf("ms to set %d translated to %f% fps %d\n",in,float(in) / (oneFrameMs*float(buffer->size())),this->fps);
+	float oneFrameMs=(TimeDiff)(1000000.0/fps/1.0);
+	this->setInPct(float(in*1000.0f) / (oneFrameMs*float(buffer->size())));
+	//printf("ms to set %f translated to %f fps %f\n",in,float(in) / (oneFrameMs*float(buffer->size())),this->fps);
+	//printf("VIDEO inMs %d :: %f \n",in,float(in) / (oneFrameMs*float(buffer->size())));
 }
 //------------------------------------------------------
 void VideoHeader::setInPct(float in)
@@ -324,8 +327,8 @@ float VideoHeader::getOut() const
 //------------------------------------------------------
 void VideoHeader::setOutMs(int out)
 {
-	float oneFrameMs=(TimeDiff)(1000.0/fps/1.0);
-	this->setOutPct(float(out) / (oneFrameMs*float(buffer->size())));
+	float oneFrameMs=(TimeDiff)(1000000.0/fps/1.0);
+	this->setOutPct(float(out*1000.0f) / (oneFrameMs*float(buffer->size())));
 }
 //------------------------------------------------------
 void VideoHeader::setOutPct(float out)
@@ -399,7 +402,11 @@ void VideoHeader::setPlaying(bool isPlaying)
 }
 	
 
-
+	//------------------------------------------------------
+	void VideoHeader::receivedLoopEvent(int &i)
+	{
+		setLoopToStart();
+	}	
 	
 
 }

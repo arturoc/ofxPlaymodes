@@ -4,32 +4,42 @@ using namespace ofxPm;
 //--------------------------------------------------------------
 void testApp::setup()
 {	
+	float duration = 7.0;
 	audioSetupFinished=false;
 
 	// audio pipeline 
-	aBufferSize=1024;
+	aBufferSize=512;
 	aSampleRate=96000;
+	
 
 //#define AUDIO_BUFFER_NUM_FRAMES 
 
-	aGrabber.setFps(aSampleRate/aBufferSize);
-	aBuffer.setup(aGrabber,7*aSampleRate/aBufferSize);
+	aGrabber.setFps(float(aSampleRate)/float(aBufferSize));
+	aBuffer.setup(aGrabber,7.0*(float(aSampleRate)/float(aBufferSize)));
+//	aBuffer.setup(aGrabber,656);
+//	aBuffer.stop();
 	aHeader.setup(aBuffer);
 	
 	
 	soundStream.listDevices();
-	soundStream.setDeviceID(0);
-	soundStream.setup(2,2,aSampleRate,aBufferSize,2);
+	soundStream.setDeviceID(8);
+	soundStream.setup(2,2,aSampleRate,aBufferSize,4);
 	soundStream.setInput(this);
 	soundStream.setOutput(this);
 	
 	// video pipeline
 	grabber.initGrabber(1280,720);
-	grabber.setDeviceID(0);
+	grabber.setDeviceID(22);
 	// need to override like this to have deisred effect
 	grabber.setFps(25);
 	buffer.setup(grabber, 175);	
+//	buffer.stop();
 	renderer.setup(buffer);
+	
+	
+	aHeader.linkToVideoHeader(*renderer.getHeader());
+	
+	freeze=true;
 	
 	audioSetupFinished=true;
 	
@@ -66,9 +76,11 @@ void testApp::draw(){
 	aBuffer.draw();
 	aHeader.draw();
 	
-	ofSetColor(255,128,0);
-	ofDrawBitmapString("FPS: " + ofToString(int(ofGetFrameRate())) + " | " ,20,ofGetHeight()-20);
-	
+	float factorFR = (ofGetFrameRate()/60.0);
+	ofSetColor(255*(1.0-factorFR),255*(factorFR*factorFR*factorFR),0);
+	ofDrawBitmapString("FPS: " + ofToString(int(ofGetFrameRate())) + " | aGrabber FPS " + ofToString(float(aGrabber.getFps())) ,20,ofGetHeight()-20);
+	//ofDrawBitmapString("VideoFrame pool size: " + ofToString(VideoFrame::getPoolSize(VideoFormat(1280,720,3))),520,ofGetHeight()-20);
+
 }
 
 //--------------------------------------------------------------
@@ -174,6 +186,7 @@ void testApp::updateOsc()
 		{
 			renderer.getHeader()->setInMs(value);
 			aHeader.setInMs(value);
+			printf("testApp :: inP %f\n",value);
 		}
 		if ( m.getAddress() == "/outPoint" )
 		{
@@ -225,7 +238,6 @@ void testApp::audioReceived(float * input, int bufferSize, int nChannels)
 	if (audioSetupFinished==true)
 	{
 		aGrabber.audioReceived(input,bufferSize,nChannels);
-		printf("i");
 	}
 }
 //--------------------------------------------------------------
@@ -236,9 +248,7 @@ void testApp::audioRequested (float * output, int bufferSize, int nChannels)
 	{
 		// get the next audio frame, apply a cosine envelope
 		// and copy to the sound card buffer
-		printf("o");
 		AudioFrame * frame= aHeader.getNextAudioFrame();
-		float speed=aHeader.getSpeed();
 		memcpy(output,frame->getAudioFrame(),sizeof(float)*bufferSize*nChannels);
 		frame->release();
 	}

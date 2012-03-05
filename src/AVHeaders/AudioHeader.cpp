@@ -26,7 +26,7 @@ namespace ofxPm
 		loopStart	= false;
 		loopMode	= OF_LOOP_NORMAL;
 		delay       = 0;
-		
+		this->vHeaderLink = NULL;
 
 	}
 
@@ -44,6 +44,7 @@ namespace ofxPm
 		playing    = false;
 		loopStart	= false;
 		loopMode	= OF_LOOP_NORMAL;
+		this->vHeaderLink = NULL;
 	}
 		
 	//------------------------------------------------------
@@ -69,7 +70,8 @@ namespace ofxPm
 		out = 0.0;
 		playing    = false;
 		loopStart	= false;
-		loopMode	= OF_LOOP_NONE;
+		loopMode	= OF_LOOP_NORMAL;
+		this->vHeaderLink = NULL;
 		
 	}
 
@@ -78,6 +80,7 @@ namespace ofxPm
 	void AudioHeader::draw()
 	{
 		float currentLength=float(currentPos)/((float)this->buffer->getMaxSize())*(float)(ofGetWidth()-PMDRAWSPACING*2);
+		float oneLength=(float)(ofGetWidth()-PMDRAWSPACING*2)/(float)(buffer->getMaxSize());
 
 		ofPushStyle();
 		ofSetColor(0,255,255);
@@ -86,6 +89,37 @@ namespace ofxPm
 		ofPopStyle();
 
 		ofDrawBitmapString(ofToString(currentPos)+" / "+ofToString(this->buffer->getMaxSize()),currentLength,615);
+		
+		int	inFrame  = int(float(buffer->size()-1)*(in));
+		int outFrame = int(float(buffer->size()-1)*(out));
+		int inPos = PMDRAWSPACING + ((buffer->size()-1-inFrame) * oneLength) + oneLength/2;
+		int outPos = PMDRAWSPACING + ((buffer->size()-1-outFrame) * oneLength) + oneLength/2;
+		
+		// draw in & out lines
+		int audioBuffDrawPos = 90;
+		ofSetLineWidth(1.0);
+		ofLine(inPos,PMDRAWELEMENTSY+10-audioBuffDrawPos,inPos,PMDRAWELEMENTSY+60-audioBuffDrawPos);
+		ofLine(outPos,PMDRAWELEMENTSY+10-audioBuffDrawPos,outPos,PMDRAWELEMENTSY+60-audioBuffDrawPos);
+		ofLine(inPos,PMDRAWELEMENTSY+60-audioBuffDrawPos,outPos,PMDRAWELEMENTSY+60-audioBuffDrawPos);
+		// draw inPos triangle
+		ofBeginShape();
+		ofVertex(inPos,PMDRAWELEMENTSY+10-audioBuffDrawPos);
+		ofVertex(inPos+5,PMDRAWELEMENTSY+5-audioBuffDrawPos);
+		ofVertex(inPos,PMDRAWELEMENTSY-audioBuffDrawPos);
+		ofEndShape();
+		// draw outPos triangle
+		ofBeginShape();
+		ofVertex(outPos,PMDRAWELEMENTSY+10-audioBuffDrawPos);
+		ofVertex(outPos-5,PMDRAWELEMENTSY+5-audioBuffDrawPos);
+		ofVertex(outPos,PMDRAWELEMENTSY-audioBuffDrawPos);
+		ofEndShape();
+		
+		ofDrawBitmapString("[ " + ofToString(inFrame) ,ofPoint(inPos+0,PMDRAWELEMENTSY+75-audioBuffDrawPos));
+		ofDrawBitmapString(ofToString(outFrame) + " ]" ,ofPoint(outPos-30,PMDRAWELEMENTSY+75-audioBuffDrawPos));
+//		
+//	
+//		ofCircle(inPos,650,10);
+//		ofCircle(outPos,650,10);
 	}
 
 	//------------------------------------------------------
@@ -108,8 +142,6 @@ namespace ofxPm
 
 	AudioFrame * AudioHeader::getNextAudioFrame()
 	{
-		printf("aH : currenPos %d fps %f \n",currentPos,fps);
-
 		buffer->lock();
 			currentPos=getNextPosition();
 			AudioFrame * frame = buffer->getAudioFrame(currentPos);
@@ -154,13 +186,13 @@ namespace ofxPm
 		int	outAbsFrame = totalNumFr - outFrame;
 		
 		
-		 printf("-------------------------------\nTOTAL : %d\nSIZE : %d \nLAST : %d\n IN : %d / %d \n OUT : %d / %d \nPOSITION : %f %d\n",
-		 totalNumFr,
-		 buffer_size,
-		 lastAbsFrame,
-		 inAbsFrame,totalNumFr-inAbsFrame,
-		 outAbsFrame,totalNumFr-outAbsFrame,
-		 position, int(position));
+//		 printf("-------------------------------\nTOTAL : %d\nSIZE : %d \nLAST : %d\n IN : %d / %d \n OUT : %d / %d \nPOSITION : %f %d\n",
+//		 totalNumFr,
+//		 buffer_size,
+//		 lastAbsFrame,
+//		 inAbsFrame,totalNumFr-inAbsFrame,
+//		 outAbsFrame,totalNumFr-outAbsFrame,
+//		 position, int(position));
 		 	
 		
 		
@@ -174,7 +206,7 @@ namespace ofxPm
 			// updates the time-stamp with the current time
 			positionTS.update();
 		}
-		
+//		printf("new Position %f !!!!!!! %f > %f\n ",position,position,float(outAbsFrame));
 		// if header is playing and loopStart is requested, set position to inPoint or outPoint depending on speed's sign !
 		if(playing && loopStart)
 		{
@@ -186,7 +218,17 @@ namespace ofxPm
 		// if we're playing in loop and we're reaching the outpoint
 		if(playing && (int(position) > (outAbsFrame)))
 		{
-			if(loopMode==OF_LOOP_NORMAL) position = float(inAbsFrame);
+			if(loopMode==OF_LOOP_NORMAL) 
+			{
+				position = float(inAbsFrame);
+				// throw event
+				if(vHeaderLink!=NULL) 
+				{
+					int i = 1;
+					ofNotifyEvent(loopInEvent,i,vHeaderLink);
+				}
+				
+			}
 			else if (loopMode==OF_LOOP_NONE)
 			{
 				setPlaying(false);
@@ -225,9 +267,12 @@ namespace ofxPm
 		int nextPos;
 		if (playing) nextPos= (buffer_size-1) - backpos;
 		else		 nextPos= (buffer_size-1) - (delay/oneFrame);
+//		printf(" nextPos %d /", nextPos);
 		
 		nextPos = CLAMP(nextPos,0,buffer_size-1);
+		if(nextPos<0) nextPos=0;
 		
+		//printf(" %d\n", nextPos);
 		return nextPos;
 
 	}
@@ -266,7 +311,7 @@ namespace ofxPm
 	{
 		TimeDiff oneFrame=(TimeDiff)(1000000.0/fps/1.0);
 		int delayToSet = delayMs*1000;
-		this->delay = CLAMP(delayToSet,0,(buffer->getMaxSize()-1)*oneFrame);
+		this->delay = CLAMP(delayToSet,0,(buffer->getMaxSize())*oneFrame);
 		// ? eloi hack
 		//this->position = 0;
 	}
@@ -290,10 +335,11 @@ namespace ofxPm
 		return in;
 	}
 	//------------------------------------------------------
-	void AudioHeader::setInMs(int in)
+	void AudioHeader::setInMs(int inMs)
 	{
-		float oneFrameMs=(TimeDiff)(1000.0/fps/1.0);
-		this->setInPct(float(in) / (oneFrameMs*float(buffer->size())));
+		TimeDiff oneFrameMs=(TimeDiff)(1000000.0/fps/1.0);
+		float result = (inMs*1000.0f) / float(oneFrameMs*float(buffer->size()));
+		this->setInPct(result);
 	}
 	//------------------------------------------------------
 	void AudioHeader::setInPct(float in)
@@ -315,8 +361,8 @@ namespace ofxPm
 	//------------------------------------------------------
 	void AudioHeader::setOutMs(int out)
 	{
-		float oneFrameMs=(TimeDiff)(1000.0/fps/1.0);
-		this->setOutPct(float(out) / (oneFrameMs*float(buffer->size())));
+		float oneFrameMs=(TimeDiff)(1000000.0/fps/1.0);
+		this->setOutPct(float(out*1000.0f) / (oneFrameMs*float(buffer->size()-1)));
 	}
 	//------------------------------------------------------
 	void AudioHeader::setOutPct(float out)
@@ -387,6 +433,12 @@ namespace ofxPm
 	void AudioHeader::setPlaying(bool isPlaying)
 	{
 		this->setPlaying(isPlaying,1.0);	
+	}
+	//------------------------------------------------------
+	void AudioHeader::linkToVideoHeader(VideoHeader &vH)
+	{
+		this->vHeaderLink=&vH;
+		ofAddListener(this->loopInEvent,this->vHeaderLink,&VideoHeader::receivedLoopEvent);
 	}
 	
 }

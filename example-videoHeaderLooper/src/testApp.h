@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxPlaymodes.h"
 #include "ofxOsc.h"
+#include "pmUtils.h"
 
 class testApp : public ofBaseApp{
 
@@ -47,5 +48,6 @@ class testApp : public ofBaseApp{
 	ofxOscSender			sender;
 	void					updateOsc();
 	
-	
+	float					inN;
+	float					outN;
 };

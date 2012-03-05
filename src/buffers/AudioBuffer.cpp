@@ -33,7 +33,7 @@ AudioBuffer::AudioBuffer(AudioSource & source, int size) {
 		this->source=&source;
 		fps=source.getFps();
 		totalFrames=0;
-		maxSize = size;
+		this->maxSize = size;
 		resume();	
 	}
 
@@ -106,6 +106,8 @@ AudioBuffer::AudioBuffer(AudioSource & source, int size) {
 	AudioFrame * AudioBuffer::getAudioFrame(float pct){
 		return getAudioFrame(getLastTimestamp()-(getInitTime()+getTotalTime()*pct));
 	}
+	//------------------------------------------------------
+	
 	float AudioBuffer::getFps(){
 		return this->fps;
 	}
@@ -150,7 +152,7 @@ AudioBuffer::AudioBuffer(AudioSource & source, int size) {
 		float oneLength=(float)(ofGetWidth()-PMDRAWSPACING*2)/(float)(maxSize);
 		
 		//		float length = (float)size()/((float)maxSize*(float)ofGetWidth()-PMDRAWSPACING);
-		//float oneLength=((float)ofGetWidth()-float(2*PMDRAWSPACING))/(float)maxSize;
+		float oneFrame =((float)ofGetWidth()-float(2*PMDRAWSPACING))/(float)maxSize;
 
 		ofLine(PMDRAWSPACING,650,length,650);
 		for(int i=0;i<size();i++){
@@ -158,10 +160,13 @@ AudioBuffer::AudioBuffer(AudioSource & source, int size) {
 			// draw wave
 			if(i%2==0) ofRect((oneLength*i)+PMDRAWSPACING,650-frames[i]->getAverageValue()*150,oneLength*2,(frames[i]->getAverageValue()*450+1));
 			// draw grid
-			if(i%int(fps)==0){
+			float X = fmod(i,source->getFps());
+			if(X<1.0)
+			{
 				ofSetColor(255,255,255);
 				ofLine((oneLength*i)+PMDRAWSPACING,650,(oneLength*i)+PMDRAWSPACING,640);
-				ofDrawBitmapString(ofToString(float(size()-i-1)/100) + " s",(oneLength*i)+PMDRAWSPACING,635);
+				ofDrawBitmapString(ofToString(float(size()-i)/source->getFps()),(oneLength*i)+PMDRAWSPACING,635);
+				// + " s"
 			}
 		}
 	}

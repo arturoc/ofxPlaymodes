@@ -19,7 +19,7 @@ public:
 	virtual ~FileGrabber();
 
 	VideoFrame * getNextVideoFrame();
-    int getFps();
+    float getFps();
 
     void update();
 

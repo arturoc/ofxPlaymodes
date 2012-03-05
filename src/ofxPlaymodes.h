@@ -14,7 +14,6 @@
 #include "OscInterface.h"
 #include "HeaderLooperRenderer.h"
 
-//#include "RaisedCosineBellEnvelope.h"
 
 #include "BasicVideoRenderer.h"
 

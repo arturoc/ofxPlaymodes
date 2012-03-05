@@ -11,6 +11,7 @@
 #include "AudioSink.h"
 #include "AudioSource.h"
 #include "AudioBuffer.h"
+#include "VideoHeader.h"
 
 
 namespace ofxPm{
@@ -59,9 +60,14 @@ public:
     float	getFps();
     void	setFps(float fps);
 	
+	// event related
+	void	linkToVideoHeader(VideoHeader &vH);
+	ofEvent<int> loopInEvent;
+	
 protected:
 	
     AudioBuffer * buffer;
+	VideoHeader * vHeaderLink;
 
     float position;
     int currentPos;
@@ -80,6 +86,7 @@ protected:
 	int		loopMode;
 	bool	loopStart;
 
+	
 	
 //    //------------------------
 //    // external control

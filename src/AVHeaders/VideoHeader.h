@@ -62,8 +62,11 @@ public:
 	// 
 	int		getOpacity() const;
 	void	setOpacity(int opacity);
-    int		getFps();
-    void	setFps(int fps);
+    float	getFps();
+    void	setFps(float fps);
+	
+	// events
+	void 	receivedLoopEvent(int &i);
 
 protected:
     VideoBuffer		*buffer;			// pointer to the buffer of video frames
@@ -71,7 +74,7 @@ protected:
     Timestamp		positionTS;
     TimeDiff		oneFrame;
 
-    int				fps;				// framerate
+    float				fps;				// framerate
     float			position;			// position expresses number of frames since start
     int				currentPos;
     float speed;

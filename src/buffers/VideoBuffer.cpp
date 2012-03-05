@@ -76,7 +76,7 @@ unsigned int VideoBuffer::getMaxSize(){
 }
 
 
-int VideoBuffer::getFps(){
+float VideoBuffer::getFps(){
     return fps;
 }
 
