@@ -26,7 +26,7 @@ void testApp::setup()
 	///////////////////
 	audioSetupFinished=false;	
 	aGrabber.setFps(float(aSampleRate)/float(aBufferSize));
-	aBuffer.setup(aGrabber,7.0*(float(aSampleRate)/float(aBufferSize)));
+	aBuffer.setup(aGrabber,7.0,aSampleRate,aBufferSize,2);
 	// avRenderer
 	//////////////
 	avRenderer.setup(vBuffer,aBuffer);
@@ -68,7 +68,7 @@ void testApp::draw(){
 	
 	float factorFR = (ofGetFrameRate()/60.0);
 	ofSetColor(255*(1.0-factorFR),255*(factorFR*factorFR*factorFR),0);
-	ofDrawBitmapString("FPS: " + ofToString(int(ofGetFrameRate())) + " | aGrabber FPS " + ofToString(float(aGrabber.getFps())) ,20,ofGetHeight()-20);
+	ofDrawBitmapString("FPS: " + ofToString(int(ofGetFrameRate())) + " | aGrabber FPS " + ofToString(float(aGrabber.getFps())) + "Samples " +ofToString(aBuffer.getMaxSizeInSamples()) ,20,ofGetHeight()-20);
 	//ofDrawBitmapString("VideoFrame pool size: " + ofToString(VideoFrame::getPoolSize(VideoFormat(1280,720,3))),520,ofGetHeight()-20);
 
 }
@@ -168,11 +168,11 @@ void testApp::updateOsc()
 		}
 		if ( m.getAddress() == "/inPoint" )
 		{
-			avRenderer.setInMs(value);
+			avRenderer.setInMs(int(value));
 		}
 		if ( m.getAddress() == "/outPoint" )
 		{
-			avRenderer.setOutMs(value);
+			avRenderer.setOutMs(int(value));
 		}
 		if ( m.getAddress() == "/freeze" )
 		{

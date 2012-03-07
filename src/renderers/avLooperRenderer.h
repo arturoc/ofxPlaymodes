@@ -43,6 +43,9 @@ private:
 	VideoHeader			vHeader;
 	AudioBuffer*		aBuffer;
 	AudioHeader			aHeader;
+	
+	
+	int					sampleIndex;
 
 	//VideoSource*		source;
 };

@@ -18,9 +18,9 @@ AudioFrame::AudioFrame(float * audioFrame, int bufferSize, int channels) {
 	//data=audioFrame;
 	averageValue=0;
 	for(int i=0;i<bufferSize;i++){
-	    data[i*2]=audioFrame[i*2];//*cos((float)i/(float)bufferSize-PI/2);
-	    data[i*2+1]=audioFrame[i*2+1];//*cos((float)i/(float)bufferSize-PI/2);
-	    averageValue+=audioFrame[i*2];
+	    data[i*channels]=audioFrame[i*channels];//*cos((float)i/(float)bufferSize-PI/2);
+	    data[i*channels+1]=audioFrame[i*channels+1];//*cos((float)i/(float)bufferSize-PI/2);
+	    averageValue+=audioFrame[i*channels];
 	}
 	averageValue=averageValue/bufferSize;
 	this->bufferSize=bufferSize;

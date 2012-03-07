@@ -8,8 +8,8 @@
 #include "AudioBuffer.h"
 
 namespace ofxPm{
-AudioBuffer::AudioBuffer(AudioSource & source, int size) {
-	setup(source,size);
+AudioBuffer::AudioBuffer(AudioSource & source, float size, int sampleR, int bufferS,int numCh) {
+	setup(source,size,sampleR,bufferS,numCh);
 }
 		
 	//------------------------------------------------------
@@ -29,14 +29,23 @@ AudioBuffer::AudioBuffer(AudioSource & source, int size) {
 
 	//------------------------------------------------------
 
-	void AudioBuffer::setup(AudioSource & source,int size)
+	void AudioBuffer::setup(AudioSource & source,float sizeInSecs,int sampleR, int bufferS, int numCh)
 	{
+		
+		//7.0*(float(aSampleRate)/float(aBufferSize))
+		
 		this->source=&source;
 		fps=source.getFps();
 		totalFrames=0;
-		this->maxSize = size;
+		aSampleRate=sampleR;
+		aBufferSize=bufferS;
+		aNumCh=numCh;
+		
+		this->maxSize = sizeInSecs *(float(sampleR)/float(bufferS));
+		this->maxSizeSamples = sizeInSecs * sampleR;
 		resume();	
 		stopped=false;
+		
 	}
 
 	//------------------------------------------------------
@@ -48,25 +57,45 @@ AudioBuffer::AudioBuffer(AudioSource & source, int size) {
 	unsigned int AudioBuffer::getMaxSize(){
 		return maxSize;
 	}
+	//------------------------------------------------------	
+	unsigned int AudioBuffer::sizeInSamples()
+	{
+		return samples.size();
+	}
+	//------------------------------------------------------
+	unsigned int AudioBuffer::getMaxSizeInSamples()
+	{
+		return maxSizeSamples;
+	}
 	//------------------------------------------------------
 	
-	
-	void AudioBuffer::newAudioFrame(AudioFrame &frame){
+	void AudioBuffer::newAudioFrame(AudioFrame &frame)
+	{
 		if(size()==0)initTime=frame.getTimestamp();
+	
+		// AudioFrames managing
 		totalFrames++;
-		//buffer.insert(make_pair(frame->getTimestamp(),frame));
-		//times.push(frame->getTimestamp());
 		frames.push_back(&frame);
-		frame.retain();
-		
+		frame.retain();		
 		if(size()>maxSize){
-			//delete buffer[times.front()];
-			//buffer.erase(times.front());
-			//times.pop();
 			frames.front()->release();
-			//frames.front()->release();
 			frames.erase(frames.begin());
 		}
+		
+		
+		// Samples managing
+		float* auxData = new float[frame.getBufferSize()*aNumCh];
+		auxData = frame.getAudioData();
+		for(int i=0;i<frame.getBufferSize();i++)
+		{
+			samples.push_back(auxData[i*2]);
+			
+			if(sizeInSamples()>maxSizeSamples){
+				samples.erase(samples.begin());
+			}
+			
+		}
+		
 		newFrameEvent.notify(this,frame);
 	}
 
@@ -108,6 +137,14 @@ AudioBuffer::AudioBuffer(AudioSource & source, int size) {
 	AudioFrame * AudioBuffer::getAudioFrame(float pct){
 		return getAudioFrame(getLastTimestamp()-(getInitTime()+getTotalTime()*pct));
 	}
+	
+	//------------------------------------------------------
+	
+	float AudioBuffer::getAudioSample(int index)
+	{
+		return samples[index];
+	}
+	
 	//------------------------------------------------------
 	
 	float AudioBuffer::getFps(){

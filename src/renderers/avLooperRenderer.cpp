@@ -18,6 +18,7 @@ namespace ofxPm
 		// link audio and video headers for event communication a->v
 		aHeader.linkToVideoHeader(vHeader);
 		
+		sampleIndex=0;
 	}
 
 	//------------------------------------------------------
@@ -105,12 +106,21 @@ namespace ofxPm
 //		memcpy(output,frame->getAudioFrame(),sizeof(float)*bufferSize*nChannels);
 //		frame->release();
 
+		
 		AudioFrame * frame= aHeader.getNextAudioFrame();
 		for(int i=0;i<bufferSize;i++)
 		{
-			output[i*nChannels  ] = frame->getAudioData()[i*nChannels  ]*aHeader.getVolume(); 
-			output[i*nChannels+1] = frame->getAudioData()[i*nChannels+1]*aHeader.getVolume(); 
+//			output[i*nChannels  ] = frame->getAudioData()[i*nChannels  ]*1.0f;//aHeader.getVolume(); 
+//			output[i*nChannels+1] = frame->getAudioData()[i*nChannels+1]*1.0f;//aHeader.getVolume(); 
+			output[i*nChannels  ] = aBuffer->getAudioSample(sampleIndex); 
+			output[i*nChannels+1] = aBuffer->getAudioSample(sampleIndex);
+			//output[i*nChannels+1] = aBuffer->getAudioSample(sampleIndex*nChannels+1); 
+			
+			//sampleIndex=(sampleIndex+1)%aBuffer->getMaxSizeInSamples();
+			sampleIndex=(sampleIndex+1);
+			if (sampleIndex>aBuffer->getMaxSizeInSamples()) sampleIndex=0;
 		}
+		// we need 
 		frame->release();
 	}
 	
