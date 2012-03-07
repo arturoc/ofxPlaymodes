@@ -272,11 +272,11 @@ float VideoHeader::getDelayPct()
 	return res;
 }
 //------------------------------------------------------
-void VideoHeader::setDelayMs(int delayMs)
+void VideoHeader::setDelayMs(float delayMs)
 {
 	TimeDiff oneFrame=(TimeDiff)(1000000.0/fps/1.0);
-	int delayToSet = delayMs*1000;
-    this->delay = CLAMP(delayToSet,0,(buffer->getMaxSize()-1)*oneFrame);
+	float delayToSet = delayMs*1000.0;
+    this->delay = CLAMP(int(delayToSet),0,(buffer->getMaxSize()-1)*oneFrame);
 	// ? eloi hack
 	//this->position = 0;
 }
@@ -300,17 +300,21 @@ float VideoHeader::getIn()
 	return in;
 }
 //------------------------------------------------------
-void VideoHeader::setInMs(int in)
+void VideoHeader::setInMs(float in)
 {
 	float oneFrameMs=(TimeDiff)(1000000.0/fps/1.0);
-	this->setInPct(float(in*1000.0f) / (oneFrameMs*float(buffer->size())));
+	float fAux = float(in*1000.0f) / (oneFrameMs*float(buffer->size()));
+	this->setInPct(CLAMP(fAux,0.0,1.0));    
+	
+	printf("vH :: in %d = pct %f\n",in,float(in*1000.0f) / (oneFrameMs*float(buffer->size())));
 	//printf("ms to set %f translated to %f fps %f\n",in,float(in) / (oneFrameMs*float(buffer->size())),this->fps);
 	//printf("VIDEO inMs %d :: %f \n",in,float(in) / (oneFrameMs*float(buffer->size())));
 }
 //------------------------------------------------------
 void VideoHeader::setInPct(float in)
 {
-	this->in=CLAMP(in,this->out,1.0);
+	//this->in=CLAMP(in,this->out,1.0);
+	this->in=in;
 }
 //------------------------------------------------------
 void VideoHeader::setInFrames(int in)
@@ -325,15 +329,19 @@ float VideoHeader::getOut()
 	return out;
 }
 //------------------------------------------------------
-void VideoHeader::setOutMs(int out)
+void VideoHeader::setOutMs(float out)
 {
 	float oneFrameMs=(TimeDiff)(1000000.0/fps/1.0);
-	this->setOutPct(float(out*1000.0f) / (oneFrameMs*float(buffer->size())));
+	float fAux = float(out*1000.0f) / (oneFrameMs*float(buffer->size()));
+	this->setOutPct(CLAMP(fAux,0.0,1.0));    
+
 }
 //------------------------------------------------------
 void VideoHeader::setOutPct(float out)
 {
 	this->out=CLAMP(out,0.0f,this->in);
+	this->out=out;
+
 }
 //------------------------------------------------------
 void VideoHeader::setOutFrames(int out)

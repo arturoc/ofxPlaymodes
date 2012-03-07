@@ -32,17 +32,17 @@ public:
     int		getDelayMs() ;
     int		getDelayFrames() ;
     float	getDelayPct() ;
-    void	setDelayMs(int delay);
+    void	setDelayMs(float delay);
     void	setDelayFrames(int delay);
     void	setDelayPct(float pct);
 	// in 
     float	getIn() ;
-    void	setInMs(int in);
+    void	setInMs(float in);
     void	setInFrames(int in);
     void	setInPct(float in);
 	// out 
     float	getOut() ;	
-    void	setOutMs(int out);
+    void	setOutMs(float out);
     void	setOutFrames(int out);
     void	setOutPct(float out);
 	// speed

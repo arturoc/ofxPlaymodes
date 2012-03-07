@@ -3,6 +3,7 @@
 #include "avLooperRenderer.h"
 #include "VideoFrame.h"
 
+int inc = 1;
 //------------------------------------------------------
 
 namespace ofxPm
@@ -38,6 +39,8 @@ namespace ofxPm
 
 		// link audio and video headers for event communication a->v
 		aHeader.linkToVideoHeader(vHeader);
+
+		sampleIndex=0;
 	}
 	//------------------------------------------------------
 
@@ -106,7 +109,6 @@ namespace ofxPm
 //		memcpy(output,frame->getAudioFrame(),sizeof(float)*bufferSize*nChannels);
 //		frame->release();
 
-		
 		AudioFrame * frame= aHeader.getNextAudioFrame();
 		for(int i=0;i<bufferSize;i++)
 		{
@@ -116,16 +118,24 @@ namespace ofxPm
 			output[i*nChannels+1] = aBuffer->getAudioSample(sampleIndex);
 			//output[i*nChannels+1] = aBuffer->getAudioSample(sampleIndex*nChannels+1); 
 			
-			//sampleIndex=(sampleIndex+1)%aBuffer->getMaxSizeInSamples();
-			sampleIndex=(sampleIndex+1);
-			if (sampleIndex>aBuffer->getMaxSizeInSamples()) sampleIndex=0;
+			//sampleIndex=(sampleIndex+inc);
+			sampleIndex=(sampleIndex+1)%aBuffer->getSizeInSamples();
+//			if (sampleIndex<512) 
+//			{
+//				sampleIndex=(sampleIndex+inc);
+//			}
+//			else {
+//				
+//				sampleIndex=0;
+//			}
+				
 		}
 		// we need 
 		frame->release();
 	}
 	
 	//------------------------------------------------------
-	void avLooperRenderer::setDelayMs(int ms)
+	void avLooperRenderer::setDelayMs(float ms)
 	{
 		vHeader.setDelayMs(ms);
 		aHeader.setDelayMs(ms);
@@ -143,17 +153,21 @@ namespace ofxPm
 		aHeader.setVolume(v);
 	}
 	//------------------------------------------------------
-	void avLooperRenderer::setInMs(int ms)
+	void avLooperRenderer::setInMs(float ms)
 	{
 		vHeader.setInMs(ms);
 		aHeader.setInMs(ms);
+		
+		printf("av::in ms = %d\n",ms);
 
 	}
 	//------------------------------------------------------
-	void avLooperRenderer::setOutMs(int ms)
+	void avLooperRenderer::setOutMs(float ms)
 	{
 		vHeader.setOutMs(ms);
 		aHeader.setOutMs(ms);
+
+		printf("av::out ms = %d\n",ms);
 	}
 	//------------------------------------------------------
 	void avLooperRenderer::setPlaying(bool b)

@@ -179,6 +179,7 @@ void VideoBuffer::draw(){
 void VideoBuffer::stop(){
 	ofRemoveListener(source->newFrameEvent,this,&VideoBuffer::newVideoFrame);
     stopped = true;
+	
 }
 
 void VideoBuffer::resume(){

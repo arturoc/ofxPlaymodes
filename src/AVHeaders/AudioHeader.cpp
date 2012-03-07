@@ -312,11 +312,11 @@ namespace ofxPm
 		return res;
 	}
 	//------------------------------------------------------
-	void AudioHeader::setDelayMs(int delayMs)
+	void AudioHeader::setDelayMs(float delayMs)
 	{
 		TimeDiff oneFrame=(TimeDiff)(1000000.0/fps/1.0);
-		int delayToSet = delayMs*1000;
-		this->delay = CLAMP(delayToSet,0,(buffer->getMaxSize()-1)*oneFrame);
+		float fAux = delayMs;
+		this->delay = CLAMP(int(fAux),0,int((buffer->getMaxSize()-1)*oneFrame));
 		// ? eloi hack
 		//this->position = 0;
 	}
@@ -340,16 +340,17 @@ namespace ofxPm
 		return in;
 	}
 	//------------------------------------------------------
-	void AudioHeader::setInMs(int inMs)
+	void AudioHeader::setInMs(float inMs)
 	{
 		TimeDiff oneFrameMs=(TimeDiff)(1000000.0/fps/1.0);
-		float result = (inMs*1000.0f) / float(oneFrameMs*float(buffer->size()));
-		this->setInPct(result);
+		float fAux = float(in*1000.0f) / (oneFrameMs*float(buffer->size()));
+		this->setInPct(CLAMP(fAux,0.0,1.0));    
+		
 	}
 	//------------------------------------------------------
 	void AudioHeader::setInPct(float in)
 	{
-		this->in=CLAMP(in,this->out,1.0);
+		this->in=CLAMP(in,0.0,1.0);
 	}
 	//------------------------------------------------------
 	void AudioHeader::setInFrames(int in)
@@ -364,10 +365,11 @@ namespace ofxPm
 		return out;
 	}
 	//------------------------------------------------------
-	void AudioHeader::setOutMs(int out)
+	void AudioHeader::setOutMs(float out)
 	{
-		float oneFrameMs=(TimeDiff)(1000000.0/fps/1.0);
-		this->setOutPct(float(out*1000.0f) / (oneFrameMs*float(buffer->size()-1)));
+		TimeDiff oneFrameMs=(TimeDiff)(1000000.0/fps/1.0);
+		float fAux = float(out*1000.0f) / (oneFrameMs*float(buffer->size()));
+		this->setInPct(CLAMP(fAux,0.0,1.0));    
 	}
 	//------------------------------------------------------
 	void AudioHeader::setOutPct(float out)
