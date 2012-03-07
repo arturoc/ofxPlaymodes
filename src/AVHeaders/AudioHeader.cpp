@@ -343,7 +343,7 @@ namespace ofxPm
 	void AudioHeader::setInMs(float inMs)
 	{
 		TimeDiff oneFrameMs=(TimeDiff)(1000000.0/fps/1.0);
-		float fAux = float(in*1000.0f) / (oneFrameMs*float(buffer->size()));
+		float fAux = float(inMs*1000.0f) / (oneFrameMs*float(buffer->size()));
 		this->setInPct(CLAMP(fAux,0.0,1.0));    
 		
 	}
@@ -368,7 +368,7 @@ namespace ofxPm
 	void AudioHeader::setOutMs(float out)
 	{
 		TimeDiff oneFrameMs=(TimeDiff)(1000000.0/fps/1.0);
-		float fAux = float(out*1000.0f) / (oneFrameMs*float(buffer->size()));
+		float fAux = float(outMs*1000.0f) / (oneFrameMs*float(buffer->size()));
 		this->setInPct(CLAMP(fAux,0.0,1.0));    
 	}
 	//------------------------------------------------------

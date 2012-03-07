@@ -38,7 +38,7 @@ namespace ofxPm
 		aHeader.setup(*aBuffer);
 
 		// link audio and video headers for event communication a->v
-		aHeader.linkToVideoHeader(vHeader);
+		//aHeader.linkToVideoHeader(vHeader);
 
 		sampleIndex=0;
 	}
@@ -119,7 +119,7 @@ namespace ofxPm
 			//output[i*nChannels+1] = aBuffer->getAudioSample(sampleIndex*nChannels+1); 
 			
 			//sampleIndex=(sampleIndex+inc);
-			sampleIndex=(sampleIndex+1)%aBuffer->getSizeInSamples();
+			sampleIndex=(sampleIndex+1)%aBuffer->sizeInSamples();
 //			if (sampleIndex<512) 
 //			{
 //				sampleIndex=(sampleIndex+inc);
