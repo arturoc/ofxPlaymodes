@@ -29,38 +29,38 @@ public:
     VideoFrame *getNextVideoFrame();
 	VideoFrame *getVideoFrame(int index);
     int getNextPosition();
-    VideoBuffer *getBuffer() const;
+    VideoBuffer *getBuffer();
 	
 	// delay
-    int		getDelayMs() const;
-    int		getDelayFrames() const;
-    float	getDelayPct() const;
+    int		getDelayMs();
+    int		getDelayFrames();
+    float	getDelayPct() ;
     void	setDelayMs(int delay);
     void	setDelayFrames(int delay);
     void	setDelayPct(float pct);
 	// in 
-    float	getIn() const;
+    float	getIn() ;
     void	setInMs(int in);
     void	setInFrames(int in);
     void	setInPct(float in);
 	// out 
-    float	getOut() const;	
+    float	getOut() ;	
     void	setOutMs(int out);
     void	setOutFrames(int out);
     void	setOutPct(float out);
 	// speed
-    float	getSpeed() const;
+    float	getSpeed();
     void	setSpeed(float speed);
 	// loop mode
 	int		getLoopMode();
 	void	setLoopMode(int loop);
-	bool	isPlaying() const;
+	bool	isPlaying();
 	void	setPlaying(bool loopMode);
 	void	setPlaying(bool loopMode, float speed);
 	void	setLoopToStart();
 	
 	// 
-	int		getOpacity() const;
+	int		getOpacity();
 	void	setOpacity(int opacity);
     float	getFps();
     void	setFps(float fps);

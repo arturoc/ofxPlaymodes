@@ -17,6 +17,7 @@ AudioBuffer::AudioBuffer(AudioSource & source, int size) {
 		source = NULL;
 		fps=0;
 		totalFrames=0;
+		stopped=false;
 	}
 
 	//------------------------------------------------------
@@ -35,6 +36,7 @@ AudioBuffer::AudioBuffer(AudioSource & source, int size) {
 		totalFrames=0;
 		this->maxSize = size;
 		resume();	
+		stopped=false;
 	}
 
 	//------------------------------------------------------
@@ -150,10 +152,11 @@ AudioBuffer::AudioBuffer(AudioSource & source, int size) {
 	void AudioBuffer::draw(){
 		float length=float(size())/((float)maxSize)*(float)(ofGetWidth()-PMDRAWSPACING*2);
 		float oneLength=(float)(ofGetWidth()-PMDRAWSPACING*2)/(float)(maxSize);
-		
 		//		float length = (float)size()/((float)maxSize*(float)ofGetWidth()-PMDRAWSPACING);
 		float oneFrame =((float)ofGetWidth()-float(2*PMDRAWSPACING))/(float)maxSize;
 
+		if(stopped==true) ofSetColor(255,0,0);
+		else ofSetColor(0,120,255);
 		ofLine(PMDRAWSPACING,650,length,650);
 		for(int i=0;i<size();i++){
 			ofSetColor(0,120,255);
@@ -163,7 +166,7 @@ AudioBuffer::AudioBuffer(AudioSource & source, int size) {
 			float X = fmod(i,source->getFps());
 			if(X<1.0)
 			{
-				ofSetColor(255,255,255);
+				ofSetColor(0,255,255);
 				ofLine((oneLength*i)+PMDRAWSPACING,650,(oneLength*i)+PMDRAWSPACING,640);
 				ofDrawBitmapString(ofToString(float(size()-i)/source->getFps()),(oneLength*i)+PMDRAWSPACING,635);
 				// + " s"
@@ -174,10 +177,12 @@ AudioBuffer::AudioBuffer(AudioSource & source, int size) {
 	//------------------------------------------------------
 
 	void AudioBuffer::stop(){
+		stopped=true;
 		ofRemoveListener(source->newFrameEvent,this,&AudioBuffer::newAudioFrame);
 	}
 
 	void AudioBuffer::resume(){
+		stopped=false;
 		ofAddListener(source->newFrameEvent,this,&AudioBuffer::newAudioFrame);
 	}
 

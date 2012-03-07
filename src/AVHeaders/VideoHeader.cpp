@@ -223,7 +223,7 @@ int VideoHeader::getNextPosition(){
 }
 
 //------------------------------------------------------
-VideoBuffer *VideoHeader::getBuffer() const
+VideoBuffer *VideoHeader::getBuffer()
 {
     return buffer;
 }
@@ -234,7 +234,7 @@ void VideoHeader::setSpeed(float speed)
 	this->speed = speed;
 }
 //------------------------------------------------------
-float VideoHeader::getSpeed() const
+float VideoHeader::getSpeed() 
 {
     return speed;
 }
@@ -244,7 +244,7 @@ void VideoHeader::setOpacity(int opacity)
 	this->opacity = CLAMP (opacity,0,255);
 }
 //------------------------------------------------------
-int VideoHeader::getOpacity() const
+int VideoHeader::getOpacity() 
 {
 	return opacity;
 }
@@ -256,17 +256,17 @@ int VideoHeader::getOpacity() const
 //------------------------------------------------------
 // get & set delay 
 //------------------------------------------------------
-int VideoHeader::getDelayMs() const
+int VideoHeader::getDelayMs() 
 {
 	return delay/1000;
 }
 //------------------------------------------------------
-int VideoHeader::getDelayFrames() const
+int VideoHeader::getDelayFrames() 
 {
 	return this->getDelayMs()/(TimeDiff)(1000.0/fps/1.0);
 }
 //------------------------------------------------------
-float VideoHeader::getDelayPct() const
+float VideoHeader::getDelayPct() 
 {
 	float res = this->getDelayFrames()/(buffer->size()-1); 
 	return res;
@@ -295,7 +295,7 @@ void VideoHeader::setDelayPct(float pct)
 //------------------------------------------------------
 // get & set in & out
 //------------------------------------------------------
-float VideoHeader::getIn() const
+float VideoHeader::getIn() 
 {
 	return in;
 }
@@ -320,7 +320,7 @@ void VideoHeader::setInFrames(int in)
 }
 	
 //------------------------------------------------------
-float VideoHeader::getOut() const
+float VideoHeader::getOut() 
 {
 	return out;
 }
@@ -365,7 +365,7 @@ void VideoHeader::setLoopToStart()
 	loopStart=true;
 }
 //------------------------------------------------------
-bool VideoHeader::isPlaying() const
+bool VideoHeader::isPlaying() 
 {
 	return playing;
 }

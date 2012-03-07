@@ -5,59 +5,52 @@ using namespace ofxPm;
 void testApp::setup()
 {	
 	float duration = 7.0;
-	audioSetupFinished=false;
+	freeze=false;
+	
+	// video pipeline
+	//////////////////
+	vGrabber.initGrabber(1280,720);
+	vGrabber.setDeviceID(22);
+	vGrabber.setFps(25);
+	vBuffer.setup(vGrabber, 175);	
 
-	// audio pipeline 
-	aBufferSize=512;
+	aBufferSize=1024;
 	aSampleRate=96000;
-	
-
-//#define AUDIO_BUFFER_NUM_FRAMES 
-
-	aGrabber.setFps(float(aSampleRate)/float(aBufferSize));
-	aBuffer.setup(aGrabber,7.0*(float(aSampleRate)/float(aBufferSize)));
-//	aBuffer.setup(aGrabber,656);
-//	aBuffer.stop();
-	aHeader.setup(aBuffer);
-	
-	
 	soundStream.listDevices();
-	soundStream.setDeviceID(8);
-	soundStream.setup(2,2,aSampleRate,aBufferSize,4);
+	soundStream.setup(2,2,aSampleRate,aBufferSize,2);
+	soundStream.setDeviceID(7);
 	soundStream.setInput(this);
 	soundStream.setOutput(this);
 	
-	// video pipeline
-	grabber.initGrabber(1280,720);
-	grabber.setDeviceID(22);
-	// need to override like this to have deisred effect
-	grabber.setFps(25);
-	buffer.setup(grabber, 175);	
-//	buffer.stop();
-	renderer.setup(buffer);
-	
-	
-	aHeader.linkToVideoHeader(*renderer.getHeader());
-	
-	freeze=true;
+	// audio pipeline 
+	///////////////////
+	audioSetupFinished=false;	
+	aGrabber.setFps(float(aSampleRate)/float(aBufferSize));
+	aBuffer.setup(aGrabber,7.0*(float(aSampleRate)/float(aBufferSize)));
+	// avRenderer
+	//////////////
+	avRenderer.setup(vBuffer,aBuffer);
 	
 	audioSetupFinished=true;
 	
+	
+	
 	// general stuff
+	/////////////////
 	ofBackground(0);
 	ofSetVerticalSync(true);
 	
 	// osc setup 
+	/////////////
 	int oscPort = 12345;
 	receiver.setup(oscPort);
 	sender.setup("localhost",oscPort);
-	freeze = false;
 	
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-	grabber.update();
+	vGrabber.update();
 	updateOsc();
 }
 
@@ -65,16 +58,13 @@ void testApp::update(){
 void testApp::draw(){
 
 	ofSetColor(255,255,255);	
-	renderer.draw(0,0,1245,700);
+	avRenderer.draw(0,0,1245,700);
+
 	// draw buffer draw limits
 	ofSetColor(100);
 	ofSetLineWidth(1.0);
 	ofLine(PMDRAWSPACING,600,PMDRAWSPACING,800);
 	ofLine(ofGetWidth()-PMDRAWSPACING,600,ofGetWidth()-PMDRAWSPACING,800);
-
-	buffer.draw();
-	aBuffer.draw();
-	aHeader.draw();
 	
 	float factorFR = (ofGetFrameRate()/60.0);
 	ofSetColor(255*(1.0-factorFR),255*(factorFR*factorFR*factorFR),0);
@@ -88,19 +78,19 @@ void testApp::keyPressed(int key){
 
 	switch (key) {
 		case 's':
-			grabber.videoSettings();
+			vGrabber.videoSettings();
 			break;
 		case ' ':
 			
 			freeze=!freeze;
 			if(freeze) 
 			{
-				buffer.stop();
+				vBuffer.stop();
 				aBuffer.stop();	
 			}
 			else 
 			{
-				buffer.resume();
+				vBuffer.resume();
 				aBuffer.resume();	
 				
 			}
@@ -118,9 +108,6 @@ void testApp::keyReleased(int key){
 
 //--------------------------------------------------------------
 void testApp::mouseMoved(int x, int y ){
-	float factor = float(x)/float(ofGetWidth());
-	renderer.getHeader()->setDelayMs(int(factor*7000));
-	aHeader.setDelayMs(int(factor*7000));
 
 }
 
@@ -164,47 +151,41 @@ void testApp::updateOsc()
 		// get the next message
 		ofxOscMessage m;
 		receiver.getNextMessage( &m );
-		printf("osc in >> %s :: %f\n",m.getAddress().c_str(),m.getArgAsFloat(0));
+		printf("OSC in > %s :: %f\n",m.getAddress().c_str(),m.getArgAsFloat(0));
 		float value = m.getArgAsFloat(0);
 		
 		if ( m.getAddress() == "/delay" )
 		{
-			renderer.getHeader()->setDelayMs(int(value));
-			aHeader.setDelayMs(int(value));
-			delayHeader = value;
+			avRenderer.setDelayMs(int(value));
 		}
 		if ( m.getAddress() == "/speed" )
 		{
-			renderer.getHeader()->setSpeed(value);
-			aHeader.setSpeed(value);
+			avRenderer.setSpeed(value);
 		}
 		if ( m.getAddress() == "/opacity" )
 		{
-			renderer.getHeader()->setOpacity(int(value*255.0));
+			avRenderer.setOpacity(value);			
 		}
 		if ( m.getAddress() == "/inPoint" )
 		{
-			renderer.getHeader()->setInMs(value);
-			aHeader.setInMs(value);
-			printf("testApp :: inP %f\n",value);
+			avRenderer.setInMs(value);
 		}
 		if ( m.getAddress() == "/outPoint" )
 		{
-			renderer.getHeader()->setOutMs(value);
-			aHeader.setOutMs(value);
+			avRenderer.setOutMs(value);
 		}
 		if ( m.getAddress() == "/freeze" )
 		{
 			if(value==1.0f)
 			{
 				freeze=true;
-				buffer.stop();
+				vBuffer.stop();
 				aBuffer.stop();
 			}
 			else if (value==0.0f)
 			{
 				freeze=false;
-				buffer.resume();
+				vBuffer.resume();
 				aBuffer.resume();
 			}
 		}
@@ -212,21 +193,18 @@ void testApp::updateOsc()
 		{
 			if(value==1.0f)
 			{
-				renderer.getHeader()->setPlaying(true);
-				aHeader.setPlaying(true);
+				avRenderer.setPlaying(true);
 			}
 			else if (value==0.0f)
 			{
-				renderer.getHeader()->setPlaying(false);
-				aHeader.setPlaying(false);
+				avRenderer.setPlaying(false);
 			}
 		}
 		if ( m.getAddress() == "/loopStart" )
 		{
 			if(value==1.0f)
 			{
-				renderer.getHeader()->setLoopToStart();
-				aHeader.setLoopToStart();
+				avRenderer.setLoopToStart();
 			}
 		}
 	}
@@ -246,11 +224,13 @@ void testApp::audioRequested (float * output, int bufferSize, int nChannels)
 {
     if(audioSetupFinished==true)
 	{
-		// get the next audio frame, apply a cosine envelope
-		// and copy to the sound card buffer
-		AudioFrame * frame= aHeader.getNextAudioFrame();
-		memcpy(output,frame->getAudioFrame(),sizeof(float)*bufferSize*nChannels);
-		frame->release();
+//		// get the next audio frame, apply a cosine envelope
+//		// and copy to the sound card buffer
+//		AudioFrame * frame= avRenderer.getAudioHeader()->getNextAudioFrame();
+//		memcpy(output,frame->getAudioFrame(),sizeof(float)*bufferSize*nChannels);
+//		frame->release();
+		
+		avRenderer.audioRequested(output,bufferSize,nChannels);
 	}
 	
 }

@@ -53,7 +53,7 @@ AudioFrame::~AudioFrame() {
 }
 
 
-float * AudioFrame::getAudioFrame(){
+float * AudioFrame::getAudioData(){
     return data;
 }
 

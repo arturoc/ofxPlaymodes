@@ -22,32 +22,30 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
-		ofxPm::VideoGrabber			grabber;
-		ofxPm::VideoBuffer			buffer;
-		ofxPm::HeaderLooperRenderer	renderer;
+		ofxPm::VideoGrabber			vGrabber;
+		ofxPm::AudioGrabber			aGrabber;
+		ofxPm::VideoBuffer			vBuffer;
+		ofxPm::AudioBuffer			aBuffer;
+		ofxPm::avLooperRenderer		avRenderer;
 	
-	// audio
-	ofxPm::AudioGrabber	aGrabber;
-	ofxPm::AudioBuffer aBuffer;
-	ofxPm::AudioHeader aHeader;
-	int aBufferSize;
-	int aSampleRate;
-	int aNumChannels;
-	bool audioSetupFinished;
-	ofSoundStream	soundStream;
-	void audioReceived(float * input, int bufferSize, int nChannels);
-	//void audioOut (float * output, int bufferSize, int nChannels);
-	void audioRequested (float * output, int bufferSize, int nChannels);
-	//---------------------------------------------------
-	// testApp var's
-	bool					freeze;
-	float					delayHeader;
+		// audio
+		int							aBufferSize;
+		int							aSampleRate;
+		int							aNumChannels;
+		ofSoundStream				soundStream;
 
-	//osc eloi
-	ofxOscReceiver			receiver;
-	ofxOscSender			sender;
-	void					updateOsc();
-	
-	float					inN;
-	float					outN;
+		void audioReceived(float * input, int bufferSize, int nChannels);
+		void audioRequested (float * output, int bufferSize, int nChannels);
+
+		bool					freeze;
+		bool					audioSetupFinished;
+		float					delayHeader;
+
+		//osc eloi
+		ofxOscReceiver			receiver;
+		ofxOscSender			sender;
+		void					updateOsc();
+
+		float					inN;
+		float					outN;
 };

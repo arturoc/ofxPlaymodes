@@ -82,13 +82,14 @@ namespace ofxPm
 		float currentLength=float(currentPos)/((float)this->buffer->getMaxSize())*(float)(ofGetWidth()-PMDRAWSPACING*2);
 		float oneLength=(float)(ofGetWidth()-PMDRAWSPACING*2)/(float)(buffer->getMaxSize());
 
-		ofPushStyle();
 		ofSetColor(0,255,255);
+
+		ofPushStyle();
 		ofSetLineWidth(3.0);
 		ofLine(currentLength+PMDRAWSPACING,610,currentLength+PMDRAWSPACING,670);
 		ofPopStyle();
 
-		ofDrawBitmapString(ofToString(currentPos)+" / "+ofToString(this->buffer->getMaxSize()),currentLength,615);
+		ofDrawBitmapString(ofToString(currentPos),currentLength,615);
 		
 		int	inFrame  = int(float(buffer->size()-1)*(in));
 		int outFrame = int(float(buffer->size()-1)*(out));
@@ -159,7 +160,7 @@ namespace ofxPm
 
 		int currentFrameSize=currentFrame->getBufferSize()*currentFrame->getChannels();
 		float resultBuffer[currentFrameSize];
-		memcpy(resultBuffer,currentFrame->getAudioFrame(),sizeof(float)*currentFrameSize);
+		memcpy(resultBuffer,currentFrame->getAudioData(),sizeof(float)*currentFrameSize);
 				
 		AudioFrame * resultFrame=
         new AudioFrame( resultBuffer,
@@ -221,7 +222,7 @@ namespace ofxPm
 			if(loopMode==OF_LOOP_NORMAL) 
 			{
 				position = float(inAbsFrame);
-				// throw event
+				// throw event to the videoHeader to say : "hi ! go back to loop start !"
 				if(vHeaderLink!=NULL) 
 				{
 					int i = 1;
@@ -241,16 +242,22 @@ namespace ofxPm
 		// if we're in playing in loop and we're reaching the inpoint (while speed is negative probably)
 		else if(playing && (int(position) < (inAbsFrame)))
 		{
-			if(loopMode==OF_LOOP_NORMAL) position = float(outAbsFrame);
+			if(loopMode==OF_LOOP_NORMAL)
+			{ 
+				position = float(outAbsFrame);
+				// throw event to the videoHeader to say : "hi ! go back to loop start !"
+				if(vHeaderLink!=NULL) 
+				{
+					int i = 1;
+					ofNotifyEvent(loopInEvent,i,vHeaderLink);
+				}				
+			}
 			else if (loopMode==OF_LOOP_NONE) setPlaying(false);
 			else if (loopMode==OF_LOOP_PALINDROME) 
 			{
 				speed=-speed;
 			}
 		}
-		
-		
-		
 		
 		// clamp position to it's limits ...
 		if(playing) position=CLAMP(position,float(inAbsFrame),float(outAbsFrame));
@@ -267,12 +274,10 @@ namespace ofxPm
 		int nextPos;
 		if (playing) nextPos= (buffer_size-1) - backpos;
 		else		 nextPos= (buffer_size-1) - (delay/oneFrame);
-//		printf(" nextPos %d /", nextPos);
 		
 		nextPos = CLAMP(nextPos,0,buffer_size-1);
 		if(nextPos<0) nextPos=0;
 		
-		//printf(" %d\n", nextPos);
 		return nextPos;
 
 	}
@@ -283,7 +288,7 @@ namespace ofxPm
 		this->speed = speed;
 	}
 	//------------------------------------------------------
-	float AudioHeader::getSpeed() const
+	float AudioHeader::getSpeed() 
 	{
 		return speed;
 	}	
@@ -291,17 +296,17 @@ namespace ofxPm
 	//------------------------------------------------------
 	// get & set delay 
 	//------------------------------------------------------
-	int AudioHeader::getDelayMs() const
+	int AudioHeader::getDelayMs() 
 	{
 		return delay/1000;
 	}
 	//------------------------------------------------------
-	int AudioHeader::getDelayFrames() const
+	int AudioHeader::getDelayFrames() 
 	{
 		return this->getDelayMs()/(TimeDiff)(1000.0/fps/1.0);
 	}
 	//------------------------------------------------------
-	float AudioHeader::getDelayPct() const
+	float AudioHeader::getDelayPct() 
 	{
 		float res = this->getDelayFrames()/(buffer->size()-1); 
 		return res;
@@ -311,7 +316,7 @@ namespace ofxPm
 	{
 		TimeDiff oneFrame=(TimeDiff)(1000000.0/fps/1.0);
 		int delayToSet = delayMs*1000;
-		this->delay = CLAMP(delayToSet,0,(buffer->getMaxSize())*oneFrame);
+		this->delay = CLAMP(delayToSet,0,(buffer->getMaxSize()-1)*oneFrame);
 		// ? eloi hack
 		//this->position = 0;
 	}
@@ -330,7 +335,7 @@ namespace ofxPm
 	//------------------------------------------------------
 	// get & set in & out
 	//------------------------------------------------------
-	float AudioHeader::getIn() const
+	float AudioHeader::getIn() 
 	{
 		return in;
 	}
@@ -354,7 +359,7 @@ namespace ofxPm
 	}
 	
 	//------------------------------------------------------
-	float AudioHeader::getOut() const
+	float AudioHeader::getOut() 
 	{
 		return out;
 	}
@@ -399,7 +404,7 @@ namespace ofxPm
 		loopStart=true;
 	}
 	//------------------------------------------------------
-	bool AudioHeader::isPlaying() const
+	bool AudioHeader::isPlaying() 
 	{
 		return playing;
 	}
@@ -439,6 +444,17 @@ namespace ofxPm
 	{
 		this->vHeaderLink=&vH;
 		ofAddListener(this->loopInEvent,this->vHeaderLink,&VideoHeader::receivedLoopEvent);
+	}
+	
+	//------------------------------------------------------
+	void AudioHeader::setVolume(float v) 
+	{
+		this->volume = CLAMP (v,0.0f,1.0f);
+	}
+	//------------------------------------------------------
+	float AudioHeader::getVolume() 
+	{
+		return volume;
 	}
 	
 }

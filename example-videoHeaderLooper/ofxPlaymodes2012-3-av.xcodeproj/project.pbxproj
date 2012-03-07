@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B081BAC714FD99E600A77060 /* HeaderLooperRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B081BAC514FD99E600A77060 /* HeaderLooperRenderer.cpp */; };
+		B07AB59B1506C16700A83CB2 /* avLooperRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B07AB5991506C16700A83CB2 /* avLooperRenderer.cpp */; };
 		B0959A0A14F1B0D20095D524 /* liboscpack.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B09599F014F1B0D20095D524 /* liboscpack.a */; };
 		B0959A0B14F1B0D20095D524 /* liboscpack.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B09599F114F1B0D20095D524 /* liboscpack.a */; };
 		B0959A0C14F1B0D20095D524 /* osc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B09599F314F1B0D20095D524 /* osc.a */; };
@@ -93,8 +93,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		B081BAC514FD99E600A77060 /* HeaderLooperRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HeaderLooperRenderer.cpp; sourceTree = "<group>"; };
-		B081BAC614FD99E600A77060 /* HeaderLooperRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderLooperRenderer.h; sourceTree = "<group>"; };
+		B07AB5991506C16700A83CB2 /* avLooperRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = avLooperRenderer.cpp; sourceTree = "<group>"; };
+		B07AB59A1506C16700A83CB2 /* avLooperRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avLooperRenderer.h; sourceTree = "<group>"; };
 		B09599DA14F1B0D20095D524 /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
 		B09599DF14F1B0D20095D524 /* IpEndpointName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IpEndpointName.h; sourceTree = "<group>"; };
 		B09599E014F1B0D20095D524 /* NetworkingUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkingUtils.h; sourceTree = "<group>"; };
@@ -188,7 +188,7 @@
 		E45BE9770E8CC7DD009D7055 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		E45BE9790E8CC7DD009D7055 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		E45BE97A0E8CC7DD009D7055 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
-		E4B69B5B0A3A1756003C02F2 /* emptyExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = emptyExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4B69B5B0A3A1756003C02F2 /* pm2av_01.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pm2av_01.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4B69E1D0A3A1BDC003C02F2 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
 		E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = testApp.cpp; path = src/testApp.cpp; sourceTree = SOURCE_ROOT; };
 		E4B69E1F0A3A1BDC003C02F2 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
@@ -543,8 +543,8 @@
 		B0959ACB14F1BCA90095D524 /* renderers */ = {
 			isa = PBXGroup;
 			children = (
-				B081BAC514FD99E600A77060 /* HeaderLooperRenderer.cpp */,
-				B081BAC614FD99E600A77060 /* HeaderLooperRenderer.h */,
+				B07AB5991506C16700A83CB2 /* avLooperRenderer.cpp */,
+				B07AB59A1506C16700A83CB2 /* avLooperRenderer.h */,
 				B0959ACC14F1BCA90095D524 /* AudioRenderer.cpp */,
 				B0959ACD14F1BCA90095D524 /* AudioRenderer.h */,
 				B0959ACE14F1BCA90095D524 /* BasicVideoRenderer.cpp */,
@@ -628,7 +628,7 @@
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
 				BB4B014C10F69532006C3DED /* addons */,
 				E45BE5980E8CC70C009D7055 /* frameworks */,
-				E4B69B5B0A3A1756003C02F2 /* emptyExample.app */,
+				E4B69B5B0A3A1756003C02F2 /* pm2av_01.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -654,9 +654,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E4B69B5A0A3A1756003C02F2 /* emptyExample */ = {
+		E4B69B5A0A3A1756003C02F2 /* pm2av_01 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "emptyExample" */;
+			buildConfigurationList = E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "pm2av_01" */;
 			buildPhases = (
 				E4B69B580A3A1756003C02F2 /* Sources */,
 				E4B69B590A3A1756003C02F2 /* Frameworks */,
@@ -668,9 +668,9 @@
 			dependencies = (
 				E4EEB9AC138B136A00A80321 /* PBXTargetDependency */,
 			);
-			name = emptyExample;
+			name = pm2av_01;
 			productName = myOFApp;
-			productReference = E4B69B5B0A3A1756003C02F2 /* emptyExample.app */;
+			productReference = E4B69B5B0A3A1756003C02F2 /* pm2av_01.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -678,7 +678,7 @@
 /* Begin PBXProject section */
 		E4B69B4C0A3A1720003C02F2 /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "ofxPlaymodes2012-2" */;
+			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "ofxPlaymodes2012-3-av" */;
 			compatibilityVersion = "Xcode 2.4";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -699,7 +699,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				E4B69B5A0A3A1756003C02F2 /* emptyExample */,
+				E4B69B5A0A3A1756003C02F2 /* pm2av_01 */,
 			);
 		};
 /* End PBXProject section */
@@ -763,7 +763,7 @@
 				B0959AF814F1BCA90095D524 /* BasicVideoRenderer.cpp in Sources */,
 				B0959AF914F1BCA90095D524 /* VideoRenderer.cpp in Sources */,
 				B0959AFA14F1BCA90095D524 /* ofxObjCPointer.cpp in Sources */,
-				B081BAC714FD99E600A77060 /* HeaderLooperRenderer.cpp in Sources */,
+				B07AB59B1506C16700A83CB2 /* avLooperRenderer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1042,7 +1042,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "ofxPlaymodes2012-2" */ = {
+		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "ofxPlaymodes2012-3-av" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B69B4E0A3A1720003C02F2 /* Debug */,
@@ -1051,7 +1051,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "emptyExample" */ = {
+		E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "pm2av_01" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B69B600A3A1757003C02F2 /* Debug */,

@@ -16,6 +16,7 @@
 
 
 #include "BasicVideoRenderer.h"
+#include "avLooperRenderer.h"
 
 #endif
 

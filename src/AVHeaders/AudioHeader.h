@@ -29,37 +29,39 @@ public:
 	
 
 	// delay
-    int		getDelayMs() const;
-    int		getDelayFrames() const;
-    float	getDelayPct() const;
+    int		getDelayMs() ;
+    int		getDelayFrames() ;
+    float	getDelayPct() ;
     void	setDelayMs(int delay);
     void	setDelayFrames(int delay);
     void	setDelayPct(float pct);
 	// in 
-    float	getIn() const;
+    float	getIn() ;
     void	setInMs(int in);
     void	setInFrames(int in);
     void	setInPct(float in);
 	// out 
-    float	getOut() const;	
+    float	getOut() ;	
     void	setOutMs(int out);
     void	setOutFrames(int out);
     void	setOutPct(float out);
 	// speed
-    float	getSpeed() const;
+    float	getSpeed() ;
     void	setSpeed(float speed);
 	// loop mode
 	int		getLoopMode();
 	void	setLoopMode(int loop);
-	bool	isPlaying() const;
+	bool	isPlaying() ;
 	void	setPlaying(bool loopMode);
 	void	setPlaying(bool loopMode, float speed);
 	void	setLoopToStart();
 	
 	// others
-    float	getFps();
-    void	setFps(float fps);
-	
+    float		getFps();
+    void		setFps(float fps);
+	float		getVolume(); 
+	void		setVolume(float opacity);
+
 	// event related
 	void	linkToVideoHeader(VideoHeader &vH);
 	ofEvent<int> loopInEvent;
@@ -81,6 +83,7 @@ protected:
 	float out;
     float fps;
 	float speed;
+	float	volume;
 	
 	bool	playing;	
 	int		loopMode;

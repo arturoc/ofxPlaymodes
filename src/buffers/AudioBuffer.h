@@ -48,13 +48,15 @@ public:
     void resume();                                  // continue receiving new frames
 
 protected:
-    deque<AudioFrame*> frames;
-    //float     data[AUDIO_BUFFER_NUM_FRAMES];
-    float     fps;
-    Timestamp initTime;
-    long    totalFrames;
-    AudioSource* source;
-	int		maxSize;
+    deque<AudioFrame*>		frames;
+    //float					data[AUDIO_BUFFER_NUM_FRAMES];
+    float					fps;
+    Timestamp				initTime;
+    long					totalFrames;
+    AudioSource*			source;
+	int						maxSize;
+	bool					stopped;
+
 };
 }
 #endif /* AUDIOBUFFER_H_ */

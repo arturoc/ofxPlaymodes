@@ -140,7 +140,9 @@ void VideoBuffer::draw(){
 	int drawBufferY = PMDRAWELEMENTSY+40;
     if(stopped) ofSetColor(255,0,0);
 	else ofSetColor(255);
+	
 	ofLine(0+PMDRAWSPACING,drawBufferY,length,drawBufferY);
+	
 	ofSetColor(255);
 	
     char measureMessage[10];
@@ -153,11 +155,10 @@ void VideoBuffer::draw(){
         }
 		 */
 		if(i%fps==0) 
-		//if(true)
 		{
 			ofSetLineWidth(2.0);
-			ofSetColor(255);
-			if(i!=int(size()))ofDrawBitmapString(ofToString(int(size()-i-1)),oneLength*(i)+PMDRAWSPACING + oneLength/2,PMDRAWELEMENTSY+25);
+			ofSetColor(255,128,0);
+			if(i!=int(size())) ofDrawBitmapString(ofToString(int(size()-i-1)),oneLength*(i)+PMDRAWSPACING + oneLength/2,PMDRAWELEMENTSY+25);
 			else 
 			{
 				ofSetColor(50);
@@ -168,7 +169,7 @@ void VideoBuffer::draw(){
 		else 
 		{
 			ofSetLineWidth(1.0);
-			ofSetColor(150);
+			ofSetColor(155,58,0);
 		}
 		ofLine(oneLength*(i)+PMDRAWSPACING,drawBufferY,oneLength*(i)+PMDRAWSPACING,drawBufferY-10);
     }
