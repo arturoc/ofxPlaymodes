@@ -14,7 +14,7 @@ namespace ofxPm
 	
 	AudioHeader::AudioHeader(AudioBuffer &buffer)
 	{
-		this->aBuffer=&buffer;
+		this->buffer=&buffer;
 		fps=buffer.getFps();
 		position=0;
 		oneFrame=0;
@@ -60,7 +60,7 @@ namespace ofxPm
 	void AudioHeader::setup(AudioBuffer & buffer)
 	{
 		
-		this->aBuffer= &buffer;
+		this->buffer= &buffer;
 		fps=buffer.getFps();
 		position=0;
 		oneFrame=0;
@@ -79,8 +79,8 @@ namespace ofxPm
 		
 	void AudioHeader::draw()
 	{
-		float currentLength=float(currentPos)/((float)this->aBuffer->getMaxSize())*(float)(ofGetWidth()-PMDRAWSPACING*2);
-		float oneLength=(float)(ofGetWidth()-PMDRAWSPACING*2)/(float)(aBuffer->getMaxSize());
+		float currentLength=float(currentPos)/((float)this->buffer->getMaxSize())*(float)(ofGetWidth()-PMDRAWSPACING*2);
+		float oneLength=(float)(ofGetWidth()-PMDRAWSPACING*2)/(float)(buffer->getMaxSize());
 
 		ofSetColor(0,255,255);
 
@@ -91,10 +91,10 @@ namespace ofxPm
 
 		ofDrawBitmapString(ofToString(currentPos),currentLength,615);
 		
-		int	inFrame  = int(float(aBuffer->size()-1)*(in));
-		int outFrame = int(float(aBuffer->size()-1)*(out));
-		int inPos = PMDRAWSPACING + ((aBuffer->size()-1-inFrame) * oneLength) + oneLength/2;
-		int outPos = PMDRAWSPACING + ((aBuffer->size()-1-outFrame) * oneLength) + oneLength/2;
+		int	inFrame  = int(float(buffer->size()-1)*(in));
+		int outFrame = int(float(buffer->size()-1)*(out));
+		int inPos = PMDRAWSPACING + ((buffer->size()-1-inFrame) * oneLength) + oneLength/2;
+		int outPos = PMDRAWSPACING + ((buffer->size()-1-outFrame) * oneLength) + oneLength/2;
 		
 		// draw in & out lines
 		int audioBuffDrawPos = 90;
@@ -143,10 +143,10 @@ namespace ofxPm
 
 	AudioFrame * AudioHeader::getNextAudioFrame()
 	{
-		aBuffer->lock();
+		buffer->lock();
 			currentPos=getNextPosition();
-			AudioFrame * frame = aBuffer->getAudioFrame(currentPos);
-		aBuffer->unlock();
+			AudioFrame * frame = buffer->getAudioFrame(currentPos);
+		buffer->unlock();
 		
 		return frame;
 	}
@@ -155,8 +155,8 @@ namespace ofxPm
 
 	AudioFrame * AudioHeader::getAudioFrame(int position)
 	{
-		position = CLAMP(position,0,aBuffer->size());
-		AudioFrame * currentFrame = aBuffer->getAudioFrame(position);
+		position = CLAMP(position,0,buffer->size());
+		AudioFrame * currentFrame = buffer->getAudioFrame(position);
 
 		int currentFrameSize=currentFrame->getBufferSize()*currentFrame->getChannels();
 		float resultBuffer[currentFrameSize];
@@ -178,8 +178,8 @@ namespace ofxPm
 		if(playing) oneFrame=(TimeDiff)(1000000.0/fps/speed);
 		else oneFrame=(TimeDiff)(1000000.0/fps/1.0);
 		
-		unsigned int buffer_size=aBuffer->size();
-		unsigned int totalNumFr = aBuffer->getTotalFrames();
+		unsigned int buffer_size=buffer->size();
+		unsigned int totalNumFr = buffer->getTotalFrames();
 		unsigned int lastAbsFrame = totalNumFr - buffer_size; 
 		int	inFrame  = int(float(buffer_size-1)*(in));
 		int outFrame = int(float(buffer_size-1)*(out));
@@ -267,7 +267,7 @@ namespace ofxPm
 		int backpos=0;	
 		if (!playing) backpos=0;
 		else {
-			backpos=int(aBuffer->getTotalFrames()-int(position));
+			backpos=int(buffer->getTotalFrames()-int(position));
 			backpos=CLAMP(backpos,0,buffer_size-1);
 		}
 		
@@ -308,7 +308,7 @@ namespace ofxPm
 	//------------------------------------------------------
 	float AudioHeader::getDelayPct() 
 	{
-		float res = this->getDelayFrames()/(aBuffer->size()-1); 
+		float res = this->getDelayFrames()/(buffer->size()-1); 
 		return res;
 	}
 	//------------------------------------------------------
@@ -316,7 +316,7 @@ namespace ofxPm
 	{
 		TimeDiff oneFrame=(TimeDiff)(1000000.0/fps/1.0);
 		float fAux = delayMs*1000.0f;
-		this->delay = CLAMP(int(fAux),0,int((aBuffer->getMaxSize()-1)*oneFrame));
+		this->delay = CLAMP(int(fAux),0,int((buffer->getMaxSize()-1)*oneFrame));
 		// ? eloi hack
 		//this->position = 0;
 	}
@@ -328,7 +328,7 @@ namespace ofxPm
 	//------------------------------------------------------
 	void AudioHeader::setDelayPct(float pct)
 	{
-		this->setDelayFrames(int(float(pct) * float(aBuffer->size())));
+		this->setDelayFrames(int(float(pct) * float(buffer->size())));
 	}
 	
 	
@@ -343,7 +343,7 @@ namespace ofxPm
 	void AudioHeader::setInMs(float inMs)
 	{
 		TimeDiff oneFrameMs=(TimeDiff)(1000000.0/fps/1.0);
-		float fAux = float(inMs*1000.0f) / (oneFrameMs*float(aBuffer->size()));
+		float fAux = float(inMs*1000.0f) / (oneFrameMs*float(buffer->size()));
 		this->setInPct(CLAMP(fAux,0.0,1.0));    
 		
 	}
@@ -355,7 +355,7 @@ namespace ofxPm
 	//------------------------------------------------------
 	void AudioHeader::setInFrames(int in)
 	{
-		float pct = float(in)/float(aBuffer->size());
+		float pct = float(in)/float(buffer->size());
 		this->setInPct(pct);
 	}
 	
@@ -368,7 +368,7 @@ namespace ofxPm
 	void AudioHeader::setOutMs(float outMs)
 	{
 		TimeDiff oneFrameMs=(TimeDiff)(1000000.0/fps/1.0);
-		float fAux = float(outMs*1000.0f) / (oneFrameMs*float(aBuffer->size()));
+		float fAux = float(outMs*1000.0f) / (oneFrameMs*float(buffer->size()));
 		this->setOutPct(CLAMP(fAux,0.0,1.0));    
 	}
 	//------------------------------------------------------
@@ -379,7 +379,7 @@ namespace ofxPm
 	//------------------------------------------------------
 	void AudioHeader::setOutFrames(int out)
 	{
-		float pct = float(out)/float(aBuffer->size());
+		float pct = float(out)/float(buffer->size());
 		this->setOutPct(pct);
 	}
 	
@@ -420,9 +420,9 @@ namespace ofxPm
 			// this behaviour is to sync entering loop mode with starting at inPoint or outPoint depending on speed
 			this->playing = isPlaying;
 			int	loopFrame;
-			if(speed>0.0f) loopFrame = int(float(aBuffer->size()-1)*(in));
-			else loopFrame = int(float(aBuffer->size()-1)*(out));
-			int	inAbsFrame  = aBuffer->getTotalFrames() -  loopFrame;
+			if(speed>0.0f) loopFrame = int(float(buffer->size()-1)*(in));
+			else loopFrame = int(float(buffer->size()-1)*(out));
+			int	inAbsFrame  = buffer->getTotalFrames() -  loopFrame;
 			position = inAbsFrame; 
 		}
 		else
@@ -431,7 +431,7 @@ namespace ofxPm
 			// this behaviour is to let the header (set by delay on no loop) where the loop was when deactivated
 			// other beahaviour could be to let the header on delay / inPoint / outPoint position when loop is turned off
 			this->playing = isPlaying;
-			float	actualFrame  = float(aBuffer->getTotalFrames()-1) - (position);
+			float	actualFrame  = float(buffer->getTotalFrames()-1) - (position);
 			TimeDiff oneFrame=(TimeDiff)(1000000.0/fps/1.0);		
 			delay = (actualFrame-1)*oneFrame;
 		}

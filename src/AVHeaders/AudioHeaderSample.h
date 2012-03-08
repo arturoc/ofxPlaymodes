@@ -5,8 +5,8 @@
  *      Author: arturo castro
  */
 
-#ifndef AUDIOHEADER_H_INCLUDED
-#define AUDIOHEADER_H_INCLUDED
+#ifndef AUDIOHEADERSAMPLE_H_INCLUDED
+#define AUDIOHEADERSAMPLE_H_INCLUDED
 
 #include "AudioSink.h"
 #include "AudioSource.h"
@@ -15,16 +15,16 @@
 
 
 namespace ofxPm{
-class AudioHeader:public AudioSink, public AudioSource{
+class AudioHeaderSample:public AudioSink, public AudioSource{
 public:
-    AudioHeader(AudioBuffer &buffer);
-    AudioHeader();
-    ~AudioHeader();
+    AudioHeaderSample(AudioBuffer &buffer);
+    AudioHeaderSample();
+    ~AudioHeaderSample();
 
 	void setup(AudioBuffer & buffer);
     void draw();
-    AudioFrame * getNextAudioFrame();
-    AudioFrame * getAudioFrame(int position);
+    float * getNextAudioFrame();
+    float * getAudioFrame(int position);
     int getNextPosition();
 	
 
