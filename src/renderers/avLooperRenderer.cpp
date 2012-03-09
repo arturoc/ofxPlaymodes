@@ -15,9 +15,13 @@ namespace ofxPm
 		
 		this->aBuffer = &bufferAudio;		
 		aHeader.setup(*aBuffer);
+		aHeader2.setup(*aBuffer);
+		
+		
 		
 		// link audio and video headers for event communication a->v
 		aHeader.linkToVideoHeader(vHeader);
+		aHeader2.linkToVideoHeader(vHeader);
 		
 		sampleIndex=0;
 	}
@@ -36,9 +40,11 @@ namespace ofxPm
 	
 		this->aBuffer = &bufferAudio;		
 		aHeader.setup(*aBuffer);
+		aHeader2.setup(*aBuffer);
 
 		// link audio and video headers for event communication a->v
-		//aHeader.linkToVideoHeader(vHeader);
+		aHeader.linkToVideoHeader(vHeader);
+		aHeader2.linkToVideoHeader(vHeader);
 
 		sampleIndex=0;
 	}
@@ -59,6 +65,7 @@ namespace ofxPm
 		}
 		vHeader.draw();
 		aHeader.draw();
+		aHeader2.draw();
 	}
 	//------------------------------------------------------
 
@@ -79,6 +86,7 @@ namespace ofxPm
 
 		vHeader.draw();
 		aHeader.draw();
+		aHeader2.draw();
 		
 		ofSetColor(255,255,255);
 		
@@ -109,28 +117,21 @@ namespace ofxPm
 //		memcpy(output,frame->getAudioFrame(),sizeof(float)*bufferSize*nChannels);
 //		frame->release();
 
+		int sampleIndex=0;
 		AudioFrame * frame= aHeader.getNextAudioFrame();
+		aHeader2.resetTick();
 		for(int i=0;i<bufferSize;i++)
 		{
-//			output[i*nChannels  ] = frame->getAudioData()[i*nChannels  ]*1.0f;//aHeader.getVolume(); 
-//			output[i*nChannels+1] = frame->getAudioData()[i*nChannels+1]*1.0f;//aHeader.getVolume(); 
-			output[i*nChannels  ] = aBuffer->getAudioSample(sampleIndex); 
-			output[i*nChannels+1] = aBuffer->getAudioSample(sampleIndex);
-			//output[i*nChannels+1] = aBuffer->getAudioSample(sampleIndex*nChannels+1); 
+			AudioSample* aSample = aHeader2.getNextAudioSample();
 			
-			//sampleIndex=(sampleIndex+inc);
-			sampleIndex=(sampleIndex+1)%aBuffer->sizeInSamples();
-//			if (sampleIndex<512) 
-//			{
-//				sampleIndex=(sampleIndex+inc);
-//			}
-//			else {
-//				
-//				sampleIndex=0;
-//			}
+			output[i*nChannels  ] = aSample->getAudioData()[0]; 
+			output[i*nChannels+1] = aSample->getAudioData()[0]; 
+			
+			aHeader2.updateTick();
+			aSample->release();
 				
 		}
-		// we need 
+		// we need
 		frame->release();
 	}
 	
@@ -139,26 +140,29 @@ namespace ofxPm
 	{
 		vHeader.setDelayMs(ms);
 		aHeader.setDelayMs(ms);
+		aHeader2.setDelaySamples(ms*96);
 	}
 	//------------------------------------------------------
 	void avLooperRenderer::setSpeed(float sp)
 	{
 		vHeader.setSpeed(sp);
 		aHeader.setSpeed(sp);
+		aHeader2.setPitch(sp);
 	}
 	//------------------------------------------------------
 	void avLooperRenderer::setOpacity(float v)
 	{
 		vHeader.setOpacity(int(v*255.0));
 		aHeader.setVolume(v);
+		aHeader2.setVolume(v);
 	}
 	//------------------------------------------------------
 	void avLooperRenderer::setInMs(float ms)
 	{
 		vHeader.setInMs(ms);
 		aHeader.setInMs(ms);
+		aHeader2.setInSamples(ms*96);
 		
-		printf("av::in ms = %d\n",ms);
 
 	}
 	//------------------------------------------------------
@@ -166,20 +170,22 @@ namespace ofxPm
 	{
 		vHeader.setOutMs(ms);
 		aHeader.setOutMs(ms);
+		aHeader2.setOutSamples(ms*96);
 
-		printf("av::out ms = %d\n",ms);
 	}
 	//------------------------------------------------------
 	void avLooperRenderer::setPlaying(bool b)
 	{
 		vHeader.setPlaying(b);
 		aHeader.setPlaying(b);
+		aHeader2.setPlaying(b);
 	}
 	//------------------------------------------------------
 	void avLooperRenderer::setLoopToStart()
 	{
 		vHeader.setLoopToStart();
 		aHeader.setLoopToStart();
+		aHeader2.setLoopToStart();
 	}
 	
 } //endNameSpace

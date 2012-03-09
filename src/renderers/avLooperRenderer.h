@@ -9,6 +9,7 @@
 #include "AudioSink.h"
 #include "AudioSource.h"
 #include "AudioHeader.h"
+#include "AudioHeaderSample.h"
 
 
 namespace ofxPm
@@ -43,6 +44,7 @@ private:
 	VideoHeader			vHeader;
 	AudioBuffer*		aBuffer;
 	AudioHeader			aHeader;
+	AudioHeaderSample	aHeader2;
 	
 	
 	int					sampleIndex;

@@ -12,6 +12,7 @@
 #include "AudioSource.h"
 #include "AudioBuffer.h"
 #include "VideoHeader.h"
+#include "AudioSample.h"
 
 
 namespace ofxPm{
@@ -21,40 +22,33 @@ public:
     AudioHeaderSample();
     ~AudioHeaderSample();
 
-	void setup(AudioBuffer & buffer);
-    void draw();
-    float * getNextAudioFrame();
-    float * getAudioFrame(int position);
-    int getNextPosition();
-	
+	void			setup(AudioBuffer & buffer);
+    void			draw();
+    AudioSample*	getNextAudioSample();
+    AudioSample*	getAudioSample(int _index);
+    float			getNextPosition();
+	void			updateTick();
+	void			resetTick();
 
 	// delay
-    int		getDelayMs() ;
-    int		getDelayFrames() ;
-    float	getDelayPct() ;
-    void	setDelayMs(float delay);
-    void	setDelayFrames(int delay);
-    void	setDelayPct(float pct);
+    void	setDelaySamples(unsigned int samples);
+    unsigned int		getDelaySamples();
 	// in 
-    float	getIn() ;
-    void	setInMs(float in);
-    void	setInFrames(int in);
-    void	setInPct(float in);
+    void	setInSamples(unsigned int in);
+    unsigned int		getInSamples() ;
 	// out 
-    float	getOut() ;	
-    void	setOutMs(float out);
-    void	setOutFrames(int out);
-    void	setOutPct(float out);
-	// speed
-    float	getSpeed() ;
-    void	setSpeed(float speed);
+    void	setOutSamples(unsigned int out);
+    unsigned int		getOutSamples() ;	
+	// pitch
+    void	setPitch(float speed);
+    float	getPitch() ;
 	// loop mode
-	int		getLoopMode();
 	void	setLoopMode(int loop);
-	bool	isPlaying() ;
 	void	setPlaying(bool loopMode);
 	void	setPlaying(bool loopMode, float speed);
 	void	setLoopToStart();
+	int		getLoopMode();
+	bool	isPlaying() ;
 	
 	// others
     float		getFps();
@@ -71,30 +65,27 @@ protected:
     AudioBuffer * aBuffer;
 	VideoHeader * vHeaderLink;
 
-    float position;
-    int currentPos;
-
-    Timestamp positionTS;
-	TimeDiff oneFrame;
+//    float position;
+//    int currentPos;
+//
+//    Timestamp positionTS;
+	TimeDiff oneSample;
 
 	//TimeDiff delay;	
-	int	delay;
-	float in;
-	float out;
-    float fps;
-	float speed;
-	float	volume;
+	float		index;
+	unsigned int			delay;
+	unsigned int			in;
+	unsigned int			out;
+    float		fps;
+	float		pitch;
+	float		volume;
+	
 	
 	bool	playing;	
 	int		loopMode;
 	bool	loopStart;
+	int		tickCount;
 
-	
-	
-//    //------------------------
-//    // external control
-//    bool pctHasChanged;
-//    float pct;
-};
+	};
 }
-#endif // AUDIOHEADER_H_INCLUDED
+#endif // AUDIOHEADERSAMPLE_H_INCLUDED

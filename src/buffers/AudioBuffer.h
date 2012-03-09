@@ -9,6 +9,7 @@
 #include "pmUtils.h"
 #include "AudioSink.h"
 #include "AudioSource.h"
+#include "AudioSample.h"
 #include "pmUtils.h"
 #include <map>
 #include <deque>
@@ -25,13 +26,13 @@ public:
 	AudioFrame * getAudioFrame(int position);       // frame number in the buffer
 	AudioFrame * getAudioFrame(TimeDiff microsec);// frame at n microseconds from the end of the buffer
 	AudioFrame * getAudioFrame(float pct);          // % of the buffer
-	float		 getAudioSample(int index);
+	AudioSample* getAudioSample(int index);
 	
 	unsigned int size();                            // total size of the buffer
 	unsigned int getMaxSize();                         // max size of the buffer
 	unsigned int sizeInSamples();                            // total size of the buffer
 	unsigned int getMaxSizeInSamples();                         // max size of the buffer
-
+	int			 getSoundStreamBufferSize();
 
     virtual void newAudioFrame(AudioFrame &frame);  // for notification of new frame event
     float getFps();                                 // fps of the audio source
@@ -52,7 +53,7 @@ public:
 
 protected:
     deque<AudioFrame*>		frames;
-	deque<float>			samples;
+	deque<AudioSample*>		samples;
 	
     //float					data[AUDIO_BUFFER_NUM_FRAMES];
     float					fps;
@@ -64,7 +65,7 @@ protected:
 	bool					stopped;
 
 	int						aSampleRate;
-	int						aBufferSize;
+	int						aSoundStreamBufferSize;
 	int						aNumCh;
 };
 }

@@ -38,13 +38,13 @@ AudioBuffer::AudioBuffer(AudioSource & source, float size, int sampleR, int buff
 		fps=source.getFps();
 		totalFrames=0;
 		aSampleRate=sampleR;
-		aBufferSize=bufferS;
+		aSoundStreamBufferSize=bufferS;
 		aNumCh=numCh;
 		
-		this->maxSize = sizeInSecs *(float(sampleR)/float(bufferS));
-		this->maxSizeSamples = sizeInSecs * sampleR;
+		this->maxSize			= sizeInSecs *(float(aSampleRate)/float(aSoundStreamBufferSize));
+		this->maxSizeSamples	= sizeInSecs * aSampleRate;
 		resume();	
-		stopped=false;
+		stopped					=false;
 		
 	}
 
@@ -60,7 +60,7 @@ AudioBuffer::AudioBuffer(AudioSource & source, float size, int sampleR, int buff
 	//------------------------------------------------------	
 	unsigned int AudioBuffer::sizeInSamples()
 	{
-		return samples.size();
+		return this->samples.size();
 	}
 	//------------------------------------------------------
 	unsigned int AudioBuffer::getMaxSizeInSamples()
@@ -73,7 +73,7 @@ AudioBuffer::AudioBuffer(AudioSource & source, float size, int sampleR, int buff
 	{
 		if(size()==0)initTime=frame.getTimestamp();
 	
-		// AudioFrames managing
+		// AudioFrames managing, store AudioFrame on the cue.
 		totalFrames++;
 		frames.push_back(&frame);
 		frame.retain();		
@@ -83,12 +83,22 @@ AudioBuffer::AudioBuffer(AudioSource & source, float size, int sampleR, int buff
 		}
 		
 		
-		// Samples managing
-		float* auxData = new float[frame.getBufferSize()*aNumCh];
-		auxData = frame.getAudioData();
+		// Samples managing, store AudioSamples on the samples cue.
+		float* audioFrameData = new float[frame.getBufferSize()*aNumCh];
+		audioFrameData = frame.getAudioData();
+		AudioSample* aS;
+		float* sampleData = new float[aNumCh];
+		
+		// for every position on the audioFrame buffer ...
 		for(int i=0;i<frame.getBufferSize();i++)
 		{
-			samples.push_back(auxData[i*2]);
+			// copy data from AudioFrame to AudioSample
+			for(int j=0;j<aNumCh;j++)
+			{
+				sampleData[j] = audioFrameData[i*aNumCh+j];
+			}
+			aS = new AudioSample(sampleData,aNumCh); 
+			samples.push_back(aS);
 			
 			if(sizeInSamples()>maxSizeSamples){
 				samples.erase(samples.begin());
@@ -140,7 +150,7 @@ AudioBuffer::AudioBuffer(AudioSource & source, float size, int sampleR, int buff
 	
 	//------------------------------------------------------
 	
-	float AudioBuffer::getAudioSample(int index)
+	AudioSample* AudioBuffer::getAudioSample(int index)
 	{
 		return samples[index];
 	}
@@ -218,11 +228,17 @@ AudioBuffer::AudioBuffer(AudioSource & source, float size, int sampleR, int buff
 		ofRemoveListener(source->newFrameEvent,this,&AudioBuffer::newAudioFrame);
 	}
 
+	//------------------------------------------------------
 	void AudioBuffer::resume(){
 		stopped=false;
 		ofAddListener(source->newFrameEvent,this,&AudioBuffer::newAudioFrame);
 	}
 
-	
+
+	//------------------------------------------------------
+	int AudioBuffer::getSoundStreamBufferSize()
+	{
+		return aSoundStreamBufferSize;
+	}
 	
 }

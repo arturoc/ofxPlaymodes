@@ -147,7 +147,7 @@ void testApp::updateOsc()
 	// check for waiting messages
 	while( receiver.hasWaitingMessages() )
 	{
-		printf(".");
+		printf(".....................\n");
 		// get the next message
 		ofxOscMessage m;
 		receiver.getNextMessage( &m );
@@ -156,7 +156,7 @@ void testApp::updateOsc()
 		
 		if ( m.getAddress() == "/delay" )
 		{
-			avRenderer.setDelayMs(int(value));
+			avRenderer.setDelayMs(value);
 		}
 		if ( m.getAddress() == "/speed" )
 		{
@@ -168,11 +168,11 @@ void testApp::updateOsc()
 		}
 		if ( m.getAddress() == "/inPoint" )
 		{
-			avRenderer.setInMs(int(value));
+			avRenderer.setInMs(value);
 		}
 		if ( m.getAddress() == "/outPoint" )
 		{
-			avRenderer.setOutMs(int(value));
+			avRenderer.setOutMs(value);
 		}
 		if ( m.getAddress() == "/freeze" )
 		{

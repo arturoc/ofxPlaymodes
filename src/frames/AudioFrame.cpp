@@ -18,8 +18,8 @@ AudioFrame::AudioFrame(float * audioFrame, int bufferSize, int channels) {
 	//data=audioFrame;
 	averageValue=0;
 	for(int i=0;i<bufferSize;i++){
-	    data[i*channels]=audioFrame[i*channels];//*cos((float)i/(float)bufferSize-PI/2);
-	    data[i*channels+1]=audioFrame[i*channels+1];//*cos((float)i/(float)bufferSize-PI/2);
+	    data[i*channels  ] = audioFrame[i*channels ];
+	    data[i*channels+1] = audioFrame[i*channels+1];
 	    averageValue+=audioFrame[i*channels];
 	}
 	averageValue=averageValue/bufferSize;
@@ -27,7 +27,6 @@ AudioFrame::AudioFrame(float * audioFrame, int bufferSize, int channels) {
 	this->channels=channels;
     numInstances++;
 }
-
 	
 void AudioFrame::release() {
 	
@@ -43,10 +42,6 @@ void AudioFrame::release() {
 */
 }
 	
-	
-	
-	
-	
 AudioFrame::~AudioFrame() {
 	delete[] data;
 	numInstances--;
@@ -56,7 +51,20 @@ AudioFrame::~AudioFrame() {
 float * AudioFrame::getAudioData(){
     return data;
 }
-
+//	
+//float * AudioFrame::getAudioData(int index)
+//{
+//	float* result = new float[channels];
+//	for(int i=0;i<channels;i++)
+//	{
+//		result[i] = data[]
+//		
+//	}
+//	return data;
+//}
+//
+	
+	
 
 int AudioFrame::getBufferSize(){
     return bufferSize;

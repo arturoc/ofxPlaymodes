@@ -5,51 +5,39 @@
  *      Author: arturo castro
  */
 
-#include "AudioHeader.h"
+#include "AudioHeaderSample.h"
 
 //------------------------------------------------------
 
 namespace ofxPm
 {
 	
-	AudioHeader::AudioHeader(AudioBuffer &buffer)
+	AudioHeaderSample::AudioHeaderSample(AudioBuffer &buffer)
 	{
-		this->buffer=&buffer;
-		fps=buffer.getFps();
-		position=0;
-		oneFrame=0;
-		speed=1;
-		currentPos=0;
-		in = 1.0;
-		out = 0.0;
-		playing    = false;
-		loopStart	= false;
-		loopMode	= OF_LOOP_NORMAL;
-		delay       = 0;
-		this->vHeaderLink = NULL;
-
+		this->setup(buffer);
 	}
 
 	
 	//------------------------------------------------------
 
-	AudioHeader::AudioHeader()
+	AudioHeaderSample::AudioHeaderSample()
 	{
-		position=0;
-		oneFrame=0;
-		speed=1;
-		currentPos=0;
-		in = 1.0;
-		out = 0.0;
-		playing    = false;
+		index	= 0;
+		delay   = 0;
+		in		= 0;
+		out		= 0;
+		pitch	= 1.0;
+		
+		playing		= false;
 		loopStart	= false;
 		loopMode	= OF_LOOP_NORMAL;
+		volume		= 1.0f;
 		this->vHeaderLink = NULL;
 	}
 		
 	//------------------------------------------------------
 		
-	 AudioHeader::~AudioHeader()
+	 AudioHeaderSample::~AudioHeaderSample()
 	{
 		
 
@@ -57,47 +45,54 @@ namespace ofxPm
 
 	//------------------------------------------------------
 		
-	void AudioHeader::setup(AudioBuffer & buffer)
+	void AudioHeaderSample::setup(AudioBuffer & buffer)
 	{
 		
-		this->buffer= &buffer;
-		fps=buffer.getFps();
-		position=0;
-		oneFrame=0;
-		speed=1;
-		currentPos=0;
-		in = 1.0;
-		out = 0.0;
-		playing    = false;
+		this->aBuffer=&buffer;
+		fps=aBuffer->getFps();
+		
+		index	= 0;
+		delay   = 0;
+		in		= 0;
+		out		= 0;
+		pitch	= 1.0;
+		
+		playing		= false;
 		loopStart	= false;
 		loopMode	= OF_LOOP_NORMAL;
+		volume		= 1.0f;
 		this->vHeaderLink = NULL;
+		
 		
 	}
 
 	//------------------------------------------------------
 		
-	void AudioHeader::draw()
+	void AudioHeaderSample::draw()
 	{
-		float currentLength=float(currentPos)/((float)this->buffer->getMaxSize())*(float)(ofGetWidth()-PMDRAWSPACING*2);
-		float oneLength=(float)(ofGetWidth()-PMDRAWSPACING*2)/(float)(buffer->getMaxSize());
-
+		int audioBuffDrawPos = 190;
+		
+		float currentLength=float(index)/((float)this->aBuffer->getMaxSizeInSamples())*(float)(ofGetWidth()-PMDRAWSPACING*2);
+		float oneLength=double(ofGetWidth()-PMDRAWSPACING*2)/(double(aBuffer->getMaxSizeInSamples()));
+		int bufferDrawSize = (float(aBuffer->sizeInSamples())/float(aBuffer->getMaxSizeInSamples())) * (ofGetWidth()-PMDRAWSPACING*2);
+		
 		ofSetColor(0,255,255);
 
 		ofPushStyle();
 		ofSetLineWidth(3.0);
-		ofLine(currentLength+PMDRAWSPACING,610,currentLength+PMDRAWSPACING,670);
+		ofLine(currentLength+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos,currentLength+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos+60);
 		ofPopStyle();
 
-		ofDrawBitmapString(ofToString(currentPos),currentLength,615);
+		ofDrawBitmapString(ofToString(index),currentLength,PMDRAWELEMENTSY+10-audioBuffDrawPos);
 		
-		int	inFrame  = int(float(buffer->size()-1)*(in));
-		int outFrame = int(float(buffer->size()-1)*(out));
-		int inPos = PMDRAWSPACING + ((buffer->size()-1-inFrame) * oneLength) + oneLength/2;
-		int outPos = PMDRAWSPACING + ((buffer->size()-1-outFrame) * oneLength) + oneLength/2;
+		float	inPct  = double(in)/double(aBuffer->sizeInSamples());//int(float(aBuffer->sizeInSamples()-1)*(double(in)/double(aBuffer->sizeInSamples())));
+		float	outPct = double(out)/double(aBuffer->sizeInSamples());//int(float(aBuffer->size()-1)*(out));
+		
+		int inPos = PMDRAWSPACING	+ int((1.0-inPct)*(bufferDrawSize)); //+ oneLength/2;
+		int outPos = PMDRAWSPACING	+ int((1.0-outPct)*(bufferDrawSize)); //+ oneLength/2;
+//		int outPos = PMDRAWSPACING + ((aBuffer->size()-1-outFrame) * oneLength) + oneLength/2;
 		
 		// draw in & out lines
-		int audioBuffDrawPos = 90;
 		ofSetLineWidth(1.0);
 		ofLine(inPos,PMDRAWELEMENTSY+10-audioBuffDrawPos,inPos,PMDRAWELEMENTSY+60-audioBuffDrawPos);
 		ofLine(outPos,PMDRAWELEMENTSY+10-audioBuffDrawPos,outPos,PMDRAWELEMENTSY+60-audioBuffDrawPos);
@@ -115,18 +110,19 @@ namespace ofxPm
 		ofVertex(outPos,PMDRAWELEMENTSY-audioBuffDrawPos);
 		ofEndShape();
 		
-		ofDrawBitmapString("[ " + ofToString(inFrame) ,ofPoint(inPos+0,PMDRAWELEMENTSY+75-audioBuffDrawPos));
-		ofDrawBitmapString(ofToString(outFrame) + " ]" ,ofPoint(outPos-30,PMDRAWELEMENTSY+75-audioBuffDrawPos));
+		ofDrawBitmapString("[ " + ofToString(in) ,ofPoint(inPos+0,PMDRAWELEMENTSY+75-audioBuffDrawPos));
+		ofDrawBitmapString(ofToString(out) + " ]" ,ofPoint(outPos-30,PMDRAWELEMENTSY+75-audioBuffDrawPos));
 //		
 //	
 //		ofCircle(inPos,650,10);
 //		ofCircle(outPos,650,10);
+		 
 	}
 
 	//------------------------------------------------------
 
 		
-	float AudioHeader::getFps()
+	float AudioHeaderSample::getFps()
 	{
 		return fps;
 	}
@@ -134,94 +130,97 @@ namespace ofxPm
 	//------------------------------------------------------
 
 
-	void AudioHeader::setFps(float fps)
+	void AudioHeaderSample::setFps(float fps)
 	{
 		this->fps=fps;
 	}
 
 	//------------------------------------------------------
 
-	AudioFrame * AudioHeader::getNextAudioFrame()
+	AudioSample* AudioHeaderSample::getNextAudioSample()
 	{
-		buffer->lock();
-			currentPos=getNextPosition();
-			AudioFrame * frame = buffer->getAudioFrame(currentPos);
-		buffer->unlock();
+		aBuffer->lock();
+			index=getNextPosition();
+			AudioSample* aSample = aBuffer->getAudioSample(index);
+		    //index = fmod((index +1.0),1024);
+
+		aBuffer->unlock();
 		
-		return frame;
+		return aSample;
 	}
 
 	//------------------------------------------------------
 
-	AudioFrame * AudioHeader::getAudioFrame(int position)
+	AudioSample* AudioHeaderSample::getAudioSample(int _index)
 	{
-		position = CLAMP(position,0,buffer->size());
-		AudioFrame * currentFrame = buffer->getAudioFrame(position);
-
-		int currentFrameSize=currentFrame->getBufferSize()*currentFrame->getChannels();
-		float resultBuffer[currentFrameSize];
-		memcpy(resultBuffer,currentFrame->getAudioData(),sizeof(float)*currentFrameSize);
-				
-		AudioFrame * resultFrame=
-        new AudioFrame( resultBuffer,
-					   currentFrame->getBufferSize(),
-					   currentFrame->getChannels());
-		currentFrame->release();
-		return resultFrame;
+		int getIndex = CLAMP(_index,0,aBuffer->sizeInSamples());
+		AudioSample* aSample = aBuffer->getAudioSample(_index);
+		return aSample;
 	}
 
 	//------------------------------------------------------
 	// returns the real position in the buffer
 
-	int AudioHeader::getNextPosition()
+	float AudioHeaderSample::getNextPosition()
 	{
-		if(playing) oneFrame=(TimeDiff)(1000000.0/fps/speed);
-		else oneFrame=(TimeDiff)(1000000.0/fps/1.0);
+		float indexPosition = index;
+		unsigned int bufferSizeInSamples=aBuffer->sizeInSamples();
+		int oneSoundStreamBufferSize = aBuffer->getSoundStreamBufferSize();
 		
-		unsigned int buffer_size=buffer->size();
-		unsigned int totalNumFr = buffer->getTotalFrames();
-		unsigned int lastAbsFrame = totalNumFr - buffer_size; 
-		int	inFrame  = int(float(buffer_size-1)*(in));
-		int outFrame = int(float(buffer_size-1)*(out));
-		int	inAbsFrame  = totalNumFr -  inFrame;
-		int	outAbsFrame = totalNumFr - outFrame;
+//		if(playing) oneFrame=(TimeDiff)(1000000.0/fps/speed);
+//		else oneFrame=(TimeDiff)(1000000.0/fps/1.0);
+//		
+//		unsigned int buffer_size=buffer->size();
+//		unsigned int totalNumFr = buffer->getTotalFrames();
+//		unsigned int lastAbsFrame = totalNumFr - buffer_size; 
+//		int	inFrame  = int(float(buffer_size-1)*(in));
+//		int outFrame = int(float(buffer_size-1)*(out));
+//		int	inAbsFrame  = totalNumFr -  inFrame;
+//		int	outAbsFrame = totalNumFr - outFrame;
+//		
+//		
+////		 printf("-------------------------------\nTOTAL : %d\nSIZE : %d \nLAST : %d\n IN : %d / %d \n OUT : %d / %d \nPOSITION : %f %d\n",
+////		 totalNumFr,
+////		 buffer_size,
+////		 lastAbsFrame,
+////		 inAbsFrame,totalNumFr-inAbsFrame,
+////		 outAbsFrame,totalNumFr-outAbsFrame,
+////		 position, int(position));
+//		 	
+//		
+//		
+//		if((float)positionTS.elapsed()+(position-floor(position))*(float)abs(oneFrame)>=abs(oneFrame))
+//		{
+//			if(oneFrame!=0)
+//			{
+//				position=position + (float)positionTS.elapsed()/(float)oneFrame;
+//
+//			}
+//			// updates the time-stamp with the current time
+//			positionTS.update();
+//		}
 		
 		
-//		 printf("-------------------------------\nTOTAL : %d\nSIZE : %d \nLAST : %d\n IN : %d / %d \n OUT : %d / %d \nPOSITION : %f %d\n",
-//		 totalNumFr,
-//		 buffer_size,
-//		 lastAbsFrame,
-//		 inAbsFrame,totalNumFr-inAbsFrame,
-//		 outAbsFrame,totalNumFr-outAbsFrame,
-//		 position, int(position));
-		 	
+		//indexPosition = fmod((indexPosition + pitch),aBuffer->sizeInSamples());
 		
 		
-		if((float)positionTS.elapsed()+(position-floor(position))*(float)abs(oneFrame)>=abs(oneFrame))
-		{
-			if(oneFrame!=0)
-			{
-				position=position + (float)positionTS.elapsed()/(float)oneFrame;
-
-			}
-			// updates the time-stamp with the current time
-			positionTS.update();
-		}
-//		printf("new Position %f !!!!!!! %f > %f\n ",position,position,float(outAbsFrame));
+////		printf("new Position %f !!!!!!! %f > %f\n ",position,position,float(outAbsFrame));
 		// if header is playing and loopStart is requested, set position to inPoint or outPoint depending on speed's sign !
 		if(playing && loopStart)
 		{
-			if(speed>0.0) position=float(inAbsFrame);
-			else position=float(outAbsFrame);
+			if(pitch>0.0) indexPosition=in;
+			else indexPosition=out;
 			loopStart=false;
+			printf("avH::loopStart!\n");
 		}
 		
 		// if we're playing in loop and we're reaching the outpoint
-		if(playing && (int(position) > (outAbsFrame)))
+		if(playing && (indexPosition < (bufferSizeInSamples-out)))
 		{
 			if(loopMode==OF_LOOP_NORMAL) 
 			{
-				position = float(inAbsFrame);
+				indexPosition = in;
+				resetTick();
 				// throw event to the videoHeader to say : "hi ! go back to loop start !"
 				if(vHeaderLink!=NULL) 
 				{
@@ -236,15 +235,16 @@ namespace ofxPm
 			}
 			else if (loopMode==OF_LOOP_PALINDROME) 
 			{
-				speed=-speed;
+				pitch=-pitch;
 			}
 		}
 		// if we're in playing in loop and we're reaching the inpoint (while speed is negative probably)
-		else if(playing && (int(position) < (inAbsFrame)))
+		else if(playing && (indexPosition < (bufferSizeInSamples-in)))
 		{
 			if(loopMode==OF_LOOP_NORMAL)
 			{ 
-				position = float(outAbsFrame);
+				indexPosition = out;
+				resetTick();
 				// throw event to the videoHeader to say : "hi ! go back to loop start !"
 				if(vHeaderLink!=NULL) 
 				{
@@ -255,175 +255,132 @@ namespace ofxPm
 			else if (loopMode==OF_LOOP_NONE) setPlaying(false);
 			else if (loopMode==OF_LOOP_PALINDROME) 
 			{
-				speed=-speed;
+				pitch=-pitch;
 			}
 		}
 		
-		// clamp position to it's limits ...
-		if(playing) position=CLAMP(position,float(inAbsFrame),float(outAbsFrame));
-		else position=CLAMP(position,float(lastAbsFrame),float(totalNumFr));
-		
-		// backpos
-		int backpos=0;	
-		if (!playing) backpos=0;
-		else {
-			backpos=int(buffer->getTotalFrames()-int(position));
-			backpos=CLAMP(backpos,0,buffer_size-1);
-		}
-		
-		int nextPos;
-		if (playing) nextPos= (buffer_size-1) - backpos;
-		else		 nextPos= (buffer_size-1) - (delay/oneFrame);
-		
-		nextPos = CLAMP(nextPos,0,buffer_size-1);
-		if(nextPos<0) nextPos=0;
-		
-		return nextPos;
+//		// clamp position to it's limits ...
+//		if(playing) position=CLAMP(position,float(inAbsFrame),float(outAbsFrame));
+//		else position=CLAMP(position,float(lastAbsFrame),float(totalNumFr));
+//		
+//		// backpos
+//		int backpos=0;	
+//		if (!playing) backpos=0;
+//		else {
+//			backpos=int(buffer->getTotalFrames()-int(position));
+//			backpos=CLAMP(backpos,0,buffer_size-1);
+//		}
+//		
+//		int nextPos;
+//		if (playing) nextPos= (buffer_size-1) - backpos;
+//		else		 nextPos= (buffer_size-1) - (delay/oneFrame);
+//		
+//		nextPos = CLAMP(nextPos,0,buffer_size-1);
+//		if(nextPos<0) nextPos=0;
+//		
+//		return nextPos;
+//
 
+		//		if (playing) nextPos= (buffer_size-1) - backpos;
+		//		else		 nextPos= (buffer_size-1) - (delay/oneFrame);
+
+		if (playing) indexPosition= float(bufferSizeInSamples-oneSoundStreamBufferSize) - indexPosition + tickCount;//indexPosition= (bufferSize-1) - backpos;
+		else		 indexPosition= float(bufferSizeInSamples-oneSoundStreamBufferSize) - delay + tickCount;
+		
+		indexPosition = CLAMP(indexPosition,0.0,float(bufferSizeInSamples-1));
+		
+		return indexPosition;
 	}
 	
 	//------------------------------------------------------
-	void AudioHeader::setSpeed(float speed)
+	void AudioHeaderSample::setPitch(float p)
 	{
-		this->speed = speed;
+		this->pitch = p;
 	}
 	//------------------------------------------------------
-	float AudioHeader::getSpeed() 
+	float AudioHeaderSample::getPitch() 
 	{
-		return speed;
+		return pitch;
 	}	
 	
 	//------------------------------------------------------
 	// get & set delay 
 	//------------------------------------------------------
-	int AudioHeader::getDelayMs() 
+	unsigned int AudioHeaderSample::getDelaySamples() 
 	{
-		return delay/1000;
+		return delay;
 	}
 	//------------------------------------------------------
-	int AudioHeader::getDelayFrames() 
+	void AudioHeaderSample::setDelaySamples(unsigned int delaySamples)
 	{
-		return this->getDelayMs()/(TimeDiff)(1000.0/fps/1.0);
+		resetTick();
+		this->delay = delaySamples;
 	}
-	//------------------------------------------------------
-	float AudioHeader::getDelayPct() 
-	{
-		float res = this->getDelayFrames()/(buffer->size()-1); 
-		return res;
-	}
-	//------------------------------------------------------
-	void AudioHeader::setDelayMs(float delayMs)
-	{
-		TimeDiff oneFrame=(TimeDiff)(1000000.0/fps/1.0);
-		float fAux = delayMs*1000.0f;
-		this->delay = CLAMP(int(fAux),0,int((buffer->getMaxSize()-1)*oneFrame));
-		// ? eloi hack
-		//this->position = 0;
-	}
-	//------------------------------------------------------
-	void AudioHeader::setDelayFrames(int delayFrames)
-	{
-		this->setDelayMs(int((float(delayFrames) / float(this->getFps()))*1000.0));
-	}
-	//------------------------------------------------------
-	void AudioHeader::setDelayPct(float pct)
-	{
-		this->setDelayFrames(int(float(pct) * float(buffer->size())));
-	}
-	
-	
+		
 	//------------------------------------------------------
 	// get & set in & out
 	//------------------------------------------------------
-	float AudioHeader::getIn() 
+	unsigned int AudioHeaderSample::getInSamples() 
 	{
-		return in;
+		return this->in;
 	}
 	//------------------------------------------------------
-	void AudioHeader::setInMs(float inMs)
+	void AudioHeaderSample::setInSamples(unsigned int inSamples)
 	{
-		TimeDiff oneFrameMs=(TimeDiff)(1000000.0/fps/1.0);
-		float fAux = float(inMs*1000.0f) / (oneFrameMs*float(buffer->size()));
-		this->setInPct(CLAMP(fAux,0.0,1.0));    
+		this->in = inSamples;    
 		
 	}
 	//------------------------------------------------------
-	void AudioHeader::setInPct(float in)
-	{
-		this->in=CLAMP(in,0.0,1.0);
-	}
-	//------------------------------------------------------
-	void AudioHeader::setInFrames(int in)
-	{
-		float pct = float(in)/float(buffer->size());
-		this->setInPct(pct);
-	}
-	
-	//------------------------------------------------------
-	float AudioHeader::getOut() 
+	unsigned int AudioHeaderSample::getOutSamples() 
 	{
 		return out;
 	}
 	//------------------------------------------------------
-	void AudioHeader::setOutMs(float outMs)
+	void AudioHeaderSample::setOutSamples(unsigned int outSamples)
 	{
-		TimeDiff oneFrameMs=(TimeDiff)(1000000.0/fps/1.0);
-		float fAux = float(outMs*1000.0f) / (oneFrameMs*float(buffer->size()));
-		this->setOutPct(CLAMP(fAux,0.0,1.0));    
+		this->out = outSamples;    
 	}
-	//------------------------------------------------------
-	void AudioHeader::setOutPct(float out)
-	{
-		this->out=CLAMP(out,0.0f,this->in);
-	}
-	//------------------------------------------------------
-	void AudioHeader::setOutFrames(int out)
-	{
-		float pct = float(out)/float(buffer->size());
-		this->setOutPct(pct);
-	}
-	
 	//------------------------------------------------------
 	// get & set loop & playing
 	//------------------------------------------------------
-	int AudioHeader::getLoopMode()
+	int AudioHeaderSample::getLoopMode()
 	{
 		return loopMode;
 	}
 	//------------------------------------------------------
-	void AudioHeader::setLoopMode(int loop)
+	void AudioHeaderSample::setLoopMode(int loop)
 	{
 		if((loopMode!=OF_LOOP_NORMAL) || (loopMode!=OF_LOOP_NONE) || (loopMode!=OF_LOOP_PALINDROME))
 		{
-			printf("ofxPlaymodes::VideoHeader:: Incorrect loop mode!\n");
+			printf("ofxPlaymodes::AudioHeaderSample:: Incorrect loop mode!\n");
 		}
 		else loopMode = loop;
 	}
 	
 	//------------------------------------------------------
-	void AudioHeader::setLoopToStart()
+	void AudioHeaderSample::setLoopToStart()
 	{
 		loopStart=true;
 	}
 	//------------------------------------------------------
-	bool AudioHeader::isPlaying() 
+	bool AudioHeaderSample::isPlaying() 
 	{
 		return playing;
 	}
 	//------------------------------------------------------
-	void AudioHeader::setPlaying(bool isPlaying, float speed)
+	void AudioHeaderSample::setPlaying(bool isPlaying, float _pitch)
 	{
-		this->speed = speed;
+		this->pitch = _pitch;
 		if(isPlaying)
 		{
 			// if we're entering loop mode move position to in point
 			// this behaviour is to sync entering loop mode with starting at inPoint or outPoint depending on speed
 			this->playing = isPlaying;
-			int	loopFrame;
-			if(speed>0.0f) loopFrame = int(float(buffer->size()-1)*(in));
-			else loopFrame = int(float(buffer->size()-1)*(out));
-			int	inAbsFrame  = buffer->getTotalFrames() -  loopFrame;
-			position = inAbsFrame; 
+			int	loopSample;
+			if(pitch>0.0f) loopSample = in;
+			else loopSample = out;
+
+			index = loopSample;
 		}
 		else
 		{
@@ -431,32 +388,40 @@ namespace ofxPm
 			// this behaviour is to let the header (set by delay on no loop) where the loop was when deactivated
 			// other beahaviour could be to let the header on delay / inPoint / outPoint position when loop is turned off
 			this->playing = isPlaying;
-			float	actualFrame  = float(buffer->getTotalFrames()-1) - (position);
-			TimeDiff oneFrame=(TimeDiff)(1000000.0/fps/1.0);		
-			delay = (actualFrame-1)*oneFrame;
+			delay = index;
 		}
 	}		
 	//------------------------------------------------------
-	void AudioHeader::setPlaying(bool isPlaying)
+	void AudioHeaderSample::setPlaying(bool isPlaying)
 	{
 		this->setPlaying(isPlaying,1.0);	
 	}
 	//------------------------------------------------------
-	void AudioHeader::linkToVideoHeader(VideoHeader &vH)
+	void AudioHeaderSample::linkToVideoHeader(VideoHeader &vH)
 	{
 		this->vHeaderLink=&vH;
 		ofAddListener(this->loopInEvent,this->vHeaderLink,&VideoHeader::receivedLoopEvent);
 	}
 	
 	//------------------------------------------------------
-	void AudioHeader::setVolume(float v) 
+	void AudioHeaderSample::setVolume(float v) 
 	{
 		this->volume = CLAMP (v,0.0f,1.0f);
 	}
 	//------------------------------------------------------
-	float AudioHeader::getVolume() 
+	float AudioHeaderSample::getVolume() 
 	{
 		return volume;
+	}
+	//------------------------------------------------------
+	void AudioHeaderSample::updateTick() 
+	{
+		tickCount = (tickCount+1)%aBuffer->getSoundStreamBufferSize();
+	}
+	//------------------------------------------------------
+	void AudioHeaderSample::resetTick() 
+	{
+		tickCount = 0;
 	}
 	
 }
