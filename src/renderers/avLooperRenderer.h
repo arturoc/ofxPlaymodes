@@ -10,7 +10,7 @@
 #include "AudioSource.h"
 #include "AudioHeader.h"
 #include "AudioHeaderSample.h"
-
+#include "AudioBufferSamples.h"
 
 namespace ofxPm
 {
@@ -19,12 +19,12 @@ namespace ofxPm
 class avLooperRenderer: public VideoSink, public ofBaseSoundOutput{
 public:
 	avLooperRenderer();
-	avLooperRenderer(VideoBuffer & buffer, AudioBuffer & bufferAudio);
+	avLooperRenderer(VideoBuffer & buffer, AudioBufferSamples & bufferAudio);
 	virtual ~avLooperRenderer();
 
-	void				setup(VideoBuffer & bufferVideo, AudioBuffer & bufferAudio);
+	void				setup(VideoBuffer & bufferVideo, AudioBufferSamples & bufferAudio);
 	VideoHeader*		getVideoHeader();
-	AudioHeader*		getAudioHeader();
+	AudioHeaderSample*	getAudioHeader();
 	
 	void				draw();
 	void				draw(int x,int y,int w,int h);
@@ -42,7 +42,7 @@ public:
 private:
 	VideoBuffer*		vBuffer;
 	VideoHeader			vHeader;
-	AudioBuffer*		aBuffer;
+	AudioBufferSamples*		aBuffer;
 	AudioHeader			aHeader;
 	AudioHeaderSample	aHeader2;
 	

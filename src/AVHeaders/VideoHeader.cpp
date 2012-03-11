@@ -124,6 +124,7 @@ VideoFrame * VideoHeader::getNextVideoFrame(){
 			VideoFrame * frame = buffer->getVideoFrame(currentPos);
         buffer->unlock();	
         return frame;
+	printf("current position %d\n",currentPos);
 }
 
 //------------------------------------------------------

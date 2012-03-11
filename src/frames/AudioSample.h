@@ -21,9 +21,8 @@ public:
 	AudioSample(){};
 	virtual ~AudioSample();
 	float * getAudioData();
-	void release();
 	int getChannels();
-	
+	void release();
     static int numInstances;
 	
 private:

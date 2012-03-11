@@ -12,7 +12,7 @@
 namespace ofxPm
 {
 	
-	AudioHeaderSample::AudioHeaderSample(AudioBuffer &buffer)
+	AudioHeaderSample::AudioHeaderSample(AudioBufferSamples &buffer)
 	{
 		this->setup(buffer);
 	}
@@ -45,7 +45,7 @@ namespace ofxPm
 
 	//------------------------------------------------------
 		
-	void AudioHeaderSample::setup(AudioBuffer & buffer)
+	void AudioHeaderSample::setup(AudioBufferSamples & buffer)
 	{
 		
 		this->aBuffer=&buffer;
@@ -65,7 +65,6 @@ namespace ofxPm
 		
 		
 	}
-
 	//------------------------------------------------------
 		
 	void AudioHeaderSample::draw()
@@ -88,8 +87,8 @@ namespace ofxPm
 		float	inPct  = double(in)/double(aBuffer->sizeInSamples());//int(float(aBuffer->sizeInSamples()-1)*(double(in)/double(aBuffer->sizeInSamples())));
 		float	outPct = double(out)/double(aBuffer->sizeInSamples());//int(float(aBuffer->size()-1)*(out));
 		
-		int inPos = PMDRAWSPACING	+ int((1.0-inPct)*(bufferDrawSize)); //+ oneLength/2;
-		int outPos = PMDRAWSPACING	+ int((1.0-outPct)*(bufferDrawSize)); //+ oneLength/2;
+		int inPos = PMDRAWSPACING	+ int((inPct)*(bufferDrawSize)); //+ oneLength/2;
+		int outPos = PMDRAWSPACING	+ int((outPct)*(bufferDrawSize)); //+ oneLength/2;
 //		int outPos = PMDRAWSPACING + ((aBuffer->size()-1-outFrame) * oneLength) + oneLength/2;
 		
 		// draw in & out lines
@@ -201,7 +200,6 @@ namespace ofxPm
 //		}
 		
 		
-		//indexPosition = fmod((indexPosition + pitch),aBuffer->sizeInSamples());
 		
 		
 ////		printf("new Position %f !!!!!!! %f > %f\n ",position,position,float(outAbsFrame));
@@ -214,8 +212,10 @@ namespace ofxPm
 			printf("avH::loopStart!\n");
 		}
 		
+		//printf("loop out ? :: buffSamp %d - 1 - indexP %f= %d < %d \n",int(aBuffer->sizeInSamples()),indexPosition,int(aBuffer->sizeInSamples()-1-indexPosition),int(out));
+		
 		// if we're playing in loop and we're reaching the outpoint
-		if(playing && (indexPosition < (bufferSizeInSamples-out)))
+		if(playing && ( (indexPosition) > (out)))
 		{
 			if(loopMode==OF_LOOP_NORMAL) 
 			{
@@ -239,7 +239,7 @@ namespace ofxPm
 			}
 		}
 		// if we're in playing in loop and we're reaching the inpoint (while speed is negative probably)
-		else if(playing && (indexPosition < (bufferSizeInSamples-in)))
+		else if(playing && ( (indexPosition) < (in)))
 		{
 			if(loopMode==OF_LOOP_NORMAL)
 			{ 
@@ -284,7 +284,7 @@ namespace ofxPm
 		//		if (playing) nextPos= (buffer_size-1) - backpos;
 		//		else		 nextPos= (buffer_size-1) - (delay/oneFrame);
 
-		if (playing) indexPosition= float(bufferSizeInSamples-oneSoundStreamBufferSize) - indexPosition + tickCount;//indexPosition= (bufferSize-1) - backpos;
+		if (playing) indexPosition= float(indexPosition);//indexPosition= (bufferSize-1) - backpos;
 		else		 indexPosition= float(bufferSizeInSamples-oneSoundStreamBufferSize) - delay + tickCount;
 		
 		indexPosition = CLAMP(indexPosition,0.0,float(bufferSizeInSamples-1));
@@ -327,7 +327,8 @@ namespace ofxPm
 	//------------------------------------------------------
 	void AudioHeaderSample::setInSamples(unsigned int inSamples)
 	{
-		this->in = inSamples;    
+		resetTick();
+		this->in = aBuffer->getMaxSizeInSamples()-1-inSamples;    
 		
 	}
 	//------------------------------------------------------
@@ -338,7 +339,8 @@ namespace ofxPm
 	//------------------------------------------------------
 	void AudioHeaderSample::setOutSamples(unsigned int outSamples)
 	{
-		this->out = outSamples;    
+		resetTick();
+		this->out = aBuffer->getMaxSizeInSamples()-1-outSamples;    
 	}
 	//------------------------------------------------------
 	// get & set loop & playing
@@ -361,6 +363,7 @@ namespace ofxPm
 	void AudioHeaderSample::setLoopToStart()
 	{
 		loopStart=true;
+		resetTick();
 	}
 	//------------------------------------------------------
 	bool AudioHeaderSample::isPlaying() 
@@ -380,6 +383,7 @@ namespace ofxPm
 			if(pitch>0.0f) loopSample = in;
 			else loopSample = out;
 
+			resetTick();
 			index = loopSample;
 		}
 		else
@@ -387,6 +391,7 @@ namespace ofxPm
 			// if we're gettint out of loop mode move delay to actual position
 			// this behaviour is to let the header (set by delay on no loop) where the loop was when deactivated
 			// other beahaviour could be to let the header on delay / inPoint / outPoint position when loop is turned off
+			resetTick();
 			this->playing = isPlaying;
 			delay = index;
 		}
@@ -417,6 +422,7 @@ namespace ofxPm
 	void AudioHeaderSample::updateTick() 
 	{
 		tickCount = (tickCount+1)%aBuffer->getSoundStreamBufferSize();
+		index = index + pitch;
 	}
 	//------------------------------------------------------
 	void AudioHeaderSample::resetTick() 

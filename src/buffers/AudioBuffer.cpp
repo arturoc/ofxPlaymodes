@@ -31,18 +31,14 @@ AudioBuffer::AudioBuffer(AudioSource & source, float size, int sampleR, int buff
 
 	void AudioBuffer::setup(AudioSource & source,float sizeInSecs,int sampleR, int bufferS, int numCh)
 	{
-		
-		//7.0*(float(aSampleRate)/float(aBufferSize))
-		
+				
 		this->source=&source;
 		fps=source.getFps();
 		totalFrames=0;
 		aSampleRate=sampleR;
 		aSoundStreamBufferSize=bufferS;
-		aNumCh=numCh;
-		
+		aNumCh=numCh;		
 		this->maxSize			= sizeInSecs *(float(aSampleRate)/float(aSoundStreamBufferSize));
-		this->maxSizeSamples	= sizeInSecs * aSampleRate;
 		resume();	
 		stopped					=false;
 		
@@ -57,16 +53,6 @@ AudioBuffer::AudioBuffer(AudioSource & source, float size, int sampleR, int buff
 	unsigned int AudioBuffer::getMaxSize(){
 		return maxSize;
 	}
-	//------------------------------------------------------	
-	unsigned int AudioBuffer::sizeInSamples()
-	{
-		return this->samples.size();
-	}
-	//------------------------------------------------------
-	unsigned int AudioBuffer::getMaxSizeInSamples()
-	{
-		return maxSizeSamples;
-	}
 	//------------------------------------------------------
 	
 	void AudioBuffer::newAudioFrame(AudioFrame &frame)
@@ -80,29 +66,6 @@ AudioBuffer::AudioBuffer(AudioSource & source, float size, int sampleR, int buff
 		if(size()>maxSize){
 			frames.front()->release();
 			frames.erase(frames.begin());
-		}
-		
-		
-		// Samples managing, store AudioSamples on the samples cue.
-		float* audioFrameData = new float[frame.getBufferSize()*aNumCh];
-		audioFrameData = frame.getAudioData();
-		AudioSample* aS;
-		float* sampleData = new float[aNumCh];
-		
-		// for every position on the audioFrame buffer ...
-		for(int i=0;i<frame.getBufferSize();i++)
-		{
-			// copy data from AudioFrame to AudioSample
-			for(int j=0;j<aNumCh;j++)
-			{
-				sampleData[j] = audioFrameData[i*aNumCh+j];
-			}
-			aS = new AudioSample(sampleData,aNumCh); 
-			samples.push_back(aS);
-			
-			if(sizeInSamples()>maxSizeSamples){
-				samples.erase(samples.begin());
-			}
 			
 		}
 		
@@ -148,12 +111,6 @@ AudioBuffer::AudioBuffer(AudioSource & source, float size, int sampleR, int buff
 		return getAudioFrame(getLastTimestamp()-(getInitTime()+getTotalTime()*pct));
 	}
 	
-	//------------------------------------------------------
-	
-	AudioSample* AudioBuffer::getAudioSample(int index)
-	{
-		return samples[index];
-	}
 	
 	//------------------------------------------------------
 	
@@ -235,10 +192,5 @@ AudioBuffer::AudioBuffer(AudioSource & source, float size, int sampleR, int buff
 	}
 
 
-	//------------------------------------------------------
-	int AudioBuffer::getSoundStreamBufferSize()
-	{
-		return aSoundStreamBufferSize;
-	}
 	
 }

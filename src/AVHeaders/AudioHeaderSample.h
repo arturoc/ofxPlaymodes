@@ -10,7 +10,7 @@
 
 #include "AudioSink.h"
 #include "AudioSource.h"
-#include "AudioBuffer.h"
+#include "AudioBufferSamples.h"
 #include "VideoHeader.h"
 #include "AudioSample.h"
 
@@ -18,11 +18,11 @@
 namespace ofxPm{
 class AudioHeaderSample:public AudioSink, public AudioSource{
 public:
-    AudioHeaderSample(AudioBuffer &buffer);
+    AudioHeaderSample(AudioBufferSamples &buffer);
     AudioHeaderSample();
     ~AudioHeaderSample();
 
-	void			setup(AudioBuffer & buffer);
+	void			setup(AudioBufferSamples & buffer);
     void			draw();
     AudioSample*	getNextAudioSample();
     AudioSample*	getAudioSample(int _index);
@@ -62,7 +62,7 @@ public:
 	
 protected:
 	
-    AudioBuffer * aBuffer;
+    AudioBufferSamples * aBuffer;
 	VideoHeader * vHeaderLink;
 
 //    float position;
@@ -84,7 +84,7 @@ protected:
 	bool	playing;	
 	int		loopMode;
 	bool	loopStart;
-	int		tickCount;
+	unsigned int	tickCount;
 
 	};
 }

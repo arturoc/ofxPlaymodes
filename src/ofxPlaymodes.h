@@ -18,6 +18,7 @@
 #include "BasicVideoRenderer.h"
 #include "avLooperRenderer.h"
 #include "AudioSample.h"
+#include "AudioBufferSamples.h"
 
 #endif
 
