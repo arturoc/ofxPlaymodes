@@ -18,7 +18,6 @@ namespace ofxPm{
 class AudioBuffer:public Buffer, public AudioSink, public AudioSource {
 public:
 	AudioBuffer(AudioSource & source,float sizeInSec, int sampleR, int bufferS, int numCh);
-
 	AudioBuffer();
 	virtual ~AudioBuffer();
 
@@ -27,13 +26,13 @@ public:
 	AudioFrame * getAudioFrame(int position);       // frame number in the buffer
 	AudioFrame * getAudioFrame(TimeDiff microsec);// frame at n microseconds from the end of the buffer
 	AudioFrame * getAudioFrame(float pct);          // % of the buffer
+	AudioSample* getAudioSample(int index);
 	
 	unsigned int size();                            // total size of the buffer
 	unsigned int getMaxSize();                         // max size of the buffer
 	unsigned int sizeInSamples();                            // total size of the buffer
 	unsigned int getMaxSizeInSamples();                         // max size of the buffer
 	int			 getSoundStreamBufferSize();
-	int			 getSampleRate();
 
     virtual void newAudioFrame(AudioFrame &frame);  // for notification of new frame event
     float getFps();                                 // fps of the audio source
@@ -54,12 +53,15 @@ public:
 
 protected:
     deque<AudioFrame*>		frames;
+	deque<AudioSample*>		samples;
 	
+    //float					data[AUDIO_BUFFER_NUM_FRAMES];
     float					fps;
     Timestamp				initTime;
     long					totalFrames;
     AudioSource*			source;
 	unsigned int			maxSize;
+	unsigned int			maxSizeSamples;
 	bool					stopped;
 
 	int						aSampleRate;

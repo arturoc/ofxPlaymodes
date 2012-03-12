@@ -30,7 +30,6 @@ void testApp::setup()
 	// avRenderer
 	//////////////
 	avRenderer.setup(vBuffer,aBuffer);
-	
 	audioSetupFinished=true;
 	
 	
@@ -173,6 +172,10 @@ void testApp::updateOsc()
 		if ( m.getAddress() == "/outPoint" )
 		{
 			avRenderer.setOutMs(value);
+		}
+		if ( m.getAddress() == "/length" )
+		{
+			avRenderer.setLengthMs(value);
 		}
 		if ( m.getAddress() == "/freeze" )
 		{

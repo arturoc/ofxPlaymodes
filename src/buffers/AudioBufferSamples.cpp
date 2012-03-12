@@ -29,15 +29,16 @@ AudioBufferSamples::AudioBufferSamples(AudioSource & source, float size, int sam
 	//------------------------------------------------------
 
 	void AudioBufferSamples::setup(AudioSource & source,float sizeInSecs,int sampleR, int bufferS, int numCh)
-	{
+	{		
 		this->source=&source;
 		fps=source.getFps();
-		aSampleRate				=sampleR;
-		aSoundStreamBufferSize	=bufferS;
-		aNumChannels					=numCh;		
+		aSampleRate=sampleR;
+		aSoundStreamBufferSize=bufferS;
+		aNumCh=numCh;
+		
 		this->maxSizeSamples	= sizeInSecs * aSampleRate;
-		stopped					=false;
 		resume();	
+		stopped					=false;
 		
 	}
 	//------------------------------------------------------	
@@ -51,26 +52,25 @@ AudioBufferSamples::AudioBufferSamples(AudioSource & source, float size, int sam
 		return maxSizeSamples;
 	}
 	//------------------------------------------------------
+	
 	void AudioBufferSamples::newAudioFrame(AudioFrame &frame)
 	{
-		printf("!!!!!!!!!!!!!\n");
 		// Samples managing, store AudioSamples on the samples cue.
-		float* audioFrameData = new float[frame.getBufferSize()*aNumChannels];
-		audioFrameData = frame.getAudioData();
 		AudioSample* aS;
-		float* sampleData = new float[aNumChannels];
+		float* sampleData = new float[aNumCh];
 		
+		this->lock();
+
 		// for every position on the audioFrame buffer ...
 		for(int i=0;i<frame.getBufferSize();i++)
 		{
-			printf(".............\n");
-
 			// copy data from AudioFrame to AudioSample
-			for(int j=0;j<aNumChannels;j++)
+			for(int j=0;j<aNumCh;j++)
 			{
-				sampleData[j] = audioFrameData[i*aNumChannels+j];
+				//sampleData[j] = audioFrameData[i*aNumCh+j];
+				sampleData[j] = frame.getAudioData()[i*aNumCh+j];
 			}
-			aS = new AudioSample(sampleData,aNumChannels);
+			aS = new AudioSample(sampleData,aNumCh); 
 			samples.push_back(aS);
 			
 			if(sizeInSamples()>maxSizeSamples){
@@ -78,10 +78,14 @@ AudioBufferSamples::AudioBufferSamples(AudioSource & source, float size, int sam
 			}
 			
 		}
+		this->unlock();
 		
-		newFrameEvent.notify(this,frame);
+		//newFrameEvent.notify(this,frame);
+		delete[] sampleData;
 	}
 
+	
+	
 	//------------------------------------------------------
 	
 	AudioSample* AudioBufferSamples::getAudioSample(int index)
@@ -97,8 +101,18 @@ AudioBufferSamples::AudioBufferSamples(AudioSource & source, float size, int sam
 
 	//------------------------------------------------------
 
+	float AudioBufferSamples::getRealFPS(){
+//		 if(size()>10)
+//			return 10.0/(float)(frames.back()->getTimestamp()-frames[size()-11]->getTimestamp())*1000000.0;
+//		else
+//			return 0;
+	}
+
+	//------------------------------------------------------
+
 	void AudioBufferSamples::draw()
 	{
+//		
 //		float length=float(size())/((float)maxSize)*(float)(ofGetWidth()-PMDRAWSPACING*2);
 //		float oneLength=(float)(ofGetWidth()-PMDRAWSPACING*2)/(float)(maxSize);
 //		//		float length = (float)size()/((float)maxSize*(float)ofGetWidth()-PMDRAWSPACING);
@@ -121,34 +135,27 @@ AudioBufferSamples::AudioBufferSamples(AudioSource & source, float size, int sam
 //				// + " s"
 //			}
 //		}
-//	
 		
-//		computeWaveforms();
-//		
-//		for(int i = 0; i < waveforms.size(); i++){
-////			ofPushMatrix();
-////			ofTranslate( normalizedXtoScreenX(computedZoomBounds.min, zoomBounds)  - normalizedXtoScreenX(zoomBounds.min, zoomBounds), 0, 0);
-////			ofScale(computedZoomBounds.span()/zoomBounds.span(), 1, 1);
-//			waveforms[i].draw();
-//		//	ofPopMatrix();
-//		}
-/*
+		int audioBuffDrawPos = 90;
+		ofSetColor(0,255,255);
 		if (samples.size()>0)
-		{
-			int	y = 500;
-			float factor = samples.size() / maxSizeSamples;
-			int totalPixelsToDraw = int(ofGetWidth()-(2*PMDRAWSPACING)*factor);
-			for(int i=0;i<totalPixelsToDraw;i++)
-			{
-				int count = (float(i)/float(totalPixelsToDraw))*samples.size();
-				//ofRect(i,y,1,100);
-				ofRect(i+PMDRAWSPACING,y,1,samples[count]->getAudioData()[0]*100.0);
-				
-			}
-		}
-*/		
-	}
+		 {
+			 int	y = 500;
+			 float factor = float(samples.size()) / float(maxSizeSamples);
+			 int totalPixelsToDraw = int(float(int(ofGetWidth())-2*PMDRAWSPACING)*factor);
+			 int count;
+			 for(int i=0;i<int(float(totalPixelsToDraw));i++)
+			 {
+				 count = (float(i)/float(totalPixelsToDraw))*samples.size();
+				 //ofRect(i,y,1,100);
+				 this->lock();
+				 ofRect(i+PMDRAWSPACING,PMDRAWELEMENTSY-audioBuffDrawPos+40,1,samples[count]->getAudioData()[0]*100.0);
+				 this->unlock();
+			 }
+		 }
+	
 		
+	}
 
 	//------------------------------------------------------
 
@@ -169,76 +176,11 @@ AudioBufferSamples::AudioBufferSamples(AudioSource & source, float size, int sam
 	{
 		return aSoundStreamBufferSize;
 	}
-	
+
 	//------------------------------------------------------
 	int AudioBufferSamples::getSampleRate()
 	{
-		return getSampleRate();
+		return aSampleRate;
 	}
-
-	//------------------------------------------------------
-	void AudioBufferSamples::computeWaveforms()
-	{
-		int height=100;
-		int originX=PMDRAWSPACING;
-		int originY=500;
-		int width =ofGetWidth()-(2*PMDRAWSPACING);
-
-		AudioSample* aS;
-		
-		waveforms.clear();
-		//float normalizationRatio = timeline->getDurationInSeconds() / player.getDuration(); //need to figure this out for framebased...but for now we are doing time based
-		float trackHeight = height/(1+aNumChannels);
-		int numSamples =  this->sizeInSamples(); //? / player.getNumChannels();
-		int pixelsPerSample = numSamples / width;
-		for(int c = 0; c < aNumChannels; c++){
-			ofPolyline preview;
-			int lastFrameIndex = 0;
-			for(float i = originX; i < originX+width; i++){
-				//float pointInTrack = screenXtoNormalizedX( i, zoomBounds ) * normalizationRatio; //will scale the screenX into wave's 0-1.0
-				float pointInTrack = float(i)/float(width);
-				float trackCenter = originY + trackHeight * (c+1);
-				if(pointInTrack <= 1.0){
-					//draw sample at pointInTrack * waveDuration;
-					int frameIndex = pointInTrack * numSamples;					
-					float losample = 0;
-					float hisample = 0;
-					for(int f = lastFrameIndex; f < frameIndex; f++){
-						//int sampleIndex = f * aNumChannels + c;
-						int sampleIndex = f ;
-						//float subpixelSample = samples[sampleIndex][c]/32565.0;
-						aS = this->getAudioSample(sampleIndex);
-
-						float subpixelSample = aS->getAudioData()[c]/32565.0;
-						if(subpixelSample < losample) {
-							losample = subpixelSample;
-						}
-						if(subpixelSample > hisample) {
-							hisample = subpixelSample;
-						}
-					}
-					if(losample == 0 && hisample == 0){
-						preview.addVertex(i, trackCenter);
-					}
-					else {
-						if(losample != 0){
-							preview.addVertex(i, trackCenter - losample * trackHeight);
-						}
-						if(hisample != 0){
-							//ofVertex(i, trackCenter - hisample * trackHeight);
-							preview.addVertex(i, trackCenter - hisample * trackHeight);
-						}
-					}
-					lastFrameIndex = frameIndex;
-				}
-				else{
-					preview.addVertex(i,trackCenter);
-				}
-			}
-			waveforms.push_back(preview);
-		}
-		//shouldRecomputePreview = false;
-	}
-	
 	
 }

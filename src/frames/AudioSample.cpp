@@ -15,13 +15,13 @@ AudioSample::AudioSample(float * audioSample, int channels) {
 	}
 	this->channels=channels;
     numInstances++;
+	this->refreshTimestamp();
 }
-
 	
 void AudioSample::release() {
-/*	
+	
 // VideoFrame release() code
-	ScopedLock<ofMutex> lock(*mutex);
+/*	ScopedLock<ofMutex> lock(*mutex);
 	_useCountOfThisObject--;
 	if(_useCountOfThisObject == 0) {
 		VideoFormat format(pixels);
@@ -30,8 +30,7 @@ void AudioSample::release() {
 		poolMutex.unlock();
 	}
 */
- }
- 
+}
 	
 
 AudioSample::~AudioSample() {

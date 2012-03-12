@@ -64,6 +64,7 @@ public:
 	void	setOpacity(int opacity);
     float	getFps();
     void	setFps(float fps);
+	void	setDriveMode(int mode);
 	
 	// events
 	void 	receivedLoopEvent(int &i);
@@ -89,6 +90,8 @@ protected:
     bool	playing;
 	int		loopMode;
 	bool	loopStart;
+	
+	int		driveMode; // 0 : based on time // 1 : based on audio which controls it through delay param.
 };
 }
 #endif // VIDEOHEADER_H_INCLUDED

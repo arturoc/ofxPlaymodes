@@ -18,6 +18,7 @@ AudioGrabber::AudioGrabber() {
 		AudioFrame * frame = new AudioFrame(input,bufferSize,nChannels);
 		newFrameEvent.notify(this,*frame);
 		frame->release();
+		//delete frame;
 	}
 
 	float AudioGrabber::getFps(){

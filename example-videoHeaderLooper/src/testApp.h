@@ -25,7 +25,7 @@ class testApp : public ofBaseApp{
 		ofxPm::VideoGrabber			vGrabber;
 		ofxPm::AudioGrabber			aGrabber;
 		ofxPm::VideoBuffer			vBuffer;
-		ofxPm::AudioBuffer			aBuffer;
+		ofxPm::AudioBufferSamples	aBuffer;
 		ofxPm::avLooperRenderer		avRenderer;
 	
 		// audio

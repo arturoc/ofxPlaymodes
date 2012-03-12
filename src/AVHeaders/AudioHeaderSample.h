@@ -10,9 +10,10 @@
 
 #include "AudioSink.h"
 #include "AudioSource.h"
-#include "AudioBufferSamples.h"
+#include "AudioBuffer.h"
 #include "VideoHeader.h"
 #include "AudioSample.h"
+#include "AudioBufferSamples.h"
 
 
 namespace ofxPm{
@@ -49,12 +50,15 @@ public:
 	void	setLoopToStart();
 	int		getLoopMode();
 	bool	isPlaying() ;
+	void	setLengthSamples(unsigned int l);
+	
 	
 	// others
     float		getFps();
     void		setFps(float fps);
 	float		getVolume(); 
 	void		setVolume(float opacity);
+	int			getIndex();
 
 	// event related
 	void	linkToVideoHeader(VideoHeader &vH);
@@ -76,6 +80,7 @@ protected:
 	unsigned int			delay;
 	unsigned int			in;
 	unsigned int			out;
+	unsigned int			length;
     float		fps;
 	float		pitch;
 	float		volume;
@@ -84,7 +89,7 @@ protected:
 	bool	playing;	
 	int		loopMode;
 	bool	loopStart;
-	unsigned int	tickCount;
+	int		tickCount;
 
 	};
 }

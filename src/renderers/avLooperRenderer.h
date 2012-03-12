@@ -10,7 +10,7 @@
 #include "AudioSource.h"
 #include "AudioHeader.h"
 #include "AudioHeaderSample.h"
-#include "AudioBufferSamples.h"
+
 
 namespace ofxPm
 {
@@ -24,7 +24,7 @@ public:
 
 	void				setup(VideoBuffer & bufferVideo, AudioBufferSamples & bufferAudio);
 	VideoHeader*		getVideoHeader();
-	AudioHeaderSample*	getAudioHeader();
+	AudioHeaderSample*		getAudioHeader();
 	
 	void				draw();
 	void				draw(int x,int y,int w,int h);
@@ -36,6 +36,7 @@ public:
 	void				setOpacity(float value);
 	void				setInMs(float ms);
 	void				setOutMs(float ms);
+	void				setLengthMs(float ms);
 	void				setPlaying(bool b);
 	void				setLoopToStart();
 	
@@ -43,7 +44,7 @@ private:
 	VideoBuffer*		vBuffer;
 	VideoHeader			vHeader;
 	AudioBufferSamples*		aBuffer;
-	AudioHeader			aHeader;
+	//AudioHeader			aHeader;
 	AudioHeaderSample	aHeader2;
 	
 	
