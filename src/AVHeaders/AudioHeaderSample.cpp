@@ -433,6 +433,27 @@ namespace ofxPm
 	//------------------------------------------------------
 	float AudioHeaderSample::getVolume() 
 	{
+		
+		declickLength=20;
+		
+		// try to detect if we're on a loop-click situation
+		
+		if (this->isPlaying() && pitch>0.0)
+		{
+			//int realIndex=aBuffer->getMaxSizeInSamples()-index;
+			if((float(out)-index)<float(declickLength))
+			{
+				//printf("out %f \n",ofMap(float(out)-index, 0.0, declickLength, 0.0, 1.0,true));
+				return(ofMap(float(out)-index, 0.0, declickLength, 0.0, 1.0,true));
+			}
+			if((index-float(in))<float(declickLength))
+			{
+				//printf("int %f \n",ofMap(index-float(in), 0.0, declickLength, 0.0, 1.0,true));
+				return(ofMap(index-float(in), 0.0, declickLength, 0.0, 1.0,true));
+			}
+			
+		}
+		
 		return volume;
 	}
 	//------------------------------------------------------

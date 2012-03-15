@@ -90,6 +90,10 @@ protected:
 	int		loopMode;
 	bool	loopStart;
 	int		tickCount;
+	
+	// declick
+	int		declickLength; 
+	
 
 	};
 }

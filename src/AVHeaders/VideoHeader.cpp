@@ -126,7 +126,6 @@ VideoFrame * VideoHeader::getNextVideoFrame(){
 			currentPos=getNextPosition();
 			VideoFrame * frame = buffer->getVideoFrame(currentPos);
         buffer->unlock();
-	printf("current Pos %d\n",currentPos);
         return frame;
 }
 
@@ -248,7 +247,6 @@ int VideoHeader::getNextPosition(){
 			buffer_size=buffer->size();
 			nextPos= int(buffer_size-1) - int(float(delay)/float(oneFrame));
 			nextPos = CLAMP(nextPos,0,buffer_size-1);
-			printf("nextPos %d delay %d\n",nextPos,delay);
 			return nextPos;
 			
 			break;

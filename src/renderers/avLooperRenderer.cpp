@@ -135,8 +135,8 @@ namespace ofxPm
 		{
 			AudioSample* aSample = aHeader2.getNextAudioSample();
 			
-			output[i*nChannels  ] = aSample->getAudioData()[0]; 
-			output[i*nChannels+1] = aSample->getAudioData()[0]; 
+			output[i*nChannels  ] = aSample->getAudioData()[0] * aHeader2.getVolume(); 
+			output[i*nChannels+1] = aSample->getAudioData()[0] * aHeader2.getVolume(); 
 			
 			aHeader2.updateTick();
 			aSample->release();
