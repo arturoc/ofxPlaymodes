@@ -14,7 +14,7 @@ void testApp::setup()
 	vGrabber.setFps(25);
 	vBuffer.setup(vGrabber, 175);	
 
-	aBufferSize=1024;
+	aBufferSize=2048;
 	aSampleRate=96000;
 	soundStream.listDevices();
 	soundStream.setup(2,2,aSampleRate,aBufferSize,2);
