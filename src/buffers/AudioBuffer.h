@@ -28,12 +28,12 @@ public:
 	AudioFrame * getAudioFrame(float pct);          // % of the buffer
 	AudioSample* getAudioSample(int index);
 	
-	unsigned int size();                            // total size of the buffer
-	unsigned int getMaxSize();                         // max size of the buffer
-	unsigned int sizeInSamples();                            // total size of the buffer
-	unsigned int getMaxSizeInSamples();                         // max size of the buffer
-	int			 getSoundStreamBufferSize();
-
+	unsigned int	size();                            // total size of the buffer
+	unsigned int	getMaxSize();                         // max size of the buffer
+	unsigned int	sizeInSamples();                            // total size of the buffer
+	unsigned int	getMaxSizeInSamples();                         // max size of the buffer
+	int				getSoundStreamBufferSize();
+	int				getAudioSampleRate();
     virtual void newAudioFrame(AudioFrame &frame);  // for notification of new frame event
     float getFps();                                 // fps of the audio source
 

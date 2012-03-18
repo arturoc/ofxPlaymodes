@@ -32,37 +32,39 @@ public:
 	void			resetTick();
 
 	// delay
-    void	setDelaySamples(unsigned int samples);
-    unsigned int		getDelaySamples();
+    void			setDelaySamples(unsigned int samples);
+    unsigned int	getDelaySamples();
 	// in 
-    void	setInSamples(unsigned int in);
-    unsigned int		getInSamples() ;
+    void			setInSamples(unsigned int in);
+    unsigned int	getInSamples() ;
 	// out 
-    void	setOutSamples(unsigned int out);
-    unsigned int		getOutSamples() ;	
+    void			setOutSamples(unsigned int out);
+    unsigned int	getOutSamples() ;	
+	// length
+	void			setLengthSamples(unsigned int l);
+	unsigned int	getLengthSamples();
 	// pitch
-    void	setPitch(float speed);
-    float	getPitch() ;
+    void			setPitch(float speed);
+    float			getPitch() ;
 	// loop mode
-	void	setLoopMode(int loop);
-	void	setPlaying(bool loopMode);
-	void	setPlaying(bool loopMode, float speed);
-	void	setLoopToStart();
-	int		getLoopMode();
-	bool	isPlaying() ;
-	void	setLengthSamples(unsigned int l);
+	void			setLoopMode(int loop);
+	void			setPlaying(bool loopMode);
+	void			setPlaying(bool loopMode, float speed);
+	void			setLoopToStart();
+	int				getLoopMode();
+	bool			isPlaying() ;
 	
 	
 	// others
-    float		getFps();
-    void		setFps(float fps);
-	float		getVolume(); 
-	void		setVolume(float opacity);
-	int			getIndex();
+    float			getFps();
+    void			setFps(float fps);
+	float			getVolume(); 
+	void			setVolume(float opacity);
+	int				getIndex();
 
 	// event related
-	void	linkToVideoHeader(VideoHeader &vH);
-	ofEvent<int> loopInEvent;
+	void			linkToVideoHeader(VideoHeader &vH);
+	ofEvent<int>	loopInEvent;
 	
 protected:
 	
@@ -92,9 +94,10 @@ protected:
 	int		tickCount;
 	
 	// declick
-	int		declickLength; 
+	int		declickLength;
+	int		declickCount;
+	ofMutex	declickMutex;
 	
-
 	};
 }
 #endif // AUDIOHEADERSAMPLE_H_INCLUDED

@@ -39,6 +39,7 @@ public:
 	void				setLengthMs(float ms);
 	void				setPlaying(bool b);
 	void				setLoopToStart();
+	void				setVideoOffsetInMs(int ms);
 	
 private:
 	VideoBuffer*		vBuffer;
@@ -49,7 +50,9 @@ private:
 	
 	
 	int					sampleIndex;
-
+	int					maximumSizeInMs;
+	int					videoOffsetInMs;
+	int					audioSampleRate;
 	//VideoSource*		source;
 };
 //------------------------------------------------------
