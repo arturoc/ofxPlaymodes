@@ -67,7 +67,14 @@ void testApp::draw(){
 	
 	float factorFR = (ofGetFrameRate()/60.0);
 	ofSetColor(255*(1.0-factorFR),255*(factorFR*factorFR*factorFR),0);
-	ofDrawBitmapString("FPS: " + ofToString(int(ofGetFrameRate())) + " | aGrabber FPS " + ofToString(float(aGrabber.getFps())) + "Samples " +ofToString(aBuffer.getMaxSizeInSamples()) ,20,ofGetHeight()-20);
+	ofDrawBitmapString("FPS: " + ofToString(int(ofGetFrameRate())) 
+					   + " || cameraBuffer FPS " + ofToString(vBuffer.getRealFPS()) 
+					   + " || audio Grabber FPS " + ofToString(float(aGrabber.getFps())) 
+					   + " || Total Samples " +ofToString(aBuffer.getMaxSizeInSamples())
+					   + " || In " +ofToString(avRenderer.getAudioHeader()->getInSamples())
+					   + " || Out " +ofToString(avRenderer.getAudioHeader()->getOutSamples())
+					   + " || Length " +ofToString(avRenderer.getAudioHeader()->getLengthSamples())
+					   ,20,ofGetHeight()-20);
 	//ofDrawBitmapString("VideoFrame pool size: " + ofToString(VideoFrame::getPoolSize(VideoFormat(1280,720,3))),520,ofGetHeight()-20);
 
 }
@@ -209,6 +216,10 @@ void testApp::updateOsc()
 			{
 				avRenderer.setLoopToStart();
 			}
+		}
+		if ( m.getAddress() == "/offsetVideoMs" )
+		{
+				avRenderer.setVideoOffsetInMs(int(value));
 		}
 	}
 }
