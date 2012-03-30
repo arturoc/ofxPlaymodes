@@ -10,11 +10,11 @@ void testApp::setup()
 	// video pipeline
 	//////////////////
 	vGrabber.initGrabber(1280,720);
-	vGrabber.setDeviceID(22);
-	vGrabber.setFps(25);
+	vGrabber.setDeviceID(36);
+	vGrabber.setFps(22);
 	vBuffer.setup(vGrabber, 175);	
 
-	aBufferSize=2048;
+	aBufferSize=1024;
 	aSampleRate=96000;
 	soundStream.listDevices();
 	soundStream.setup(2,2,aSampleRate,aBufferSize,2);
@@ -57,7 +57,7 @@ void testApp::update(){
 void testApp::draw(){
 
 	ofSetColor(255,255,255);	
-	avRenderer.draw(0,0,1245,700);
+	avRenderer.draw(0,0,1280,720);
 
 	// draw buffer draw limits
 	ofSetColor(100);
@@ -69,14 +69,16 @@ void testApp::draw(){
 	ofSetColor(255*(1.0-factorFR),255*(factorFR*factorFR*factorFR),0);
 	ofDrawBitmapString("FPS: " + ofToString(int(ofGetFrameRate())) 
 					   + " || cameraBuffer FPS " + ofToString(vBuffer.getRealFPS()) 
-					   + " || audio Grabber FPS " + ofToString(float(aGrabber.getFps())) 
+					   + " || audio Grabber FPS " + ofToString(float(aGrabber.getFps()))
+					   + " || Num AudioFrames " + ofToString(aBuffer.size())
 					   + " || Total Samples " +ofToString(aBuffer.getMaxSizeInSamples())
 					   + " || In " +ofToString(avRenderer.getAudioHeader()->getInSamples())
 					   + " || Out " +ofToString(avRenderer.getAudioHeader()->getOutSamples())
 					   + " || Length " +ofToString(avRenderer.getAudioHeader()->getLengthSamples())
+					   + " || VideoOffsetMs " +ofToString(avRenderer.getVideoOffsetInMs())
 					   ,20,ofGetHeight()-20);
 	//ofDrawBitmapString("VideoFrame pool size: " + ofToString(VideoFrame::getPoolSize(VideoFormat(1280,720,3))),520,ofGetHeight()-20);
-
+	
 }
 
 //--------------------------------------------------------------
@@ -157,7 +159,9 @@ void testApp::updateOsc()
 		// get the next message
 		ofxOscMessage m;
 		receiver.getNextMessage( &m );
-		printf("OSC in > %s :: %f\n",m.getAddress().c_str(),m.getArgAsFloat(0));
+		
+		
+		printf("OSC in > %s :: %f || time :: %d ms \n",m.getAddress().c_str(),m.getArgAsFloat(0),ofGetElapsedTimeMillis());
 		float value = m.getArgAsFloat(0);
 		
 		if ( m.getAddress() == "/delay" )
@@ -220,6 +224,14 @@ void testApp::updateOsc()
 		if ( m.getAddress() == "/offsetVideoMs" )
 		{
 				avRenderer.setVideoOffsetInMs(int(value));
+		}
+		if ( m.getAddress() == "/deClickLength" )
+		{
+			avRenderer.getAudioHeader()->setDeClickLength(int(value));
+		}
+		if ( m.getAddress() == "/grainTrigger" )
+		{
+			avRenderer.executeInOut();
 		}
 	}
 }

@@ -55,8 +55,8 @@ namespace ofxPm
 		index	= 0;
 		delay   = 0;
 		in		= 0;
-		out		= 1.0;
-		length	= 0;
+		out		= aBuffer->getSoundStreamBufferSize();
+		length	= out - in;
 		pitch	= 1.0;
 		
 		playing		= false;
@@ -66,6 +66,8 @@ namespace ofxPm
 		this->vHeaderLink = NULL;
 		
 		declickCount=0;
+		declickLength=10;
+
 		
 	}
 	//------------------------------------------------------
@@ -127,6 +129,7 @@ namespace ofxPm
 		//		ofCircle(inPos,650,10);
 		//		ofCircle(outPos,650,10);
 		
+		// volume representation
 		float vol = this->getVolume();
 		ofRect(20,PMDRAWELEMENTSY-200,20,vol*100.0);
 		ofDrawBitmapString(ofToString(index-float(in)) +"\n" +ofToString(float(out)-index) ,ofPoint(40,PMDRAWELEMENTSY-200));
@@ -155,6 +158,8 @@ namespace ofxPm
 		aBuffer->lock();
 		index=getNextPosition();
 		AudioSample* aSample = aBuffer->getAudioSample(index);
+		aSample->retain();
+		
 		//index = fmod((index +1.0),1024);
 		
 		aBuffer->unlock();
@@ -162,14 +167,14 @@ namespace ofxPm
 		return aSample;
 	}
 	
-	//------------------------------------------------------
-	
-	AudioSample* AudioHeaderSample::getAudioSample(int _index)
-	{
-		int getIndex = CLAMP(_index,0,aBuffer->sizeInSamples());
-		AudioSample* aSample = aBuffer->getAudioSample(_index);
-		return aSample;
-	}
+//	//------------------------------------------------------
+//	
+//	AudioSample* AudioHeaderSample::getAudioSample(int _index)
+//	{
+//		int getIndex = CLAMP(_index,0,aBuffer->sizeInSamples());
+//		AudioSample* aSample = aBuffer->getAudioSample(_index);
+//		return aSample;
+//	}
 	
 	//------------------------------------------------------
 	// returns the real position in the buffer
@@ -341,30 +346,75 @@ namespace ofxPm
 	//------------------------------------------------------
 	void AudioHeaderSample::setInSamples(unsigned int inSamples)
 	{
-		if(declickMutex.tryLock())
+		while(declickMutex.tryLock()==false)
 		{
+			
+		}
+//		if(declickMutex.tryLock())
+//		{
+			/*
 			resetTick();
 			this->in = (aBuffer->getMaxSizeInSamples()-1)-inSamples;
 
 			// clamp the in value
 			// can't compare as "in < 0" because it's an unsigned int !
+			// control the case where in is below 0 sample index. 
 			if (int(aBuffer->getMaxSizeInSamples()-1-inSamples)<0){
 				this->in=0;
 			}
-			else if (this->in > aBuffer->getMaxSizeInSamples()) this->in=aBuffer->getMaxSizeInSamples()-1; 
-
+			// control the case where in is too big and needs to be at least Max-Buffer-1 samples away of the end
+			else if (this->in > aBuffer->getMaxSizeInSamples()-1-aBuffer->getMaxSizeInSamples()) 
+			{
+				this->in=aBuffer->getMaxSizeInSamples()-1-aBuffer->getSoundStreamBufferSize(); 
+				this->length = aBuffer->getSoundStreamBufferSize();
+			}
 			if(abs(int(this->in - this->out)) < aBuffer->getSoundStreamBufferSize())
 			{
+				printf("AHS:: setIn too small !!\n");
 				// we don't let make the loop smaller then SoundStream buffer size !
 				this->in = this->out - aBuffer->getSoundStreamBufferSize();
+				this->length = aBuffer->getSoundStreamBufferSize();
 			}
-			
 			// upate out point based on length
 			this->out = in + length;
-			this->out = CLAMP(this->out,0,aBuffer->getMaxSizeInSamples()-1);
+			*/
+			
+			resetTick();
+			int auxIn = (aBuffer->getMaxSizeInSamples()-1)-inSamples; 
+			if ((auxIn) < 0 )
+			{				
+				// if inPoint is less then 0 -> =0 
+				this->in = 0;
+			}
+			else 
+			{
+				if (auxIn > aBuffer->getMaxSizeInSamples()-1-aBuffer->getSoundStreamBufferSize()) 
+				{
+					this->in = aBuffer->getMaxSizeInSamples()-1-aBuffer->getSoundStreamBufferSize();
+					this->out = this->in + aBuffer->getSoundStreamBufferSize();
+					this->length = aBuffer->getSoundStreamBufferSize();
+				}
+				else 
+				{
+					this->in = auxIn;
+					if((this->in + length) > aBuffer->getMaxSizeInSamples()-1)
+					{
+						this->length = (aBuffer->getMaxSizeInSamples() - 1) - this->in;
+						this->out = (aBuffer->getMaxSizeInSamples() - 1);
+					}
+					else 
+					{
+						this->out = this->in + this->length;
+					}
+
+				}
+
+			}
+
+			
 			declickMutex.unlock();
 			
-		}
+		//}
 	}
 	//------------------------------------------------------
 	unsigned int AudioHeaderSample::getOutSamples() 
@@ -374,37 +424,71 @@ namespace ofxPm
 	//------------------------------------------------------
 	void AudioHeaderSample::setOutSamples(unsigned int outSamples)
 	{
-		if(declickMutex.tryLock())
+		while(declickMutex.tryLock()==false)
 		{
+			
+		}
+		
+		//if(declickMutex.tryLock())
+		//{
 
 			resetTick();
-			this->out = aBuffer->getMaxSizeInSamples()-1-outSamples;   
-			this->out = CLAMP(this->out,0,aBuffer->getMaxSizeInSamples()-1);
+/*			this->out = aBuffer->getMaxSizeInSamples()-1-outSamples;
+			
+			// manual clamping to be sure of minimum values possible
+			if (int(aBuffer->getMaxSizeInSamples()-1-outSamples) < aBuffer->getSoundStreamBufferSize())
+			{
+				this->out=aBuffer->getSoundStreamBufferSize();
+			}
+			else if (this->out > aBuffer->getMaxSizeInSamples()-1) this->out=aBuffer->getMaxSizeInSamples()-1; 
+			
+			//this->out = CLAMP(this->out,0,aBuffer->getMaxSizeInSamples()-1);
 
 			if(abs(int(this->in - this->out)) < aBuffer->getSoundStreamBufferSize())
 			{
+				printf("AHS:: setOut too small !!\n");
 				// we don't let make the loop smaller then SoundStream buffer size !
 				this->out = this->in + aBuffer->getSoundStreamBufferSize();
+				this->length = aBuffer->getSoundStreamBufferSize();
 			}
 			this->length = out - in;
+*/
+			int auxOut = (aBuffer->getMaxSizeInSamples()-1)-outSamples; 
+			
+			if(auxOut > (aBuffer->getMaxSizeInSamples()-1)) {
+				this->out = aBuffer->getMaxSizeInSamples()-1; 
+			}
+			else if (auxOut < (this->in + aBuffer->getSoundStreamBufferSize())) 
+			{
+				this->out = this->in + aBuffer->getSoundStreamBufferSize();
+			}
+			else this->out = auxOut;
+			
+			this->length = this->out - this->in;				
 			declickMutex.unlock();
-		}
+		//}
 	}
 	//------------------------------------------------------
 	void AudioHeaderSample::setLengthSamples(unsigned int l)
 	{
-		printf("AHS::l=%d\n",l);
-		if(declickMutex.tryLock())
+		while(declickMutex.tryLock())
 		{
+			
+		}
+		
+		//if(declickMutex.tryLock())
+		//{
 			resetTick();
 			length = l;
-			if(length<aBuffer->getSoundStreamBufferSize()) length=aBuffer->getSoundStreamBufferSize();
+			// control the case where length is too small
+			if(length < aBuffer->getSoundStreamBufferSize()) length=aBuffer->getSoundStreamBufferSize();
+			// control the case where length goes beyond ranges
+			if ((this->in + length) > (aBuffer->getMaxSizeInSamples()-1)) length=(aBuffer->getMaxSizeInSamples()-1)-this->in;
+
 			this->out = this->in + this->length;
 			this->out = CLAMP(this->out,0,aBuffer->getMaxSizeInSamples()-1);
-			
-			
 			declickMutex.unlock();
-		}
+		//}
 	}
 	//------------------------------------------------------
 	unsigned int AudioHeaderSample::getLengthSamples() 
@@ -463,7 +547,7 @@ namespace ofxPm
 			// other beahaviour could be to let the header on delay / inPoint / outPoint position when loop is turned off
 			resetTick();
 			this->playing = isPlaying;
-			delay = index;
+			delay = aBuffer->sizeInSamples()-1-out;
 		}
 	}		
 	//------------------------------------------------------
@@ -487,7 +571,6 @@ namespace ofxPm
 	float AudioHeaderSample::getVolume() 
 	{
 		
-		declickLength=100;
 		
 		// try to detect if we're on a loop-click situation
 //		if ((this->isPlaying() && pitch>0.0))
@@ -527,41 +610,50 @@ namespace ofxPm
 //		
 //		}
 // 
-		
-		bool outRange=false;
-		bool inRange=false;
-		if (((float(out)-index)>=0)&&((float(out)-index)<(float(declickLength)*pitch))) outRange=true;	
-		if (((index-float(in))>=0)&&((index-float(in))<(float(declickLength)*pitch))) inRange=true;	
-											
-		// case to avoid getting stuck on short loops -> no envelope is applied.
-		if(inRange&&outRange) 
-		{
-			printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!|\n");
-			declickMutex.unlock();
-			return(1.0);
-		}
-		else if(inRange)
-		{
-			declickMutex.tryLock();
-			float attFactor = ofMap(index-float(in), 0.0, declickLength*pitch, 0.0, 1.0,true);
-			return(attFactor);
-		}
-		
-		else if(outRange) 
-		{
-			declickMutex.tryLock();
-			float attFactor = ofMap(float(out)-index, 0.0, declickLength*pitch, 0.0, 1.0,true);
-			return(attFactor);
-		}
-		else {
-			declickMutex.unlock();
-			return(1.0);
-		}
-		
-										
+		if(playing)
+		{		
+			bool outRange=false;
+			bool inRange=false;
+			int inDeclick=(in+declickLength*pitch);
+			int outDeclick=(out-declickLength*pitch);		
+			
+			if (((float(out)-index)>=0)&&((float(out)-index)<(float(declickLength)*pitch))) outRange=true;	
+			if (((index-float(in))>=0)&&((index-float(in))<(float(declickLength)*pitch))) inRange=true;	
+												
+			// case to avoid getting stuck on short loops -> we decide that no envelope is applied.
+			if((inDeclick>=outDeclick)||(out-in<=aBuffer->getSoundStreamBufferSize())) 
+			//if(abs(int(out)-int(in))<=(declickLength)*pitch)
+			{
+				//printf("XX-");
+				declickMutex.unlock();
+				return(1.0);
+			}
+			else if(inRange)
+			{
+				//printf("i-");
+				if(declickMutex.tryLock())
+				{
+					float attFactor = ofMap(index-float(in), 0.0, declickLength*pitch, 0.0, 1.0,true);
+					return(attFactor);
+				}
+			}
+			
+			else if(outRange) 
+			{
+				if(declickMutex.tryLock())
+				{
+					//printf("o-");
+					float attFactor = ofMap(float(out)-index, 0.0, declickLength*pitch, 0.0, 1.0,true);
+					return(attFactor);					
+				}
+			}
+			else {
+				declickMutex.unlock();
+				return(1.0);
+			}
+		}							
 										   
-										   
-										   
+		declickMutex.unlock();									   
 		return volume;
 	}
 	//------------------------------------------------------
@@ -580,5 +672,10 @@ namespace ofxPm
 	{
 		return index;
 	}
-
+	//------------------------------------------------------
+	void AudioHeaderSample::setDeClickLength(int t) 
+	{
+		declickLength=t;
+	}
+	
 }

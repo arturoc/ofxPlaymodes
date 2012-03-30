@@ -7,10 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B07D2BD6150E0F7B003F4516 /* AudioHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B07D2B7F150E0F7B003F4516 /* AudioHeader.cpp */; };
 		B07D2BD7150E0F7B003F4516 /* AudioHeaderSample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B07D2B81150E0F7B003F4516 /* AudioHeaderSample.cpp */; };
 		B07D2BD8150E0F7B003F4516 /* VideoHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B07D2B83150E0F7B003F4516 /* VideoHeader.cpp */; };
-		B07D2BD9150E0F7B003F4516 /* AudioBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B07D2B86150E0F7B003F4516 /* AudioBuffer.cpp */; };
 		B07D2BDA150E0F7B003F4516 /* AudioBufferSamples.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B07D2B88150E0F7B003F4516 /* AudioBufferSamples.cpp */; };
 		B07D2BDB150E0F7B003F4516 /* Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B07D2B8A150E0F7B003F4516 /* Buffer.cpp */; };
 		B07D2BDC150E0F7B003F4516 /* VideoBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B07D2B8C150E0F7B003F4516 /* VideoBuffer.cpp */; };
@@ -31,7 +29,6 @@
 		B07D2BEB150E0F7B003F4516 /* AudioRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B07D2BB7150E0F7B003F4516 /* AudioRenderer.cpp */; };
 		B07D2BEC150E0F7B003F4516 /* avLooperRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B07D2BB9150E0F7B003F4516 /* avLooperRenderer.cpp */; };
 		B07D2BED150E0F7B003F4516 /* BasicVideoRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B07D2BBB150E0F7B003F4516 /* BasicVideoRenderer.cpp */; };
-		B07D2BEE150E0F7B003F4516 /* HeaderLooperRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B07D2BBD150E0F7B003F4516 /* HeaderLooperRenderer.cpp */; };
 		B07D2BEF150E0F7B003F4516 /* VideoRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B07D2BBF150E0F7B003F4516 /* VideoRenderer.cpp */; };
 		B07D2BF0150E0F7B003F4516 /* ofxObjCPointer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B07D2BC2150E0F7B003F4516 /* ofxObjCPointer.cpp */; };
 		B0959A0A14F1B0D20095D524 /* liboscpack.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B09599F014F1B0D20095D524 /* liboscpack.a */; };
@@ -97,14 +94,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		B07D2B7F150E0F7B003F4516 /* AudioHeader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioHeader.cpp; sourceTree = "<group>"; };
-		B07D2B80150E0F7B003F4516 /* AudioHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioHeader.h; sourceTree = "<group>"; };
 		B07D2B81150E0F7B003F4516 /* AudioHeaderSample.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioHeaderSample.cpp; sourceTree = "<group>"; };
 		B07D2B82150E0F7B003F4516 /* AudioHeaderSample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioHeaderSample.h; sourceTree = "<group>"; };
 		B07D2B83150E0F7B003F4516 /* VideoHeader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VideoHeader.cpp; sourceTree = "<group>"; };
 		B07D2B84150E0F7B003F4516 /* VideoHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoHeader.h; sourceTree = "<group>"; };
-		B07D2B86150E0F7B003F4516 /* AudioBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioBuffer.cpp; sourceTree = "<group>"; };
-		B07D2B87150E0F7B003F4516 /* AudioBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioBuffer.h; sourceTree = "<group>"; };
 		B07D2B88150E0F7B003F4516 /* AudioBufferSamples.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioBufferSamples.cpp; sourceTree = "<group>"; };
 		B07D2B89150E0F7B003F4516 /* AudioBufferSamples.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioBufferSamples.h; sourceTree = "<group>"; };
 		B07D2B8A150E0F7B003F4516 /* Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Buffer.cpp; sourceTree = "<group>"; };
@@ -148,8 +141,6 @@
 		B07D2BBA150E0F7B003F4516 /* avLooperRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avLooperRenderer.h; sourceTree = "<group>"; };
 		B07D2BBB150E0F7B003F4516 /* BasicVideoRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BasicVideoRenderer.cpp; sourceTree = "<group>"; };
 		B07D2BBC150E0F7B003F4516 /* BasicVideoRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicVideoRenderer.h; sourceTree = "<group>"; };
-		B07D2BBD150E0F7B003F4516 /* HeaderLooperRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HeaderLooperRenderer.cpp; sourceTree = "<group>"; };
-		B07D2BBE150E0F7B003F4516 /* HeaderLooperRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderLooperRenderer.h; sourceTree = "<group>"; };
 		B07D2BBF150E0F7B003F4516 /* VideoRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VideoRenderer.cpp; sourceTree = "<group>"; };
 		B07D2BC0150E0F7B003F4516 /* VideoRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoRenderer.h; sourceTree = "<group>"; };
 		B07D2BC2150E0F7B003F4516 /* ofxObjCPointer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxObjCPointer.cpp; sourceTree = "<group>"; };
@@ -276,8 +267,6 @@
 		B07D2B7E150E0F7B003F4516 /* AVHeaders */ = {
 			isa = PBXGroup;
 			children = (
-				B07D2B7F150E0F7B003F4516 /* AudioHeader.cpp */,
-				B07D2B80150E0F7B003F4516 /* AudioHeader.h */,
 				B07D2B81150E0F7B003F4516 /* AudioHeaderSample.cpp */,
 				B07D2B82150E0F7B003F4516 /* AudioHeaderSample.h */,
 				B07D2B83150E0F7B003F4516 /* VideoHeader.cpp */,
@@ -289,8 +278,6 @@
 		B07D2B85150E0F7B003F4516 /* buffers */ = {
 			isa = PBXGroup;
 			children = (
-				B07D2B86150E0F7B003F4516 /* AudioBuffer.cpp */,
-				B07D2B87150E0F7B003F4516 /* AudioBuffer.h */,
 				B07D2B88150E0F7B003F4516 /* AudioBufferSamples.cpp */,
 				B07D2B89150E0F7B003F4516 /* AudioBufferSamples.h */,
 				B07D2B8A150E0F7B003F4516 /* Buffer.cpp */,
@@ -406,8 +393,6 @@
 				B07D2BBA150E0F7B003F4516 /* avLooperRenderer.h */,
 				B07D2BBB150E0F7B003F4516 /* BasicVideoRenderer.cpp */,
 				B07D2BBC150E0F7B003F4516 /* BasicVideoRenderer.h */,
-				B07D2BBD150E0F7B003F4516 /* HeaderLooperRenderer.cpp */,
-				B07D2BBE150E0F7B003F4516 /* HeaderLooperRenderer.h */,
 				B07D2BBF150E0F7B003F4516 /* VideoRenderer.cpp */,
 				B07D2BC0150E0F7B003F4516 /* VideoRenderer.h */,
 			);
@@ -761,10 +746,8 @@
 				B0959A1414F1B0D30095D524 /* ofxOscMessage.cpp in Sources */,
 				B0959A1514F1B0D30095D524 /* ofxOscReceiver.cpp in Sources */,
 				B0959A1614F1B0D30095D524 /* ofxOscSender.cpp in Sources */,
-				B07D2BD6150E0F7B003F4516 /* AudioHeader.cpp in Sources */,
 				B07D2BD7150E0F7B003F4516 /* AudioHeaderSample.cpp in Sources */,
 				B07D2BD8150E0F7B003F4516 /* VideoHeader.cpp in Sources */,
-				B07D2BD9150E0F7B003F4516 /* AudioBuffer.cpp in Sources */,
 				B07D2BDA150E0F7B003F4516 /* AudioBufferSamples.cpp in Sources */,
 				B07D2BDB150E0F7B003F4516 /* Buffer.cpp in Sources */,
 				B07D2BDC150E0F7B003F4516 /* VideoBuffer.cpp in Sources */,
@@ -785,7 +768,6 @@
 				B07D2BEB150E0F7B003F4516 /* AudioRenderer.cpp in Sources */,
 				B07D2BEC150E0F7B003F4516 /* avLooperRenderer.cpp in Sources */,
 				B07D2BED150E0F7B003F4516 /* BasicVideoRenderer.cpp in Sources */,
-				B07D2BEE150E0F7B003F4516 /* HeaderLooperRenderer.cpp in Sources */,
 				B07D2BEF150E0F7B003F4516 /* VideoRenderer.cpp in Sources */,
 				B07D2BF0150E0F7B003F4516 /* ofxObjCPointer.cpp in Sources */,
 			);

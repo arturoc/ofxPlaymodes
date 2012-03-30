@@ -23,10 +23,10 @@ public:
 
 	void setup(AudioSource & source, float sizeInSec, int sampleR, int bufferS, int numCh);
 
-	AudioFrame * getAudioFrame(int position);       // frame number in the buffer
-	AudioFrame * getAudioFrame(TimeDiff microsec);// frame at n microseconds from the end of the buffer
-	AudioFrame * getAudioFrame(float pct);          // % of the buffer
-	AudioSample* getAudioSample(int index);
+//	AudioFrame * getAudioFrame(int position);       // frame number in the buffer
+//	AudioFrame * getAudioFrame(TimeDiff microsec);// frame at n microseconds from the end of the buffer
+//	AudioFrame * getAudioFrame(float pct);          // % of the buffer
+//	AudioSample* getAudioSample(int index);
 	
 	unsigned int	size();                            // total size of the buffer
 	unsigned int	getMaxSize();                         // max size of the buffer
@@ -53,7 +53,6 @@ public:
 
 protected:
     deque<AudioFrame*>		frames;
-	deque<AudioSample*>		samples;
 	
     //float					data[AUDIO_BUFFER_NUM_FRAMES];
     float					fps;

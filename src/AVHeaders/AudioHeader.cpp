@@ -145,7 +145,9 @@ namespace ofxPm
 	{
 		aBuffer->lock();
 			currentPos=getNextPosition();
-			AudioFrame * frame = aBuffer->getAudioFrame(currentPos);
+			AudioFrame * frame;
+		//!!!!!!!! OK frame = aBuffer->getAudioFrame(currentPos);
+		
 		aBuffer->unlock();
 		
 		return frame;
@@ -156,7 +158,8 @@ namespace ofxPm
 	AudioFrame * AudioHeader::getAudioFrame(int position)
 	{
 		position = CLAMP(position,0,aBuffer->size());
-		AudioFrame * currentFrame = aBuffer->getAudioFrame(position);
+		AudioFrame * currentFrame;
+		// OK !!!!! currentFrame = aBuffer->getAudioFrame(position);
 
 		int currentFrameSize=currentFrame->getBufferSize()*currentFrame->getChannels();
 		float resultBuffer[currentFrameSize];

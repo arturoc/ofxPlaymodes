@@ -2,6 +2,7 @@
 #include "AudioSample.h"
 
 
+using Poco::ScopedLock;
 
 namespace ofxPm{
 int AudioSample::numInstances=0;
@@ -18,19 +19,23 @@ AudioSample::AudioSample(float * audioSample, int channels) {
 	this->refreshTimestamp();
 }
 	
-void AudioSample::release() {
-	
-// VideoFrame release() code
-/*	ScopedLock<ofMutex> lock(*mutex);
-	_useCountOfThisObject--;
-	if(_useCountOfThisObject == 0) {
-		VideoFormat format(pixels);
-		poolMutex.lock();
-		pool[format].push_back(this);
-		poolMutex.unlock();
+	//-------------------------------------------------------------------------------
+	void AudioSample::release() 
+	{
+	    ScopedLock<ofMutex> lock(*mutex);
+		_useCountOfThisObject--;
+		if(_useCountOfThisObject == 0) {
+			printf("AUDIOFRAME:: deleting object !!!!!!!!!!!!!!!!!!!!!!!!!\n");
+			delete this;
+		}
 	}
-*/
-}
+	
+	//-------------------------------------------------------------------------------
+	void AudioSample::retain() 
+	{
+		ScopedLock<ofMutex> lock(*mutex);
+		_useCountOfThisObject++;
+	}
 	
 
 AudioSample::~AudioSample() {

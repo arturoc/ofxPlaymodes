@@ -7,12 +7,16 @@
 
 #include "AudioBuffer.h"
 
-namespace ofxPm{
-AudioBuffer::AudioBuffer(AudioSource & source, float size, int sampleR, int bufferS,int numCh) {
-	setup(source,size,sampleR,bufferS,numCh);
-}
+namespace ofxPm
+{
+
+	//-------------------------------------------------------------------------------
+	AudioBuffer::AudioBuffer(AudioSource & source, float size, int sampleR, int bufferS,int numCh) 
+	{
+		setup(source,size,sampleR,bufferS,numCh);
+	}
 		
-	//------------------------------------------------------
+	//-------------------------------------------------------------------------------
 	AudioBuffer::AudioBuffer() {
 		source = NULL;
 		fps=0;
@@ -20,55 +24,41 @@ AudioBuffer::AudioBuffer(AudioSource & source, float size, int sampleR, int buff
 		stopped=false;
 	}
 
-	//------------------------------------------------------
-		
+	//-------------------------------------------------------------------------------		
 	AudioBuffer::~AudioBuffer() 
 	{
 
 	}
 
-	//------------------------------------------------------
-
+	//-------------------------------------------------------------------------------
 	void AudioBuffer::setup(AudioSource & source,float sizeInSecs,int sampleR, int bufferS, int numCh)
-	{
-		
-		//7.0*(float(aSampleRate)/float(aBufferSize))
-		
-		this->source=&source;
-		fps=source.getFps();
-		totalFrames=0;
-		aSampleRate=sampleR;
-		aSoundStreamBufferSize=bufferS;
-		aNumCh=numCh;
+	{		
+		this->source			=&source;
+		fps						=source.getFps();
+		totalFrames				=0;
+		aSampleRate				=sampleR;
+		aSoundStreamBufferSize	=bufferS;
+		aNumCh					=numCh;
 		
 		this->maxSize			= sizeInSecs *(float(aSampleRate)/float(aSoundStreamBufferSize));
 		this->maxSizeSamples	= sizeInSecs * aSampleRate;
-		resume();	
 		stopped					=false;
+
+		resume();	
 		
 	}
 
-	//------------------------------------------------------
-
+	//-------------------------------------------------------------------------------
 	unsigned int AudioBuffer::size(){
 		return frames.size();
 	}
-	//------------------------------------------------------
+
+	//-------------------------------------------------------------------------------
 	unsigned int AudioBuffer::getMaxSize(){
 		return maxSize;
 	}
-	//------------------------------------------------------	
-	unsigned int AudioBuffer::sizeInSamples()
-	{
-		return this->samples.size();
-	}
-	//------------------------------------------------------
-	unsigned int AudioBuffer::getMaxSizeInSamples()
-	{
-		return maxSizeSamples;
-	}
-	//------------------------------------------------------
 	
+	//-------------------------------------------------------------------------------
 	void AudioBuffer::newAudioFrame(AudioFrame &frame)
 	{
 		if(size()==0)initTime=frame.getTimestamp();
@@ -82,87 +72,55 @@ AudioBuffer::AudioBuffer(AudioSource & source, float size, int sampleR, int buff
 			frames.erase(frames.begin());
 		}
 		
-		
-		// Samples managing, store AudioSamples on the samples cue.
-		float* audioFrameData = new float[frame.getBufferSize()*aNumCh];
-		audioFrameData = frame.getAudioData();
-		AudioSample* aS;
-		float* sampleData = new float[aNumCh];
-		
-		// for every position on the audioFrame buffer ...
-		for(int i=0;i<frame.getBufferSize();i++)
-		{
-			// copy data from AudioFrame to AudioSample
-			for(int j=0;j<aNumCh;j++)
-			{
-				sampleData[j] = audioFrameData[i*aNumCh+j];
-			}
-			aS = new AudioSample(sampleData,aNumCh); 
-			samples.push_back(aS);
-			
-			if(sizeInSamples()>maxSizeSamples){
-				samples.erase(samples.begin());
-			}
-			
-		}
-		
 		newFrameEvent.notify(this,frame);
 	}
 
 	//------------------------------------------------------
+//
+//	AudioFrame * AudioBuffer::getAudioFrame(int position){
+//		if(size()){
+//			position = CLAMP(position,0,size());
+//			frames[position]->retain();
+//			//cout << "frame " << position << " retained " << frames[position]->_useCountOfThisObject << "\n";
+//			return frames[position];
+//		}else{
+//			return NULL;
+//		}
+//	}
 
-	AudioFrame * AudioBuffer::getAudioFrame(int position){
-		if(size()){
-			position = CLAMP(position,0,size());
-			frames[position]->retain();
-			//cout << "frame " << position << " retained " << frames[position]->_useCountOfThisObject << "\n";
-			return frames[position];
-		}else{
-			return NULL;
-		}
-	}
-
-	//------------------------------------------------------
-
-	AudioFrame * AudioBuffer::getAudioFrame(TimeDiff time){
-		AudioFrame * frame = NULL;
-		if(size()>0){
-			int frameback = CLAMP((int)((float)time/1000000.0*(float)fps),1,size());
-			int currentPos=size()-frameback;
-			frame= frames[currentPos];
-
-			/*if(((float)time/1000000.0*(float)fps)<size() && ((float)time/1000000.0*(float)fps)>=0)
-				frame= frames[frames.size()-1-(int)((float)time/1000000.0*(float)fps)];
-			else if(((float)time/1000000.0*(float)fps)<0)
-				frame= frames[size()-1];
-			else
-				frame= frames[0];*/
-			frame->retain();
-		}
-		return frame;
-	}
+//	//------------------------------------------------------
+//
+//	AudioFrame * AudioBuffer::getAudioFrame(TimeDiff time){
+//		AudioFrame * frame = NULL;
+//		if(size()>0){
+//			int frameback = CLAMP((int)((float)time/1000000.0*(float)fps),1,size());
+//			int currentPos=size()-frameback;
+//			frame= frames[currentPos];
+//
+//			/*if(((float)time/1000000.0*(float)fps)<size() && ((float)time/1000000.0*(float)fps)>=0)
+//				frame= frames[frames.size()-1-(int)((float)time/1000000.0*(float)fps)];
+//			else if(((float)time/1000000.0*(float)fps)<0)
+//				frame= frames[size()-1];
+//			else
+//				frame= frames[0];*/
+//			frame->retain();
+//		}
+//		return frame;
+//	}
 	
-	//------------------------------------------------------
-
-	AudioFrame * AudioBuffer::getAudioFrame(float pct){
-		return getAudioFrame(getLastTimestamp()-(getInitTime()+getTotalTime()*pct));
-	}
+//	//------------------------------------------------------
+//
+//	AudioFrame * AudioBuffer::getAudioFrame(float pct){
+//		return getAudioFrame(getLastTimestamp()-(getInitTime()+getTotalTime()*pct));
+//	}
+//	
 	
-	//------------------------------------------------------
-	
-	AudioSample* AudioBuffer::getAudioSample(int index)
-	{
-		return samples[index];
-	}
-	
-	//------------------------------------------------------
-	
+	//-------------------------------------------------------------------------------
 	float AudioBuffer::getFps(){
 		return this->fps;
 	}
 
-	//------------------------------------------------------
-
+	//-------------------------------------------------------------------------------
 	Timestamp AudioBuffer::getLastTimestamp(){
 		if(size()>0)
 			return frames.back()->getTimestamp();
@@ -170,8 +128,7 @@ AudioBuffer::AudioBuffer(AudioSource & source, float size, int sampleR, int buff
 			return Timestamp();
 	}
 
-	//------------------------------------------------------
-
+	//-------------------------------------------------------------------------------
 	TimeDiff AudioBuffer::getTotalTime(){
 		return getLastTimestamp()-getInitTime();
 	}
@@ -179,14 +136,12 @@ AudioBuffer::AudioBuffer(AudioSource & source, float size, int sampleR, int buff
 		return initTime;
 	}
 
-	//------------------------------------------------------
-
+	//-------------------------------------------------------------------------------
 	long AudioBuffer::getTotalFrames(){
 		return totalFrames;
 	}
 
-	//------------------------------------------------------
-
+	//-------------------------------------------------------------------------------
 	float AudioBuffer::getRealFPS(){
 		 if(size()>10)
 			return 10.0/(float)(frames.back()->getTimestamp()-frames[size()-11]->getTimestamp())*1000000.0;
@@ -194,8 +149,7 @@ AudioBuffer::AudioBuffer(AudioSource & source, float size, int sampleR, int buff
 			return 0;
 	}
 
-	//------------------------------------------------------
-
+	//-------------------------------------------------------------------------------
 	void AudioBuffer::draw(){
 		float length=float(size())/((float)maxSize)*(float)(ofGetWidth()-PMDRAWSPACING*2);
 		float oneLength=(float)(ofGetWidth()-PMDRAWSPACING*2)/(float)(maxSize);
@@ -221,21 +175,19 @@ AudioBuffer::AudioBuffer(AudioSource & source, float size, int sampleR, int buff
 		}
 	}
 
-	//------------------------------------------------------
-
+	//-------------------------------------------------------------------------------
 	void AudioBuffer::stop(){
 		stopped=true;
 		ofRemoveListener(source->newFrameEvent,this,&AudioBuffer::newAudioFrame);
 	}
 
-	//------------------------------------------------------
+	//-------------------------------------------------------------------------------
 	void AudioBuffer::resume(){
 		stopped=false;
 		ofAddListener(source->newFrameEvent,this,&AudioBuffer::newAudioFrame);
 	}
 
-
-	//------------------------------------------------------
+	//-------------------------------------------------------------------------------
 	int AudioBuffer::getSoundStreamBufferSize()
 	{
 		return aSoundStreamBufferSize;

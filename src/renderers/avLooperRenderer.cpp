@@ -36,6 +36,9 @@ namespace ofxPm
 		videoOffsetInMs		= 0;
 		audioSampleRate		= aBuffer->getSampleRate();
 		maximumSizeInMs		= aBuffer->getMaxSizeInSamples()/audioSampleRate*1000;
+		
+		lastIn = 0.0;
+		lastOut = 0.0;
 	}
 	//------------------------------------------------------
 
@@ -119,7 +122,8 @@ namespace ofxPm
 		aHeader2.resetTick();
 		for(int i=0;i<bufferSize;i++)
 		{
-			AudioSample* aSample = aHeader2.getNextAudioSample();
+			AudioSample* aSample;
+			aSample = aHeader2.getNextAudioSample();
 			
 			output[i*nChannels  ] = aSample->getAudioData()[0] * aHeader2.getVolume(); 
 			//output[i*nChannels+1] = aSample->getAudioData()[0] * aHeader2.getVolume(); 
@@ -130,6 +134,8 @@ namespace ofxPm
 		}
 		// we need
 //		frame->release();
+ 
+ 
 	}
 	
 	//------------------------------------------------------
@@ -155,13 +161,14 @@ namespace ofxPm
 	{
 		// SYNC		vHeader.setInMs(ms);
 		aHeader2.setInSamples(ms*(audioSampleRate/1000));
+		lastIn = ms*(audioSampleRate/1000);
 	}
 	//------------------------------------------------------
 	void avLooperRenderer::setOutMs(float ms)
 	{
 		//SYNC		vHeader.setOutMs(ms);
 		aHeader2.setOutSamples(ms*(audioSampleRate/1000));
-
+		lastOut = ms*(audioSampleRate/1000);
 	}
 	//------------------------------------------------------
 	void avLooperRenderer::setLengthMs(float ms)
@@ -186,4 +193,16 @@ namespace ofxPm
     {
 		videoOffsetInMs = ms;
 	}
+	//------------------------------------------------------
+    int avLooperRenderer::getVideoOffsetInMs()
+    {
+		return (videoOffsetInMs);
+	}
+	//------------------------------------------------------
+    void avLooperRenderer::executeInOut()
+    {
+		aHeader2.setInSamples(lastIn);
+		aHeader2.setOutSamples(lastOut);
+	}
+
 } //endNameSpace

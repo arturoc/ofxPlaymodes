@@ -26,7 +26,7 @@ public:
 	void			setup(AudioBufferSamples & buffer);
     void			draw();
     AudioSample*	getNextAudioSample();
-    AudioSample*	getAudioSample(int _index);
+//    AudioSample*	getAudioSample(int _index);
     float			getNextPosition();
 	void			updateTick();
 	void			resetTick();
@@ -61,7 +61,8 @@ public:
 	float			getVolume(); 
 	void			setVolume(float opacity);
 	int				getIndex();
-
+	void			setDeClickLength(int t);
+	
 	// event related
 	void			linkToVideoHeader(VideoHeader &vH);
 	ofEvent<int>	loopInEvent;
@@ -75,28 +76,28 @@ protected:
 //    int currentPos;
 //
 //    Timestamp positionTS;
-	TimeDiff oneSample;
+	TimeDiff		oneSample;
 
 	//TimeDiff delay;	
-	float		index;
-	unsigned int			delay;
-	unsigned int			in;
-	unsigned int			out;
-	unsigned int			length;
-    float		fps;
-	float		pitch;
-	float		volume;
+	float			index;
+	unsigned int	delay;
+	unsigned int	in;
+	unsigned int	out;
+	unsigned int	length;
+    float			fps;
+	float			pitch;
+	float			volume;
 	
 	
-	bool	playing;	
-	int		loopMode;
-	bool	loopStart;
-	int		tickCount;
+	bool			playing;	
+	int				loopMode;
+	bool			loopStart;
+	int				tickCount;
 	
 	// declick
-	int		declickLength;
-	int		declickCount;
-	ofMutex	declickMutex;
+	int				declickLength;
+	int				declickCount;
+	ofMutex			declickMutex;
 	
 	};
 }

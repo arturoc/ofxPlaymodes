@@ -24,10 +24,12 @@ public:
 
 	AudioSample* getAudioSample(int index);
 	
-	unsigned int sizeInSamples();                            // total size of the buffer
-	unsigned int getMaxSizeInSamples();                         // max size of the buffer
-	int			 getSoundStreamBufferSize();
-	int			 getSampleRate();
+	unsigned int		size();                            // total size of the buffer
+	unsigned int		getMaxSize();                         // max size of the buffer
+	unsigned int		sizeInSamples();                            // total size of the buffer
+	unsigned int		getMaxSizeInSamples();                         // max size of the buffer
+	int					getSoundStreamBufferSize();
+	int					getSampleRate();
 
     virtual void newAudioFrame(AudioFrame &frame);  // for notification of new frame event
     float getFps();                                 // fps of the audio source
@@ -40,10 +42,15 @@ public:
     void resume();                                  // continue receiving new frames
 
 protected:
-	deque<AudioSample*>		samples;
+	deque<AudioFrame*>		frames;
 	
     float					fps;
     AudioSource*			source;
+
+	int						totalFrames;
+	Timestamp				initTime;
+
+	unsigned int			maxSize;
 	unsigned int			maxSizeSamples;
 	bool					stopped;
 
