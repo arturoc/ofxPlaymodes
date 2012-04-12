@@ -14,6 +14,7 @@
 #include "VideoHeader.h"
 #include "AudioSample.h"
 #include "AudioBufferSamples.h"
+#include "AudioBufferSamplesMarker.h"
 
 
 namespace ofxPm{
@@ -25,7 +26,7 @@ public:
 
 	void			setup(AudioBufferSamples & buffer);
     void			draw();
-    AudioSample*	getNextAudioSample();
+    AudioSample		getNextAudioSample();
 //    AudioSample*	getAudioSample(int _index);
     float			getNextPosition();
 	void			updateTick();
@@ -64,18 +65,12 @@ public:
 	void			setDeClickLength(int t);
 	
 	// event related
-	void			linkToVideoHeader(VideoHeader &vH);
+	//void			linkToVideoHeader(VideoHeader &vH);
 	ofEvent<int>	loopInEvent;
 	
 protected:
 	
     AudioBufferSamples * aBuffer;
-	VideoHeader * vHeaderLink;
-
-//    float position;
-//    int currentPos;
-//
-//    Timestamp positionTS;
 	TimeDiff		oneSample;
 
 	//TimeDiff delay;	
@@ -94,10 +89,13 @@ protected:
 	bool			loopStart;
 	int				tickCount;
 	
-	// declick
-	int				declickLength;
-	int				declickCount;
+	// declick on Volume
 	ofMutex			declickMutex;
+	
+	// declick on markers
+	AudioBufferSamplesMarker	markIn;
+	AudioBufferSamplesMarker	markOut;
+	void	crossfade(AudioSample *sampleA,int mixB,float pct);
 	
 	};
 }

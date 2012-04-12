@@ -25,7 +25,6 @@ namespace ofxPm
 	{
 		AudioFrame * frame = AudioFrame::newAudioFrame(input,bufferSize,nChannels);
 		newFrameEvent.notify(this,*frame);
-		frame->release();
 	}
 
 	//-------------------------------------------------------------------------------

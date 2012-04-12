@@ -11,14 +11,14 @@ void testApp::setup()
 	//////////////////
 	vGrabber.initGrabber(1280,720);
 	vGrabber.setDeviceID(36);
-	vGrabber.setFps(22);
+	vGrabber.setFps(25);
 	vBuffer.setup(vGrabber, 175);	
 
 	aBufferSize=1024;
 	aSampleRate=96000;
 	soundStream.listDevices();
 	soundStream.setup(2,2,aSampleRate,aBufferSize,2);
-	soundStream.setDeviceID(7);
+	soundStream.setDeviceID(8);
 	soundStream.setInput(this);
 	soundStream.setOutput(this);
 	
@@ -76,6 +76,7 @@ void testApp::draw(){
 					   + " || Out " +ofToString(avRenderer.getAudioHeader()->getOutSamples())
 					   + " || Length " +ofToString(avRenderer.getAudioHeader()->getLengthSamples())
 					   + " || VideoOffsetMs " +ofToString(avRenderer.getVideoOffsetInMs())
+					   + "\n|| Video Delays Ms " +ofToString(avRenderer.getVideoHeader()->getDelayMs())
 					   ,20,ofGetHeight()-20);
 	//ofDrawBitmapString("VideoFrame pool size: " + ofToString(VideoFrame::getPoolSize(VideoFormat(1280,720,3))),520,ofGetHeight()-20);
 	
@@ -224,10 +225,6 @@ void testApp::updateOsc()
 		if ( m.getAddress() == "/offsetVideoMs" )
 		{
 				avRenderer.setVideoOffsetInMs(int(value));
-		}
-		if ( m.getAddress() == "/deClickLength" )
-		{
-			avRenderer.getAudioHeader()->setDeClickLength(int(value));
 		}
 		if ( m.getAddress() == "/grainTrigger" )
 		{

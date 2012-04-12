@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B0663C4A15265B7C00A6B65B /* AudioBufferSamplesMarker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0663C4815265B7C00A6B65B /* AudioBufferSamplesMarker.cpp */; };
 		B07D2BD7150E0F7B003F4516 /* AudioHeaderSample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B07D2B81150E0F7B003F4516 /* AudioHeaderSample.cpp */; };
 		B07D2BD8150E0F7B003F4516 /* VideoHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B07D2B83150E0F7B003F4516 /* VideoHeader.cpp */; };
 		B07D2BDA150E0F7B003F4516 /* AudioBufferSamples.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B07D2B88150E0F7B003F4516 /* AudioBufferSamples.cpp */; };
@@ -94,6 +95,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B0663C4815265B7C00A6B65B /* AudioBufferSamplesMarker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioBufferSamplesMarker.cpp; sourceTree = "<group>"; };
+		B0663C4915265B7C00A6B65B /* AudioBufferSamplesMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioBufferSamplesMarker.h; sourceTree = "<group>"; };
 		B07D2B81150E0F7B003F4516 /* AudioHeaderSample.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioHeaderSample.cpp; sourceTree = "<group>"; };
 		B07D2B82150E0F7B003F4516 /* AudioHeaderSample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioHeaderSample.h; sourceTree = "<group>"; };
 		B07D2B83150E0F7B003F4516 /* VideoHeader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VideoHeader.cpp; sourceTree = "<group>"; };
@@ -278,6 +281,8 @@
 		B07D2B85150E0F7B003F4516 /* buffers */ = {
 			isa = PBXGroup;
 			children = (
+				B0663C4815265B7C00A6B65B /* AudioBufferSamplesMarker.cpp */,
+				B0663C4915265B7C00A6B65B /* AudioBufferSamplesMarker.h */,
 				B07D2B88150E0F7B003F4516 /* AudioBufferSamples.cpp */,
 				B07D2B89150E0F7B003F4516 /* AudioBufferSamples.h */,
 				B07D2B8A150E0F7B003F4516 /* Buffer.cpp */,
@@ -770,6 +775,7 @@
 				B07D2BED150E0F7B003F4516 /* BasicVideoRenderer.cpp in Sources */,
 				B07D2BEF150E0F7B003F4516 /* VideoRenderer.cpp in Sources */,
 				B07D2BF0150E0F7B003F4516 /* ofxObjCPointer.cpp in Sources */,
+				B0663C4A15265B7C00A6B65B /* AudioBufferSamplesMarker.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

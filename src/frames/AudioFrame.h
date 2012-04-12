@@ -25,7 +25,7 @@ public:
 
 //	float * getAudioData(int index);
 	void release();
-	void retain();
+	//void retain();
 	
 	int         getBufferSize();
 	int         getChannels();

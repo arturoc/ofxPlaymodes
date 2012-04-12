@@ -29,9 +29,6 @@ namespace ofxPm
 		this->aBuffer = &bufferAudio;		
 		aHeader2.setup(*aBuffer);
 
-		// link audio and video headers for event communication a->v
-		aHeader2.linkToVideoHeader(vHeader);
-
 		sampleIndex			= 0;
 		videoOffsetInMs		= 0;
 		audioSampleRate		= aBuffer->getSampleRate();
@@ -70,8 +67,8 @@ namespace ofxPm
 		
 		// 2
 		float delayToVideo = (float(aHeader2.getIndex()) / float(audioSampleRate)) * 1000.0; 
-		vHeader.setDelayMs(maximumSizeInMs-delayToVideo-videoOffsetInMs);
-		//printf("avR :: delayToVideo in ms = %f / index %d\n",delayToVideo,aHeader2.getIndex());
+		vHeader.setDelayMs(float(maximumSizeInMs)-delayToVideo-float(videoOffsetInMs));
+		//printf("avR ::DELAY is = %f || maxSize %d delayToVideo in ms = %f / index %d\n",float(maximumSizeInMs)-delayToVideo-float(videoOffsetInMs),maximumSizeInMs,delayToVideo,aHeader2.getIndex());
 		
 		// OK video independent
 		VideoFrame * frame = vHeader.getNextVideoFrame();
@@ -122,14 +119,14 @@ namespace ofxPm
 		aHeader2.resetTick();
 		for(int i=0;i<bufferSize;i++)
 		{
-			AudioSample* aSample;
-			aSample = aHeader2.getNextAudioSample();
-			
-			output[i*nChannels  ] = aSample->getAudioData()[0] * aHeader2.getVolume(); 
+			AudioSample aSample = aHeader2.getNextAudioSample();
+			//if (aSample=NULL) printf("NULL!!!!!!\n");
+			//printf("AVLR::sample channels %d\n",aSample.getChannels());
+			//output[i*nChannels  ] = aSample->getAudioData()[0] * aHeader2.getVolume(); 
+			output[i*nChannels  ] = aSample.getAudioData()[0] * aHeader2.getVolume(); 
 			//output[i*nChannels+1] = aSample->getAudioData()[0] * aHeader2.getVolume(); 
 			
 			aHeader2.updateTick();
-			aSample->release();
 				
 		}
 		// we need

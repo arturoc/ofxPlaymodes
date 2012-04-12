@@ -22,7 +22,7 @@ public:
 
 	void setup(AudioSource & source, float sizeInSec, int sampleR, int bufferS, int numCh);
 
-	AudioSample* getAudioSample(int index);
+	AudioSample getAudioSample(int index);
 	
 	unsigned int		size();                            // total size of the buffer
 	unsigned int		getMaxSize();                         // max size of the buffer
@@ -30,6 +30,7 @@ public:
 	unsigned int		getMaxSizeInSamples();                         // max size of the buffer
 	int					getSoundStreamBufferSize();
 	int					getSampleRate();
+	int					getNumChannels();
 
     virtual void newAudioFrame(AudioFrame &frame);  // for notification of new frame event
     float getFps();                                 // fps of the audio source

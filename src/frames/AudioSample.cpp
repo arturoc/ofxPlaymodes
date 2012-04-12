@@ -7,17 +7,18 @@ using Poco::ScopedLock;
 namespace ofxPm{
 int AudioSample::numInstances=0;
 
-AudioSample::AudioSample(float * audioSample, int channels) {
-    data = NULL;
-	data = new float[channels];
-	for(int i=0;i<channels;i++)
+	AudioSample::AudioSample(float * audioSample, int _channels) 
 	{
-	    data[i]=audioSample[i];
+		channels=_channels;
+		data = new float[channels];
+		for(int i=0;i<channels;i++)
+		{
+			data[i]=audioSample[i];
+		}
+		numInstances++;
+		this->refreshTimestamp();
+	//	printf("AS:: chann %d\n",this->channels);
 	}
-	this->channels=channels;
-    numInstances++;
-	this->refreshTimestamp();
-}
 	
 	//-------------------------------------------------------------------------------
 	void AudioSample::release() 
@@ -25,7 +26,7 @@ AudioSample::AudioSample(float * audioSample, int channels) {
 	    ScopedLock<ofMutex> lock(*mutex);
 		_useCountOfThisObject--;
 		if(_useCountOfThisObject == 0) {
-			printf("AUDIOFRAME:: deleting object !!!!!!!!!!!!!!!!!!!!!!!!!\n");
+			printf("AS:: deleting object !!!!!!!!!!!!!!!!!!!!!!!!!\n");
 			delete this;
 		}
 	}
@@ -38,18 +39,26 @@ AudioSample::AudioSample(float * audioSample, int channels) {
 	}
 	
 
-AudioSample::~AudioSample() {
-	delete[] data;
-	numInstances--;
-}
+	//-------------------------------------------------------------------------------
+	AudioSample::~AudioSample() 
+	{
+		delete[] data;
+		numInstances--;
+	}
 
 
-float * AudioSample::getAudioData(){
-    return data;
-}	
-	
-int AudioSample::getChannels(){
-    return channels;
-}
-
+	//-------------------------------------------------------------------------------
+	float * AudioSample::getAudioData(){
+		return data;
+	}	
+		
+	//-------------------------------------------------------------------------------
+	int AudioSample::getChannels(){
+		return channels;
+	}	
+	//-------------------------------------------------------------------------------
+	void AudioSample::setAudioData(int _channel, float _value)
+	{
+		this->data[_channel] = _value;
+	}
 }

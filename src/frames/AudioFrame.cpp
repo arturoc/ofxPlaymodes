@@ -38,34 +38,37 @@ namespace ofxPm
 		}
 		aFrame->averageValue=aFrame->averageValue/bufferSize;
 		numInstances++;
-		aFrame->retain();
-		printf("AudioFrame Nu Instances %d\n",numInstances);
+		//aFrame->retain(); ??
+		//aFrame->release(); // ??
+		
 		return aFrame;
 	}
 		
 	//-------------------------------------------------------------------------------
 	void AudioFrame::release() 
 	{
-	    ScopedLock<ofMutex> lock(*mutex);
+		ScopedLock<ofMutex> lock(*mutex);
 		_useCountOfThisObject--;
 		if(_useCountOfThisObject == 0) {
 			printf("AUDIOFRAME:: deleting object !!!!!!!!!!!!!!!!!!!!!!!!!\n");
 			delete this;
 		}
 	}
-		
+
+ /*		
 	//-------------------------------------------------------------------------------
 	void AudioFrame::retain() 
 	{
 		ScopedLock<ofMutex> lock(*mutex);
 		_useCountOfThisObject++;
 	}
-	
+*/	
 	//-------------------------------------------------------------------------------
 	AudioFrame::~AudioFrame() 
 	{
 		data.~vector();
 		printf("deleting AudioFrame!!\n");
+		delete this;
 		numInstances--;
 	}
 

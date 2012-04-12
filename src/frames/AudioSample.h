@@ -20,12 +20,14 @@ public:
 	AudioSample(float * audioSample, int channels);
 	AudioSample(){};
 	virtual ~AudioSample();
-	float * getAudioData();
-	void release();
-	void retain();
-	int getChannels();
 	
-    static int numInstances;
+	float *			getAudioData();
+	void			setAudioData(int _channel, float _value);
+	void			release();
+	void			retain();
+	int				getChannels();
+	
+    static int		numInstances;
 	
 private:
     float * data;
