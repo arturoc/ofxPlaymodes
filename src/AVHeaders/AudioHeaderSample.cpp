@@ -96,7 +96,7 @@ namespace ofxPm
 		ofPushStyle();
 		ofLine(currentLength+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos,currentLength+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos+60);
 
-
+		// we draw the lines of the crossfade area
 		ofSetColor(255,255,0);
 		ofSetLineWidth(1.0);
 		ofLine(currentLengthInDeclick+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos,currentLengthInDeclick+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos+60);
