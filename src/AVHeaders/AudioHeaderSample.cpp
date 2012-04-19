@@ -186,7 +186,7 @@ namespace ofxPm
 			declickMutex.tryLock();
 			int mixB = int(markIn.getMin()) + (int(index)-int(markOut.getMin()));
 			//printf("mixing index %d with mixB %d || mIn.min %d \n",int(index),int(mixB),int(markIn.getMin()));
-			crossfade(&aSample,mixB,pct);
+			aSample = crossfade(aSample,mixB,pct);
 		}
 		else declickMutex.unlock();
 		aBuffer->unlock();		
@@ -542,26 +542,21 @@ namespace ofxPm
 		return index;
 	}
 	//------------------------------------------------------
-	void AudioHeaderSample::crossfade(AudioSample * sampleA,int mixB,float pct)
+	AudioSample AudioHeaderSample::crossfade(const AudioSample & sampleA,int mixB,float pct)
 //	AudioSample*  AudioHeaderSample::crossfade(int mixA,int mixB,float pct)
 	{
 
 		//printf("AHS::sampleA channels %d :: mixB %d :: \n",sampleA->getChannels(),mixB);
 		AudioSample sampleB = aBuffer->getAudioSample(int(mixB));
+		float * samples = new float[sampleA.getChannels()];
 		float mix;
-		for(int i=0;i<sampleA->getChannels();i++)
+		for(int i=0;i<sampleA.getChannels();i++)
 		{
-			mix = ((1.0f-pct)*sampleA->getAudioData()[i]) + ((pct)*sampleB.getAudioData()[i]);
-			sampleA->setAudioData(i,mix);
+			mix = ((1.0f-pct)*sampleA.getAudioData()[i]) + ((pct)*sampleB.getAudioData()[i]);
+			samples[i] = mix;
 		}
 		
-		// call deletion of sample 
-		//		delete sampleA;
-		//		delete sampleB;
-
-//		AudioSample* sampleResult=new AudioSample(audioResult,sampleA.getChannels());
-		
-//		return(sampleResult);
+		return AudioSample(samples,sampleA.getChannels());
 		
 	}
 

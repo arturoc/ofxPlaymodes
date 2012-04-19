@@ -95,7 +95,7 @@ protected:
 	// declick on markers
 	AudioBufferSamplesMarker	markIn;
 	AudioBufferSamplesMarker	markOut;
-	void	crossfade(AudioSample *sampleA,int mixB,float pct);
+	AudioSample	crossfade(const AudioSample & sampleA,int mixB,float pct);
 	
 	};
 }

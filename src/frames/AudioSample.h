@@ -17,16 +17,20 @@ namespace ofxPm{
 class AudioSample {
 
 public:
-	AudioSample(float * audioSample, int channels);
-	AudioSample(){};
+	AudioSample(float * audioSample, int channels)
+	:data(audioSample)
+	,channels(channels){}
 	
-	float *			getAudioData();
-	void			setAudioData(int _channel, float _value);
-	int				getChannels();
+	const float *	getAudioData() const{
+		return data;
+	}
+	int	getChannels() const{
+		return channels;
+	}
 	
 	
 private:
-    float * data;
+    const float * data;
 	int channels;
 };
 }
