@@ -19,7 +19,7 @@ public:
 	virtual ~VideoFilter();
     virtual VideoFrame * getNextVideoFrame()=0;
 	virtual void newVideoFrame(VideoFrame & frame){};
-    virtual int getFps()=0;
+    virtual float getFps()=0;
 
 };
 }

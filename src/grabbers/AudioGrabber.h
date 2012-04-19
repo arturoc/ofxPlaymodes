@@ -12,12 +12,16 @@
 #include "ofMain.h"
 
 namespace ofxPm{
-class AudioGrabber: public AudioSource{
+class AudioGrabber: public AudioSource, public ofBaseSoundInput{
 public:
     AudioGrabber();
     virtual ~AudioGrabber();
 	void audioReceived(float * input, int bufferSize, int nChannels);
-	float getFps();
+
+	float	getFps();
+	void	setFps(float f);
+	
+	float fps;
 };
 }
 #endif // AUDIOGRABBER_H_INCLUDED

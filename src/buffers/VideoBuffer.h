@@ -17,6 +17,7 @@
 #include "deque"
 
 
+
 // a buffer can be connected to any source and stores
 // VIDEO_BUFFER_NUM_FRAMES. once the buffer is full
 // it begins to delete the first stored frames
@@ -51,7 +52,7 @@ public:
 	unsigned int size();                            // total size of the buffer
 	unsigned int getMaxSize();                         // max size of the buffer
 
-	int getFps();                                   // fps of the video source
+	float getFps();                                   // fps of the video source
 
     Timestamp getLastTimestamp();                 // timestamp for the last frame
 	TimeDiff getTotalTime();                      // total time of the buffer in microseconds

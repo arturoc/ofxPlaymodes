@@ -14,12 +14,21 @@
 #include "ofMain.h"
 
 
+#define PMDRAWSPACING 25	
+#define PMDRAWELEMENTSY 700	
+
 namespace ofxPm{
+	
 typedef Poco::Timestamp Timestamp;
 typedef Poco::Timestamp::TimeDiff TimeDiff;
 
 typedef Poco::AbstractDelegate<int> IntDelegate;
 typedef Poco::AbstractDelegate<float> FloatDelegate;
+
+
+
 }
+
+
 
 #endif // PMUTILS_H_INCLUDED

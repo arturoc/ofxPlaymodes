@@ -34,15 +34,13 @@ ofxObjCPointer::~ofxObjCPointer() {
 void ofxObjCPointer::retain() {
     ScopedLock<ofMutex> lock(*mutex);
 	_useCountOfThisObject++;
-	//printf("ofxObjCPointer::retain() - Use Count: %i\n", _useCountOfThisObject);
+
 }
 
 void ofxObjCPointer::release() {
     ScopedLock<ofMutex> lock(*mutex);
 	_useCountOfThisObject--;
-	//printf("ofxObjCPointer::release() - Use Count: %i\n", _useCountOfThisObject);
 	if(_useCountOfThisObject == 0) {
-		//printf("    deleting object\n");
 		delete this;
 	}
 }

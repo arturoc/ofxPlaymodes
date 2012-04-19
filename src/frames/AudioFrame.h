@@ -11,22 +11,32 @@
 #include "Frame.h"
 #include "pmUtils.h"
 #include "ofMain.h"
+#include "ofEvents.h"
+#include "ofTypes.h"
 
 namespace ofxPm{
-class AudioFrame:public Frame {
-public:
-	AudioFrame(float * audioFrame, int bufferSize, int channels);
-	AudioFrame(){};
-	virtual ~AudioFrame();
-	float * getAudioFrame();
+class AudioFrame:public ofxPm::Frame, public ofEventArgs {
 
+public:
+	static AudioFrame * newAudioFrame(const float * audioFrame,const int bufferSize,const int channels);
+	AudioFrame();
+	virtual ~AudioFrame();
+	vector<float> getAudioData();
+
+//	float * getAudioData(int index);
+	void release();
+	//void retain();
+	
 	int         getBufferSize();
 	int         getChannels();
 	float       getAverageValue();
 
     static int numInstances;
+	
+
+	
 private:
-    float * data;
+	vector<float> data;
 	int bufferSize;
 	int channels;
 	float averageValue;

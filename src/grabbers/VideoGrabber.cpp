@@ -43,6 +43,7 @@ void VideoGrabber::update(){
 		newFrameEvent.notify(this,*frame);
 		frame->release();
 	}
+
 #endif
 }
 
@@ -52,7 +53,16 @@ void VideoGrabber::newFrame(ofPixels & pixels){
 	frame->release();
 }
 
-int VideoGrabber::getFps(){
-    return 30;
+//------------------------------------------------------
+float VideoGrabber::getFps(){
+	return fps;
 }
+	
+//------------------------------------------------------
+void VideoGrabber::setFps(float fps){
+	this->fps = fps;
+}
+	
+	;
+	
 }

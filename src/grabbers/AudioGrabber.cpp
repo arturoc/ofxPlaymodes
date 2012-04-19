@@ -7,22 +7,34 @@
 
 #include "AudioGrabber.h"
 
-namespace ofxPm{
-AudioGrabber::AudioGrabber() {
-	//ofEvents::addAudioReceivedListener(this);
+namespace ofxPm
+{
+	//-------------------------------------------------------------------------------
+	AudioGrabber::AudioGrabber() 
+	{
+		//ofEvents::addAudioReceivedListener(this);
 
-}
-AudioGrabber::~AudioGrabber(){
-}
-void AudioGrabber::audioReceived(float * input, int bufferSize, int nChannels){
-    AudioFrame * frame = new AudioFrame(input,bufferSize,nChannels);
-    newFrameEvent.notify(this,*frame);
-    frame->release();
+	}
+	//-------------------------------------------------------------------------------
+	AudioGrabber::~AudioGrabber()
+	{
+	}
+	
+	//-------------------------------------------------------------------------------
+	void AudioGrabber::audioReceived(float * input, int bufferSize, int nChannels)
+	{
+		AudioFrame * frame = AudioFrame::newAudioFrame(input,bufferSize,nChannels);
+		newFrameEvent.notify(this,*frame);
+	}
 
-    //cout << "audio: " << frame.getTimestamp().epochTime() << "\n";
-}
-
-float AudioGrabber::getFps(){
-    return 44100.0/1024.0;
-}
+	//-------------------------------------------------------------------------------
+	float AudioGrabber::getFps(){
+		return fps;
+	}
+	
+	//-------------------------------------------------------------------------------
+	void AudioGrabber::setFps(float f){
+		fps = f;
+	}
+	
 }

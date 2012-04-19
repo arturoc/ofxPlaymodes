@@ -17,8 +17,7 @@ public:
 	virtual ~VideoSource();
 
 	virtual VideoFrame * getNextVideoFrame()=0;
-    virtual int getFps()=0;
-
+    virtual float getFps()=0;
     ofEvent<VideoFrame> newFrameEvent;
 };
 }

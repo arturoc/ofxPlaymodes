@@ -6,47 +6,105 @@
  */
 #include "AudioFrame.h"
 
+using Poco::ScopedLock;
 
 
-namespace ofxPm{
-int AudioFrame::numInstances=0;
+namespace ofxPm
+{
 
-AudioFrame::AudioFrame(float * audioFrame, int bufferSize, int channels) {
-    data = NULL;
-	data = new float[bufferSize*channels];
-	//memcpy(data,audioFrame,sizeof(float)*bufferSize*channels);
-	//data=audioFrame;
-	averageValue=0;
-	for(int i=0;i<bufferSize;i++){
-	    data[i*2]=audioFrame[i*2];//*cos((float)i/(float)bufferSize-PI/2);
-	    data[i*2+1]=audioFrame[i*2+1];//*cos((float)i/(float)bufferSize-PI/2);
-	    averageValue+=audioFrame[i*2];
+	
+	int AudioFrame::numInstances=0;
+
+	//-------------------------------------------------------------------------------
+	AudioFrame::AudioFrame()
+	{
+		bufferSize=-1;
+		channels=-1;
+		averageValue=-1;
 	}
-	averageValue=averageValue/bufferSize;
-	this->bufferSize=bufferSize;
-	this->channels=channels;
-    numInstances++;
-}
+	
+	//-------------------------------------------------------------------------------
+	AudioFrame * AudioFrame::newAudioFrame(const float * audioFrame,int bufferSize,const int channels) 
+	{		
+		AudioFrame * aFrame = new AudioFrame();
+		aFrame->bufferSize = bufferSize;
+		aFrame->channels = channels;
+		aFrame->averageValue=0;
+		for(int i=0;i<bufferSize;i++)
+		{
+			aFrame->data.push_back(audioFrame[i*channels ]);
+			aFrame->data.push_back(audioFrame[i*channels+1]);
+			aFrame->averageValue+=audioFrame[i*channels];
+		}
+		aFrame->averageValue=aFrame->averageValue/bufferSize;
+		numInstances++;
+		//aFrame->retain(); ??
+		//aFrame->release(); // ??
+		
+		return aFrame;
+	}
+		
+	//-------------------------------------------------------------------------------
+	void AudioFrame::release() 
+	{
+		ScopedLock<ofMutex> lock(*mutex);
+		_useCountOfThisObject--;
+		if(_useCountOfThisObject == 0) {
+			printf("AUDIOFRAME:: deleting object !!!!!!!!!!!!!!!!!!!!!!!!!\n");
+			delete this;
+		}
+	}
 
-AudioFrame::~AudioFrame() {
-	delete[] data;
-	numInstances--;
-}
+ /*		
+	//-------------------------------------------------------------------------------
+	void AudioFrame::retain() 
+	{
+		ScopedLock<ofMutex> lock(*mutex);
+		_useCountOfThisObject++;
+	}
+*/	
+	//-------------------------------------------------------------------------------
+	AudioFrame::~AudioFrame() 
+	{
+		data.~vector();
+		printf("deleting AudioFrame!!\n");
+		delete this;
+		numInstances--;
+	}
 
 
-float * AudioFrame::getAudioFrame(){
-    return data;
-}
+	//-------------------------------------------------------------------------------
+	vector<float> AudioFrame::getAudioData()
+	{
+		return data;
+	}
+		
+//	float * AudioFrame::getAudioData(int index)
+//	{
+//		float* result = new float[channels];
+//		for(int i=0;i<channels;i++)
+//		{
+//			result[i] = data[]
+//			
+//		}
+//		return data;
+//	}
 
-
-int AudioFrame::getBufferSize(){
-    return bufferSize;
-}
-int AudioFrame::getChannels(){
-    return channels;
-}
-
-float   AudioFrame::getAverageValue(){
-    return averageValue;
-}
+	//-------------------------------------------------------------------------------
+	int AudioFrame::getBufferSize()
+	{
+		return bufferSize;
+	}
+	
+	//-------------------------------------------------------------------------------
+	int AudioFrame::getChannels()
+	{
+		return channels;
+	}
+	
+	//-------------------------------------------------------------------------------
+	float   AudioFrame::getAverageValue()
+	{
+		return averageValue;
+	}
 }

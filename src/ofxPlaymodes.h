@@ -12,10 +12,14 @@
 #include "AudioHeader.h"
 
 #include "OscInterface.h"
+#include "HeaderLooperRenderer.h"
 
-//#include "RaisedCosineBellEnvelope.h"
 
 #include "BasicVideoRenderer.h"
+#include "avLooperRenderer.h"
+#include "AudioSample.h"
+#include "AudioBufferSamples.h"
+#include "AudioBufferSamplesMarker.h"
 
 #endif
 

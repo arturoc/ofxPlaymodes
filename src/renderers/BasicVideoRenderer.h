@@ -10,9 +10,11 @@
 
 #include "VideoSink.h"
 #include "VideoSource.h"
+#include "VideoHeader.h"
 
-
-namespace ofxPm{
+namespace ofxPm
+{
+	
 class BasicVideoRenderer: public VideoSink {
 public:
 	BasicVideoRenderer();
@@ -22,6 +24,7 @@ public:
 	void setup(VideoSource & source);
 
 	void draw();
+	void draw(int x,int y,int w,int h);
 
 private:
 	VideoSource * source;

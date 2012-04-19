@@ -11,60 +11,90 @@
 #include "AudioSink.h"
 #include "AudioSource.h"
 #include "AudioBuffer.h"
+#include "VideoHeader.h"
 
 
 namespace ofxPm{
 class AudioHeader:public AudioSink, public AudioSource{
 public:
-    AudioHeader(AudioBuffer *buffer);
+    AudioHeader(AudioBuffer &buffer);
+    AudioHeader();
     ~AudioHeader();
 
-    // draws the state of the header
+	void setup(AudioBuffer & buffer);
     void draw();
-
-    TimeDiff delay;
-
-
-    float getFps();
-    void setFps(float fps);
-
-    AudioFrame * getNextFrame();
-    AudioFrame * getAudioFrame(int position,float density);
-
-
+    AudioFrame * getNextAudioFrame();
+    AudioFrame * getAudioFrame(int position);
     int getNextPosition();
+	
 
-    float speed;
-    float density;
+	// delay
+    int		getDelayMs() ;
+    int		getDelayFrames() ;
+    float	getDelayPct() ;
+    void	setDelayMs(float delay);
+    void	setDelayFrames(int delay);
+    void	setDelayPct(float pct);
+	// in 
+    float	getIn() ;
+    void	setInMs(float in);
+    void	setInFrames(int in);
+    void	setInPct(float in);
+	// out 
+    float	getOut() ;	
+    void	setOutMs(float out);
+    void	setOutFrames(int out);
+    void	setOutPct(float out);
+	// speed
+    float	getSpeed() ;
+    void	setSpeed(float speed);
+	// loop mode
+	int		getLoopMode();
+	void	setLoopMode(int loop);
+	bool	isPlaying() ;
+	void	setPlaying(bool loopMode);
+	void	setPlaying(bool loopMode, float speed);
+	void	setLoopToStart();
+	
+	// others
+    float		getFps();
+    void		setFps(float fps);
+	float		getVolume(); 
+	void		setVolume(float opacity);
 
-    void setPct(float & pct){
-        this->pct=pct;
-        pctHasChanged=true;
-    }
-    void incrPct(float & incr){
-        this->pct+=incr;
-        pctHasChanged=true;
-    }
+	// event related
+	void	linkToVideoHeader(VideoHeader &vH);
+	ofEvent<int> loopInEvent;
+	
 protected:
-    AudioBuffer * buffer;
-    float fps;
+	
+    AudioBuffer * aBuffer;
+	VideoHeader * vHeaderLink;
 
-    //------------------------
-    // speed control
     float position;
-    int prevBufferPos;
-    Timestamp positionTS;
-    TimeDiff oneFrame;
-
-    //-----------------------
-    // header draw
     int currentPos;
-    char msgPos[5];
 
-    //------------------------
-    // external control
-    bool pctHasChanged;
-    float pct;
+    Timestamp positionTS;
+	TimeDiff oneFrame;
+
+	//TimeDiff delay;	
+	int	delay;
+	float in;
+	float out;
+    float fps;
+	float speed;
+	float	volume;
+	
+	bool	playing;	
+	int		loopMode;
+	bool	loopStart;
+
+	
+	
+//    //------------------------
+//    // external control
+//    bool pctHasChanged;
+//    float pct;
 };
 }
 #endif // AUDIOHEADER_H_INCLUDED

@@ -32,7 +32,7 @@ void FileGrabber::update(){
 	}
 }
 
-int FileGrabber::getFps(){
+float FileGrabber::getFps(){
     return 25;
 }
 }

@@ -22,8 +22,10 @@ public:
     bool initGrabber(int w, int h);
 
 	VideoFrame * getNextVideoFrame();
-    int getFps();
-
+    float getFps();
+	// ugly! need to be able to override the fps of the grabber. ofVideoGrabber doesn't have a getFps !!
+	void setFps(float fps);
+	
     void update();
 
 
@@ -31,6 +33,7 @@ public:
 
 private:
     void newFrame(ofPixels & frame);
+	float fps;
 };
 }
 

@@ -1,12 +1,6 @@
-/*
- * AudioBuffer.h
- *
- *  Created on: 09-oct-2008
- *      Author: arturo castro
- */
 
-#ifndef AUDIOBUFFER_H_
-#define AUDIOBUFFER_H_
+#ifndef AUDIOBUFFER2_H_
+#define AUDIOBUFFER2_H_
 
 #include "ofMain.h"
 
@@ -15,24 +9,31 @@
 #include "pmUtils.h"
 #include "AudioSink.h"
 #include "AudioSource.h"
+#include "AudioSample.h"
+#include "pmUtils.h"
 #include <map>
 #include <deque>
-
-#define AUDIO_BUFFER_NUM_FRAMES 1148
 
 namespace ofxPm{
 class AudioBuffer:public Buffer, public AudioSink, public AudioSource {
 public:
-	AudioBuffer(AudioSource * source);
+	AudioBuffer(AudioSource & source,float sizeInSec, int sampleR, int bufferS, int numCh);
+	AudioBuffer();
 	virtual ~AudioBuffer();
 
-	AudioFrame * getAudioFrame(int position);       // frame number in the buffer
-	AudioFrame * getAudioFrame(TimeDiff microsec);// frame at n microseconds from the end of the buffer
-	AudioFrame * getAudioFrame(float pct);          // % of the buffer
+	void setup(AudioSource & source, float sizeInSec, int sampleR, int bufferS, int numCh);
 
-	unsigned int size();                            // total size of the buffer
-
-
+//	AudioFrame * getAudioFrame(int position);       // frame number in the buffer
+//	AudioFrame * getAudioFrame(TimeDiff microsec);// frame at n microseconds from the end of the buffer
+//	AudioFrame * getAudioFrame(float pct);          // % of the buffer
+//	AudioSample* getAudioSample(int index);
+	
+	unsigned int	size();                            // total size of the buffer
+	unsigned int	getMaxSize();                         // max size of the buffer
+	unsigned int	sizeInSamples();                            // total size of the buffer
+	unsigned int	getMaxSizeInSamples();                         // max size of the buffer
+	int				getSoundStreamBufferSize();
+	int				getAudioSampleRate();
     virtual void newAudioFrame(AudioFrame &frame);  // for notification of new frame event
     float getFps();                                 // fps of the audio source
 
@@ -51,12 +52,20 @@ public:
     void resume();                                  // continue receiving new frames
 
 protected:
-    deque<AudioFrame*> frames;
-    float     data[AUDIO_BUFFER_NUM_FRAMES];
-    float     fps;
-    Timestamp initTime;
-    long    totalFrames;
-    AudioSource* source;
+    deque<AudioFrame*>		frames;
+	
+    //float					data[AUDIO_BUFFER_NUM_FRAMES];
+    float					fps;
+    Timestamp				initTime;
+    long					totalFrames;
+    AudioSource*			source;
+	unsigned int			maxSize;
+	unsigned int			maxSizeSamples;
+	bool					stopped;
+
+	int						aSampleRate;
+	int						aSoundStreamBufferSize;
+	int						aNumCh;
 };
 }
 #endif /* AUDIOBUFFER_H_ */
