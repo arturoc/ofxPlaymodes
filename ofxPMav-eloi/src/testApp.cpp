@@ -53,7 +53,7 @@ void testApp::setup()
 	gui.addSlider("delayMs",guiDelay,0.0,7000.0);
 	gui.addSlider("inMs",guiIn,0.0,7000.0);
 	gui.addSlider("outMs",guiOut,0.0,7000.0);
-	gui.addSlider("lengthMs",guiLength,0.0,7000.0);
+	gui.addSlider("lengthMs",guiLength,100,7000.0);
 	gui.addToggle("freeze",guiFreeze);
 	gui.addToggle("play",guiPlay);
 	gui.show();
@@ -69,8 +69,9 @@ void testApp::update(){
 	avRenderer.setInMs(float(guiIn));
 	avRenderer.setOutMs(float(guiOut));
 	avRenderer.setOutMs(float(guiOut));
-	avRenderer.setLengthMs(float(guiLength);
+	avRenderer.setLengthMs(float(guiLength));
 						   
+	
 
 }
 
@@ -112,20 +113,29 @@ void testApp::keyPressed(int key){
 			vGrabber.videoSettings();
 			break;
 		case ' ':
-			
-			freeze=!freeze;
-			if(freeze) 
+			if(guiFreeze)
 			{
+				freeze=true;
 				vBuffer.stop();
-				aBuffer.stop();	
-			}
-			else 
-			{
-				vBuffer.resume();
-				aBuffer.resume();	
+				aBuffer.stop();
 				
 			}
-
+			else if (freeze)
+			{
+				freeze=false;
+				vBuffer.resume();
+				aBuffer.resume();
+			}
+			
+			if(guiPlay)
+			{
+				avRenderer.setPlaying(true);
+			}
+			else
+			{
+				avRenderer.setPlaying(false);
+			}
+			
 		default:
 			break;
 	}
