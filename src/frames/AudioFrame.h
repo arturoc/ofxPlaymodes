@@ -18,28 +18,19 @@ namespace ofxPm{
 class AudioFrame:public ofxPm::Frame, public ofEventArgs {
 
 public:
-	static AudioFrame * newAudioFrame(const float * audioFrame,const int bufferSize,const int channels);
+	static AudioFrame newAudioFrame(const float * audioFrame,const int bufferSize,const int channels);
 	AudioFrame();
 	virtual ~AudioFrame();
-	vector<float> getAudioData();
-
-//	float * getAudioData(int index);
-	void release();
-	//void retain();
+	vector<float> & getAudioData();
 	
 	int         getBufferSize();
 	int         getChannels();
 	float       getAverageValue();
 
-    static int numInstances;
-	
-
 	
 private:
-	vector<float> data;
-	int bufferSize;
-	int channels;
-	float averageValue;
+	class Obj;
+	ofPtr<Obj> data;
 };
 }
 #endif /* AUDIOFRAME_H_ */

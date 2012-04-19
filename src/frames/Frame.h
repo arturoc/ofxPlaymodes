@@ -12,7 +12,7 @@
 #include "ofxObjCPointer.h"
 
 namespace ofxPm{
-class Frame: public ofxObjCPointer {
+class Frame {
 public:
 	Frame();
 	virtual ~Frame();

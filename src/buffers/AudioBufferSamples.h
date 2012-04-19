@@ -43,7 +43,7 @@ public:
     void resume();                                  // continue receiving new frames
 
 protected:
-	deque<AudioFrame*>		frames;
+	deque<AudioFrame>		frames;
 	
     float					fps;
     AudioSource*			source;

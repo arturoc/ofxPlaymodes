@@ -23,8 +23,8 @@ namespace ofxPm
 	//-------------------------------------------------------------------------------
 	void AudioGrabber::audioReceived(float * input, int bufferSize, int nChannels)
 	{
-		AudioFrame * frame = AudioFrame::newAudioFrame(input,bufferSize,nChannels);
-		newFrameEvent.notify(this,*frame);
+		AudioFrame frame = AudioFrame::newAudioFrame(input,bufferSize,nChannels);
+		newFrameEvent.notify(this,frame);
 	}
 
 	//-------------------------------------------------------------------------------

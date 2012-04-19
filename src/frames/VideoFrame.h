@@ -16,7 +16,7 @@
 #include <map>
 
 namespace ofxPm{
-class VideoFrame:public ofxPm::Frame, public ofEventArgs {
+class VideoFrame: public ofxObjCPointer, public ofxPm::Frame, public ofEventArgs {
     // create a video frame from an ofPixels
 	VideoFrame(const ofPixels & videoFrame);
 	VideoFrame(){}

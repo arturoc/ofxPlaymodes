@@ -66,9 +66,7 @@ namespace ofxPm
 		// AudioFrames managing, store AudioFrame on the cue.
 		totalFrames++;
 		frames.push_back(&frame);
-		frame.retain();		
 		if(size()>maxSize){
-			frames.front()->release();
 			frames.erase(frames.begin());
 		}
 		
