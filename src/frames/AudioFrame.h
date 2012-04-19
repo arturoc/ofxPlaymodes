@@ -13,6 +13,7 @@
 #include "ofMain.h"
 #include "ofEvents.h"
 #include "ofTypes.h"
+#include "AudioFormat.h"
 
 namespace ofxPm{
 class AudioFrame:public ofxPm::Frame, public ofEventArgs {
@@ -31,6 +32,10 @@ public:
 private:
 	class Obj;
 	ofPtr<Obj> data;
+    static int total_num_frames;
+    static map<AudioFormat,vector< ofPtr<Obj> > > pool;
+    static ofMutex poolMutex;
+    static void poolDeleter(Obj * obj);
 };
 }
 #endif /* AUDIOFRAME_H_ */
