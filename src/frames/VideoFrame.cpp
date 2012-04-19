@@ -24,7 +24,6 @@ ofMutex VideoFrame::poolMutex;
 	}
 
 	VideoFrame::~VideoFrame() {
-		printf("DELETING VIDEO FRAME!!\n");
 		total_num_frames--;
 	}
 

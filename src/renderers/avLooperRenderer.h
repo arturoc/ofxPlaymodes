@@ -24,7 +24,7 @@ public:
 
 	void				setup(VideoBuffer & bufferVideo, AudioBufferSamples & bufferAudio);
 	VideoHeader*		getVideoHeader();
-	AudioHeaderSample*		getAudioHeader();
+	AudioHeaderSample*	getAudioHeader();
 	
 	void				draw();
 	void				draw(int x,int y,int w,int h);

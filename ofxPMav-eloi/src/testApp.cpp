@@ -45,12 +45,26 @@ void testApp::setup()
 	receiver.setup(oscPort);
 	sender.setup("localhost",oscPort);
 	
+
+	// gui
+	gui.addSlider("delayMs",guiDelay,0.0,7000.0);
+	gui.addSlider("inMs",guiIn,0.0,7000.0);
+	gui.addSlider("outMs",guiOut,0.0,7000.0);
+	gui.addSlider("lengthMs",guiLength,0.0,7000.0);
+	gui.show();
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
 	vGrabber.update();
 	updateOsc();
+	
+	//update for gui to work ?
+	avRenderer.setDelayMs(float(guiDelay));
+	avRenderer.setInMs(float(guiIn));
+	avRenderer.setOutMs(float(guiOut));
+	avRenderer.setOutMs(float(guiOut));
+
 }
 
 //--------------------------------------------------------------
@@ -80,6 +94,7 @@ void testApp::draw(){
 					   ,20,ofGetHeight()-20);
 	//ofDrawBitmapString("VideoFrame pool size: " + ofToString(VideoFrame::getPoolSize(VideoFormat(1280,720,3))),520,ofGetHeight()-20);
 	
+	gui.draw();
 }
 
 //--------------------------------------------------------------

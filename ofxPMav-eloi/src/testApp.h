@@ -4,50 +4,55 @@
 #include "ofxPlaymodes.h"
 #include "ofxOsc.h"
 #include "pmUtils.h"
+#include "ofxSimpleGuiToo.h"
 
 
 
 class testApp : public ofBaseApp{
 
 	public:
-		void setup();
-		void update();
-		void draw();
 
-		void keyPressed  (int key);
-		void keyReleased(int key);
-		void mouseMoved(int x, int y );
-		void mouseDragged(int x, int y, int button);
-		void mousePressed(int x, int y, int button);
-		void mouseReleased(int x, int y, int button);
-		void windowResized(int w, int h);
-		void dragEvent(ofDragInfo dragInfo);
-		void gotMessage(ofMessage msg);
-		
-		ofxPm::VideoGrabber			vGrabber;
-		ofxPm::AudioGrabber			aGrabber;
-		ofxPm::VideoBuffer			vBuffer;
-		ofxPm::AudioBufferSamples	aBuffer;
-		ofxPm::avLooperRenderer		avRenderer;
+	void setup();
+	void update();
+	void draw();
+
+	void keyPressed  (int key);
+	void keyReleased(int key);
+	void mouseMoved(int x, int y );
+	void mouseDragged(int x, int y, int button);
+	void mousePressed(int x, int y, int button);
+	void mouseReleased(int x, int y, int button);
+	void windowResized(int w, int h);
+	void dragEvent(ofDragInfo dragInfo);
+	void gotMessage(ofMessage msg);
 	
-		// audio
-		int							aBufferSize;
-		int							aSampleRate;
-		int							aNumChannels;
-		ofSoundStream				soundStream;
+	ofxPm::VideoGrabber			vGrabber;
+	ofxPm::AudioGrabber			aGrabber;
+	ofxPm::VideoBuffer			vBuffer;
+	ofxPm::AudioBufferSamples	aBuffer;
+	ofxPm::avLooperRenderer		avRenderer;
 
-		void audioReceived(float * input, int bufferSize, int nChannels);
-		void audioRequested (float * output, int bufferSize, int nChannels);
+	// audio
+	int							aBufferSize;
+	int							aSampleRate;
+	int							aNumChannels;
+	ofSoundStream				soundStream;
 
-		bool					freeze;
-		bool					audioSetupFinished;
-		float					delayHeader;
+	void audioReceived(float * input, int bufferSize, int nChannels);
+	void audioRequested (float * output, int bufferSize, int nChannels);
 
-		//osc eloi
-		ofxOscReceiver			receiver;
-		ofxOscSender			sender;
-		void					updateOsc();
+	bool					freeze;
+	bool					audioSetupFinished;
 
-		float					inN;
-		float					outN;
+	//osc eloi
+	ofxOscReceiver			receiver;
+	ofxOscSender			sender;
+	void					updateOsc();
+
+	// needed for gui ?À
+	float					guiDelay;
+	float					guiIn;
+	float					guiOut;
+	float					guiLength;
+			
 };
