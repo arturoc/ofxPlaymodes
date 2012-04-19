@@ -9,7 +9,6 @@
 #include "AudioBuffer.h"
 #include "VideoBuffer.h"
 
-#include "AudioHeader.h"
 
 #include "OscInterface.h"
 #include "HeaderLooperRenderer.h"

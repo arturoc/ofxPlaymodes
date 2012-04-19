@@ -93,7 +93,7 @@ namespace ofxPm{
 		int whichSampleInAudioFrame = index % samplesPerFrame;
 
 		//printf("ABS :: num Chan :: %d || index :: %d || samplesPerFrame %d || whichAudioFrame %d || whichSample %d \n",aNumCh,index,samplesPerFrame,whichAudioFrame,whichSampleInAudioFrame);
-		float* sampleData = new float[aNumCh];
+		/*float* sampleData = new float[aNumCh];
 
 		for(int i=0;i<aNumCh;i++)
 		{
@@ -101,9 +101,9 @@ namespace ofxPm{
 		}
 		
 		AudioSample * aS = new AudioSample(sampleData,aNumCh);
-		delete[] sampleData;
+		delete[] sampleData;*/
 		
-		return *aS;
+		return AudioSample(&frames[whichAudioFrame]->getAudioData()[whichSampleInAudioFrame*aNumCh],aNumCh);
 	}
 	
 	//----------------------------------------------------------------------------------------	
