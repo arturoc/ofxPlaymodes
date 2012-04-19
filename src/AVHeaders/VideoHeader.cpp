@@ -307,11 +307,14 @@ float VideoHeader::getDelayPct()
 //------------------------------------------------------
 void VideoHeader::setDelayMs(float delayMs)
 {
-	TimeDiff oneFrame=(TimeDiff)(1000000.0/fps/1.0);
-	float delayToSet = delayMs*1000.0;
-    this->delay = CLAMP(int(delayToSet),0,(buffer->getMaxSize()-1)*oneFrame);
-	// ? eloi hack
-	//this->position = 0;
+	float oneFrame=(TimeDiff)(1000000.0/fps/1.0);
+	int delayToSet = int(float(delayMs*1000.0));
+
+	// control not out of bounds !! needs more precise control related to bufferMarkers !! (TO DO)
+	if(delayToSet<0) delayToSet = 0;
+	else if (delayToSet>int(float(buffer->getMaxSize()-1)*float(oneFrame))) delayToSet = int(float(buffer->getMaxSize()-1)*float(oneFrame));
+
+	this->delay = delayToSet;
 }
 //------------------------------------------------------
 void VideoHeader::setDelayFrames(int delayFrames)
@@ -335,6 +338,8 @@ float VideoHeader::getIn()
 //------------------------------------------------------
 void VideoHeader::setInMs(float in)
 {
+	// needs more precise control related to bufferMarkers !! (TO DO)
+
 	float oneFrameMs=(TimeDiff)(1000000.0/fps/1.0);
 	float fAux = float(in*1000.0f) / (oneFrameMs*float(buffer->size()));
 	this->setInPct(CLAMP(fAux,0.0,1.0));    

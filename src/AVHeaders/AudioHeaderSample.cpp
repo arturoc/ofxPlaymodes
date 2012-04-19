@@ -85,24 +85,11 @@ namespace ofxPm
 		int audioBuffDrawPos = 90;
 		
 		float currentLength=float(index)/((float)this->aBuffer->getMaxSizeInSamples())*(float)(ofGetWidth()-PMDRAWSPACING*2);
-		float currentLengthInDeclick=float(markIn.getIndex()+markIn.getLength()*pitch)/((float)this->aBuffer->getMaxSizeInSamples())*(float)(ofGetWidth()-PMDRAWSPACING*2);
+		float currentLengthInDeclick=float(markIn.getIndex()-markIn.getLength()*pitch)/((float)this->aBuffer->getMaxSizeInSamples())*(float)(ofGetWidth()-PMDRAWSPACING*2);
 		float currentLengthOutDeclick=float(markOut.getIndex()-markOut.getLength()*pitch)/((float)this->aBuffer->getMaxSizeInSamples())*(float)(ofGetWidth()-PMDRAWSPACING*2);
 		float oneLength=double(ofGetWidth()-PMDRAWSPACING*2)/(double(aBuffer->getMaxSizeInSamples()));
 		int bufferDrawSize = (float(aBuffer->sizeInSamples())/float(aBuffer->getMaxSizeInSamples())) * (ofGetWidth()-PMDRAWSPACING*2);
-		
-		ofSetColor(0,255,255);
-		
-		// audioHeader
-		ofPushStyle();
-		ofLine(currentLength+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos,currentLength+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos+60);
-
-		// we draw the lines of the crossfade area
-		ofSetColor(255,255,0);
-		ofSetLineWidth(1.0);
-		ofLine(currentLengthInDeclick+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos,currentLengthInDeclick+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos+60);
-		ofLine(currentLengthOutDeclick+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos,currentLengthOutDeclick+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos+60);
-		ofPopStyle();
-		
+						
 		ofSetColor(0,255,255);
 		ofDrawBitmapString(ofToString(index),currentLength,PMDRAWELEMENTSY+10-audioBuffDrawPos);
 		
@@ -133,9 +120,23 @@ namespace ofxPm
 		ofDrawBitmapString("[ " + ofToString(markIn.getIndex()) ,ofPoint(inPos+0,PMDRAWELEMENTSY+75-audioBuffDrawPos));
 		ofDrawBitmapString(ofToString(markOut.getIndex()) + " ]" ,ofPoint(outPos-30,PMDRAWELEMENTSY+75-audioBuffDrawPos));
 		
-		// volume representation
-		float vol = this->getVolume();
-		ofRect(20,PMDRAWELEMENTSY-200,20,vol*100.0);
+		// draw audioHeader
+		ofPushStyle();
+		ofLine(currentLength+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos,currentLength+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos+60);
+		
+		// we draw the lines of the crossfade area
+		ofSetColor(64,128,128);
+		ofSetLineWidth(1.0);
+		// the limits
+		ofLine(currentLengthInDeclick+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos,currentLengthInDeclick+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos+50);
+		ofLine(currentLengthOutDeclick+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos,currentLengthOutDeclick+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos+50);
+		// the ramp
+		ofSetColor(0,128,128);
+		ofLine(currentLengthOutDeclick+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos,outPos,PMDRAWELEMENTSY+10-audioBuffDrawPos+50);		
+		ofLine(currentLengthInDeclick+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos+50,inPos,PMDRAWELEMENTSY+10-audioBuffDrawPos);		
+		ofPopStyle();
+		
+		
 	}
 	
 	//------------------------------------------------------

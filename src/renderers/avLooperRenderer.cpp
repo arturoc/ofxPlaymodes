@@ -32,7 +32,7 @@ namespace ofxPm
 		sampleIndex			= 0;
 		videoOffsetInMs		= 0;
 		audioSampleRate		= aBuffer->getSampleRate();
-		maximumSizeInMs		= aBuffer->getMaxSizeInSamples()/audioSampleRate*1000;
+		maximumSizeInMs		= int(float(aBuffer->getMaxSizeInSamples())/float(audioSampleRate))*1000;
 		
 		lastIn = 0.0;
 		lastOut = 0.0;
@@ -49,9 +49,11 @@ namespace ofxPm
 	{
 		VideoFrame * frame = vHeader.getNextVideoFrame();
 		if(frame!=NULL){
+			// draw the frame texture to screen
 			frame->getTextureRef().draw(0,0);
 			frame->release();
 		}
+		// draw av header interfaces
 		vHeader.draw();
 		aHeader2.draw();
 	}
@@ -69,16 +71,17 @@ namespace ofxPm
 		float delayToVideo = (float(aHeader2.getIndex()) / float(audioSampleRate)) * 1000.0; 
 		vHeader.setDelayMs(float(maximumSizeInMs)-delayToVideo-float(videoOffsetInMs));
 		//printf("avR ::DELAY is = %f || maxSize %d delayToVideo in ms = %f / index %d\n",float(maximumSizeInMs)-delayToVideo-float(videoOffsetInMs),maximumSizeInMs,delayToVideo,aHeader2.getIndex());
+		printf("AVLR:: videoDelayMs :: %f \n",float(maximumSizeInMs)-delayToVideo-float(videoOffsetInMs));
 		
-		// OK video independent
 		VideoFrame * frame = vHeader.getNextVideoFrame();
 		if(frame!=NULL){
+			// draw the frame texture to screen
 			ofSetColor(vHeader.getOpacity(),vHeader.getOpacity(),vHeader.getOpacity());
 			frame->getTextureRef().draw(x,y,w,h);
 			frame->release();
 		}
 		
-		// draw renderer interface 
+		// draw av header interfaces
 		aBuffer->draw();
 		vBuffer->draw();
 

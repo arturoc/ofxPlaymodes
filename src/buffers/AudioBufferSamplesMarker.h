@@ -5,7 +5,7 @@
 #include "AudioBufferSamples.h"
 #include "AudioSample.h"
 
-#define DEFAULT_LENGTH 5000
+#define DEFAULT_LENGTH 10000
 
 namespace ofxPm
 {
