@@ -48,10 +48,14 @@ void testApp::setup()
 	
 
 	// gui
+	guiPlay=false;
+	guiFreeze=false;
 	gui.addSlider("delayMs",guiDelay,0.0,7000.0);
 	gui.addSlider("inMs",guiIn,0.0,7000.0);
 	gui.addSlider("outMs",guiOut,0.0,7000.0);
 	gui.addSlider("lengthMs",guiLength,0.0,7000.0);
+	gui.addToggle("freeze",guiFreeze);
+	gui.addToggle("play",guiPlay);
 	gui.show();
 }
 
@@ -65,6 +69,8 @@ void testApp::update(){
 	avRenderer.setInMs(float(guiIn));
 	avRenderer.setOutMs(float(guiOut));
 	avRenderer.setOutMs(float(guiOut));
+	avRenderer.setLengthMs(float(guiLength);
+						   
 
 }
 

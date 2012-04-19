@@ -54,5 +54,8 @@ class testApp : public ofBaseApp{
 	float					guiIn;
 	float					guiOut;
 	float					guiLength;
+	
+	bool					guiFreeze;
+	bool					guiPlay;
 			
 };
