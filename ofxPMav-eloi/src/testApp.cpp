@@ -38,7 +38,7 @@ void testApp::setup()
 	// general stuff
 	/////////////////
 	ofBackground(0);
-	ofSetVerticalSync(true);
+	//ofSetVerticalSync(true);
 	
 	// osc setup 
 	/////////////
@@ -53,7 +53,7 @@ void testApp::setup()
 	gui.addSlider("delayMs",guiDelay,0.0,7000.0);
 	gui.addSlider("inMs",guiIn,0.0,7000.0);
 	gui.addSlider("outMs",guiOut,0.0,7000.0);
-	gui.addSlider("lengthMs",guiLength,100,7000.0);
+	gui.addSlider("lengthMs",guiLength,60,7000.0);
 	gui.addToggle("freeze",guiFreeze);
 	gui.addToggle("play",guiPlay);
 	gui.show();

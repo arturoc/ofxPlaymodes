@@ -71,7 +71,7 @@ namespace ofxPm
 		float delayToVideo = (float(aHeader2.getIndex()) / float(audioSampleRate)) * 1000.0; 
 		vHeader.setDelayMs(float(maximumSizeInMs)-delayToVideo-float(videoOffsetInMs));
 		//printf("avR ::DELAY is = %f || maxSize %d delayToVideo in ms = %f / index %d\n",float(maximumSizeInMs)-delayToVideo-float(videoOffsetInMs),maximumSizeInMs,delayToVideo,aHeader2.getIndex());
-		printf("AVLR:: videoDelayMs :: %f \n",float(maximumSizeInMs)-delayToVideo-float(videoOffsetInMs));
+		//printf("AVLR:: videoDelayMs :: %f \n",float(maximumSizeInMs)-delayToVideo-float(videoOffsetInMs));
 		
 		VideoFrame * frame = vHeader.getNextVideoFrame();
 		if(frame!=NULL){

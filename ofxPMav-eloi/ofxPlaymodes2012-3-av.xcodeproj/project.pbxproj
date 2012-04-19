@@ -161,6 +161,7 @@
 		B02F4412154006E500D3D812 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		B02F4414154006E500D3D812 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
 		B02F4415154006E500D3D812 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
+		B030746E154034C50088A99B /* AudioFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioFormat.h; sourceTree = "<group>"; };
 		B0663C4815265B7C00A6B65B /* AudioBufferSamplesMarker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioBufferSamplesMarker.cpp; sourceTree = "<group>"; };
 		B0663C4915265B7C00A6B65B /* AudioBufferSamplesMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioBufferSamplesMarker.h; sourceTree = "<group>"; };
 		B07D2B81150E0F7B003F4516 /* AudioHeaderSample.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioHeaderSample.cpp; sourceTree = "<group>"; };
@@ -582,6 +583,7 @@
 		B07D2BC1150E0F7B003F4516 /* utils */ = {
 			isa = PBXGroup;
 			children = (
+				B030746E154034C50088A99B /* AudioFormat.h */,
 				B07D2BC2150E0F7B003F4516 /* ofxObjCPointer.cpp */,
 				B07D2BC3150E0F7B003F4516 /* ofxObjCPointer.h */,
 				B07D2BC4150E0F7B003F4516 /* pmUtils.h */,
