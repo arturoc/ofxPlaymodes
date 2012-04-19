@@ -31,16 +31,17 @@ namespace ofxPm
 		
 		playing		= false;
 		loopStart	= false;
+		lengthChanged = false;
 		loopMode	= OF_LOOP_NORMAL;
 		volume		= 1.0f;
+		isCrossfading = false;
 	}
 	
 	//------------------------------------------------------
 	
 	AudioHeaderSample::~AudioHeaderSample()
 	{
-		
-		
+		ofRemoveListener(ofEvents.update,this,&AudioHeaderSample::update);
 	}
 	
 	//------------------------------------------------------
@@ -60,11 +61,16 @@ namespace ofxPm
 		
 		playing		= false;
 		loopStart	= false;
+		isCrossfading = false;
+		lengthChanged = false;
+		
 		loopMode	= OF_LOOP_NORMAL;
 		volume		= 1.0f;
 		
 		markIn.setup(int(0),buffer);
 		markOut.setup(aBuffer->getMaxSizeInSamples(),buffer);
+		
+		ofAddListener(ofEvents.update,this,&AudioHeaderSample::update);
 		
 		/*
 		printf("AHS_setup:: markIn index:%d   leng:%d    in:%d     out:%d \n",
@@ -183,12 +189,18 @@ namespace ofxPm
 		
 		if(isPlaying()&&(int(index)>=markOut.getMin()))
 		{
-			declickMutex.tryLock();
+			if(!isCrossfading) isCrossfading=true;
+			
 			int mixB = int(markIn.getMin()) + (int(index)-int(markOut.getMin()));
 			//printf("mixing index %d with mixB %d || mIn.min %d \n",int(index),int(mixB),int(markIn.getMin()));
 			aSample = crossfade(aSample,mixB,pct);
 		}
-		else declickMutex.unlock();
+		else 
+		{
+			//printf("crosffdading false\n");
+			isCrossfading = false;
+		}
+		
 		aBuffer->unlock();		
 		return aSample;
 	}
@@ -355,7 +367,6 @@ namespace ofxPm
 	//------------------------------------------------------
 	void AudioHeaderSample::setInSamples(unsigned int inSamples)
 	{
-		while(declickMutex.tryLock()==false){}
 		resetTick();
 		int auxIn = (aBuffer->getMaxSizeInSamples()-1)-inSamples; 
 		if ((auxIn) < 0 )
@@ -388,7 +399,6 @@ namespace ofxPm
 			}
 
 		}			
-		declickMutex.unlock();		
 	}
 	//------------------------------------------------------
 	unsigned int AudioHeaderSample::getOutSamples() 
@@ -399,7 +409,6 @@ namespace ofxPm
 	//------------------------------------------------------
 	void AudioHeaderSample::setOutSamples(unsigned int outSamples)
 	{
-		while(declickMutex.tryLock()==false){}
 		
 		resetTick();
 
@@ -421,12 +430,10 @@ namespace ofxPm
 		}
 
 		this->length = markIn.getIndex() - markOut.getIndex();
-		declickMutex.unlock();
 	}
 	//------------------------------------------------------
 	void AudioHeaderSample::setLengthSamples(unsigned int l)
 	{
-		while(declickMutex.tryLock()) {}
 		
 		resetTick();
 		length = l;
@@ -437,11 +444,20 @@ namespace ofxPm
 		{
 			//length=(aBuffer->getMaxSizeInSamples()-1)-this->in;			
 		}
-		markOut.setIndex(markIn.getIndex() + this->length);
-		if(markOut.getIndex() < 0) markOut.setIndex(0);
-		if(markOut.getIndex() > aBuffer->getMaxSizeInSamples()-1) markOut.setIndex(aBuffer->getMaxSizeInSamples()-1);
+		
+		if(!isCrossfading){
+			markOut.setIndex(markIn.getIndex() + this->length);
+			// control out of bounds ...
+			if(markOut.getIndex() < 0) markOut.setIndex(0);
+			if(markOut.getIndex() > aBuffer->getMaxSizeInSamples()-1) markOut.setIndex(aBuffer->getMaxSizeInSamples()-1);
+			printf("c");
+		}
+		else {
+			nextLength = markIn.getIndex() + this->length;
+			lengthChanged=true;
+			printf("AQUI!!!!!!!\n");
+		}
 
-		declickMutex.unlock();
 	}
 	//------------------------------------------------------
 	unsigned int AudioHeaderSample::getLengthSamples() 
@@ -559,5 +575,21 @@ namespace ofxPm
 		return AudioSample(samples,sampleA.getChannels());
 		
 	}
+	
+	//------------------------------------------------------
+	void AudioHeaderSample::update(ofEventArgs &arg)
+	{
+		
+		if((!isCrossfading)&&(lengthChanged))
+		{
+			lengthChanged=false;			
+			// setting length()
+			markOut.setIndex(nextLength);		
+			// control out of bounds ...
+			if(markOut.getIndex() < 0) markOut.setIndex(0);
+			if(markOut.getIndex() > aBuffer->getMaxSizeInSamples()-1) markOut.setIndex(aBuffer->getMaxSizeInSamples()-1);
+		}
+	}
+
 
 }

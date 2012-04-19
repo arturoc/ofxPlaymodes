@@ -68,6 +68,8 @@ public:
 	//void			linkToVideoHeader(VideoHeader &vH);
 	ofEvent<int>	loopInEvent;
 	
+	
+	
 protected:
 	
     AudioBufferSamples * aBuffer;
@@ -89,13 +91,17 @@ protected:
 	bool			loopStart;
 	int				tickCount;
 	
-	// declick on Volume
-	ofMutex			declickMutex;
-	
-	// declick on markers
 	AudioBufferSamplesMarker	markIn;
 	AudioBufferSamplesMarker	markOut;
 	AudioSample	crossfade(const AudioSample & sampleA,int mixB,float pct);
+	
+	
+	void			update(ofEventArgs &arg);
+	bool			isCrossfading;
+	bool			lengthChanged;
+	unsigned int	nextLength;
+	
+	
 	
 	};
 }

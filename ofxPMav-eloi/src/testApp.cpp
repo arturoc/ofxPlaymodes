@@ -60,7 +60,8 @@ void testApp::setup()
 }
 
 //--------------------------------------------------------------
-void testApp::update(){
+void testApp::update()
+{
 	vGrabber.update();
 	updateOsc();
 	
@@ -69,10 +70,7 @@ void testApp::update(){
 	avRenderer.setInMs(float(guiIn));
 	avRenderer.setOutMs(float(guiOut));
 	avRenderer.setOutMs(float(guiOut));
-	avRenderer.setLengthMs(float(guiLength));
-						   
 	
-
 }
 
 //--------------------------------------------------------------
@@ -135,7 +133,9 @@ void testApp::keyPressed(int key){
 			{
 				avRenderer.setPlaying(false);
 			}
-			
+
+			avRenderer.setLengthMs(float(guiLength));
+
 		default:
 			break;
 	}

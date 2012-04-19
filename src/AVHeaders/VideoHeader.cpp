@@ -448,15 +448,17 @@ void VideoHeader::setPlaying(bool isPlaying)
 }
 	
 
-	//------------------------------------------------------
-	void VideoHeader::receivedLoopEvent(int &i)
-	{
-		setLoopToStart();
-	}	
-	void VideoHeader::setDriveMode(int mode)
-	{
-		driveMode = mode;
-	}
+//------------------------------------------------------
+void VideoHeader::receivedLoopEvent(int &i)
+{
+	setLoopToStart();
+}	
+
+//------------------------------------------------------
+void VideoHeader::setDriveMode(int mode)
+{
+	driveMode = mode;
+}
 	
 
 }
