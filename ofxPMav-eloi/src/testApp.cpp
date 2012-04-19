@@ -17,8 +17,8 @@ void testApp::setup()
 	aBufferSize=1024;
 	aSampleRate=96000;
 	soundStream.listDevices();
+	soundStream.setDeviceID(7);
 	soundStream.setup(2,2,aSampleRate,aBufferSize,2);
-	soundStream.setDeviceID(8);
 	soundStream.setInput(this);
 	soundStream.setOutput(this);
 	
@@ -27,6 +27,7 @@ void testApp::setup()
 	audioSetupFinished=false;	
 	aGrabber.setFps(float(aSampleRate)/float(aBufferSize));
 	aBuffer.setup(aGrabber,7.0,aSampleRate,aBufferSize,2);
+	
 	// avRenderer
 	//////////////
 	avRenderer.setup(vBuffer,aBuffer);
