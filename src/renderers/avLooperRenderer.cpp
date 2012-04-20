@@ -161,14 +161,14 @@ namespace ofxPm
 	{
 		// SYNC		vHeader.setInMs(ms);
 		aHeader2.setInSamples(ms*(audioSampleRate/1000));
-		lastIn = ms*(audioSampleRate/1000);
+		//lastIn = ms*(audioSampleRate/1000);
 	}
 	//------------------------------------------------------
 	void avLooperRenderer::setOutMs(float ms)
 	{
 		//SYNC		vHeader.setOutMs(ms);
 		aHeader2.setOutSamples(ms*(audioSampleRate/1000));
-		lastOut = ms*(audioSampleRate/1000);
+		//lastOut = ms*(audioSampleRate/1000);
 	}
 	//------------------------------------------------------
 	void avLooperRenderer::setLengthMs(float ms)

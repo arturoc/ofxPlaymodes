@@ -70,6 +70,7 @@ namespace ofxPm
 		markIn.setup(int(0),buffer);
 		markOut.setup(aBuffer->getMaxSizeInSamples(),buffer);
 		
+		// addListener for testApp::update event -> this class update!
 		ofAddListener(ofEvents.update,this,&AudioHeaderSample::update);
 		
 		/*
@@ -128,6 +129,11 @@ namespace ofxPm
 		
 		// draw audioHeader
 		ofPushStyle();
+		if(isCrossfading)
+		{
+			ofSetLineWidth(3.0);
+			ofSetColor(255,0,0);
+		}
 		ofLine(currentLength+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos,currentLength+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos+60);
 		
 		// we draw the lines of the crossfade area
@@ -141,7 +147,6 @@ namespace ofxPm
 		ofLine(currentLengthOutDeclick+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos,outPos,PMDRAWELEMENTSY+10-audioBuffDrawPos+50);		
 		ofLine(currentLengthInDeclick+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos+50,inPos,PMDRAWELEMENTSY+10-audioBuffDrawPos);		
 		ofPopStyle();
-		
 		
 	}
 	
@@ -195,10 +200,10 @@ namespace ofxPm
 			//printf("mixing index %d with mixB %d || mIn.min %d \n",int(index),int(mixB),int(markIn.getMin()));
 			aSample = crossfade(aSample,mixB,pct);
 		}
-		else 
+		else if (isPlaying())
 		{
 			//printf("crosffdading false\n");
-			isCrossfading = false;
+			if (isCrossfading) isCrossfading = false;
 		}
 		
 		aBuffer->unlock();		
@@ -442,17 +447,19 @@ namespace ofxPm
 		// control the case where length goes beyond ranges
 		if ((this->in + length) > (aBuffer->getMaxSizeInSamples()-1)) 
 		{
-			//length=(aBuffer->getMaxSizeInSamples()-1)-this->in;			
+			length=(aBuffer->getMaxSizeInSamples()-1)-this->in;			
 		}
 		
-		if(!isCrossfading){
+		if(!isCrossfading)
+		{
 			markOut.setIndex(markIn.getIndex() + this->length);
 			// control out of bounds ...
 			if(markOut.getIndex() < 0) markOut.setIndex(0);
 			if(markOut.getIndex() > aBuffer->getMaxSizeInSamples()-1) markOut.setIndex(aBuffer->getMaxSizeInSamples()-1);
-			printf("c");
+			printf("AQUI NO!!!!!\n");
 		}
-		else {
+		else if (isCrossfading)
+		{
 			nextLength = markIn.getIndex() + this->length;
 			lengthChanged=true;
 			printf("AQUI!!!!!!!\n");
@@ -589,7 +596,8 @@ namespace ofxPm
 			if(markOut.getIndex() < 0) markOut.setIndex(0);
 			if(markOut.getIndex() > aBuffer->getMaxSizeInSamples()-1) markOut.setIndex(aBuffer->getMaxSizeInSamples()-1);
 		}
-	}
+	 
+	 }
 
 
 }

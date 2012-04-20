@@ -95,9 +95,12 @@ protected:
 	AudioBufferSamplesMarker	markOut;
 	AudioSample	crossfade(const AudioSample & sampleA,int mixB,float pct);
 	
-	
+	// this update will be called when testApp trows update event !
 	void			update(ofEventArgs &arg);
+
+	// indicates if we're crossfading for decliking process
 	bool			isCrossfading;
+	
 	bool			lengthChanged;
 	unsigned int	nextLength;
 	
