@@ -22,6 +22,7 @@ namespace ofxPm
 		void					setup(unsigned int _index, AudioBufferSamples & buffer);
 
 		void					setIndex(unsigned int _index);
+		void					setLength(int nSamples);
 		void					draw();
 		unsigned int			getIndex();
 		unsigned int			getMin();

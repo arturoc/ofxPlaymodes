@@ -19,7 +19,6 @@ namespace ofxPm{
 		source = NULL;
 		fps=0;
 		stopped=false;
-		totalFrames=0;
 	}
 	//-----------------------------------------------------------------------------------------		
 	AudioBufferSamples::~AudioBufferSamples() 
@@ -34,13 +33,13 @@ namespace ofxPm{
 		aSampleRate=sampleR;
 		aSoundStreamBufferSize=bufferS;
 		aNumCh=numCh;
-		totalFrames=0;
 		
 		// this is the max size related to seconds ... but ... keep reading :
-		this->maxSizeSamples	= sizeInSecs * aSampleRate;
-		this->maxSize			= this->maxSizeSamples/aSoundStreamBufferSize +1 ;
+		this->usedSizeSamples	= sizeInSecs * aSampleRate;
+		this->maxSize			= this->usedSizeSamples/aSoundStreamBufferSize +1 ;
 		// ? because aex. to fill 7s we need 656,25 AudioFrames ... we need 657 AF to be declared.
 		this->maxSizeSamples	= this->maxSize * aSoundStreamBufferSize;
+		this->unusedSamples		= maxSizeSamples - usedSizeSamples;
 		
 		resume();	
 		stopped					= false;
@@ -66,13 +65,17 @@ namespace ofxPm{
 	{
 		return maxSizeSamples;
 	}
+	//----------------------------------------------------------------------------------------
+	unsigned int AudioBufferSamples::getUsedSizeInSamples()
+	{
+		return usedSizeSamples;
+	}
 	//----------------------------------------------------------------------------------------	
 	void AudioBufferSamples::newAudioFrame(AudioFrame &frame)
 	{		
 		if(size()==0)initTime=frame.getTimestamp();
 		
 		// AudioFrames managing, store AudioFrame on the cue.
-		totalFrames++;
 		frames.push_back(frame);
 
 		if(size()>maxSize)
@@ -167,5 +170,9 @@ namespace ofxPm{
 	{
 		return aNumCh;
 	}
-	
+	//--------------------------------------------------------------------------------------
+	int AudioBufferSamples::getUnusedSamples()
+	{
+		return unusedSamples;
+	}
 }

@@ -204,5 +204,9 @@ namespace ofxPm
 		aHeader2.setInSamples(lastIn);
 		aHeader2.setOutSamples(lastOut);
 	}
-
+	//------------------------------------------------------
+    void avLooperRenderer::setCrossfadeWidth(int nSamples)
+    {
+		aHeader2.setDeClickLength(nSamples);
+	}
 } //endNameSpace

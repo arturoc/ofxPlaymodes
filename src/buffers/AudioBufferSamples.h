@@ -28,10 +28,11 @@ public:
 	unsigned int		getMaxSize();                         // max size of the buffer
 	unsigned int		sizeInSamples();                            // total size of the buffer
 	unsigned int		getMaxSizeInSamples();                         // max size of the buffer
-	int					getSoundStreamBufferSize();
+	unsigned int		getUsedSizeInSamples();                         // real size of the buffer 
+	int					getSoundStreamBufferSize();						
 	int					getSampleRate();
 	int					getNumChannels();
-
+	int					getUnusedSamples();
     virtual void newAudioFrame(AudioFrame &frame);  // for notification of new frame event
     float getFps();                                 // fps of the audio source
 
@@ -48,11 +49,13 @@ protected:
     float					fps;
     AudioSource*			source;
 
-	int						totalFrames;
 	Timestamp				initTime;
 
 	unsigned int			maxSize;
 	unsigned int			maxSizeSamples;
+	unsigned int			usedSizeSamples;
+	int						unusedSamples;
+
 	bool					stopped;
 
 	int						aSampleRate;

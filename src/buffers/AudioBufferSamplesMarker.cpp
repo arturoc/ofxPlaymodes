@@ -39,9 +39,14 @@ namespace ofxPm
 	{
 		this->aBuffer=&buffer;
 		this->length = DEFAULT_LENGTH;
-		this->index =_index; 
-		this->indexMin = this->getIndex() - this->getLength();
-		this->indexMax = this->getIndex() + this->getLength();
+		// because of matching of samples coming from video frames or from audio frames,
+		// we need to correct the indexes with the unused samples.
+		
+		this->setIndex(_index);
+
+		//this->index =_index + aBuffer->getUnusedSamples(); 
+		//this->indexMin = this->getIndex() - this->getLength();
+		//this->indexMax = this->getIndex() + this->getLength();
 				
 		printf("ABSM::setupMarker:: index %d   length %d || MIN %d || MAX %d \n",int(this->getIndex()),int(this->getLength()),int(this->getMin()),int(this->getMax()));
 	}
@@ -50,10 +55,12 @@ namespace ofxPm
 	
 	void AudioBufferSamplesMarker::setIndex(unsigned int _index)
 	{
-		int bufferSize = aBuffer->sizeInSamples();
+		//int bufferSize = aBuffer->sizeInSamples();
+		int bufferSize = aBuffer->getUsedSizeInSamples();
 		
 		// check for minimum & maximum position not out of buffer bounds
-		if (((_index-length)>=0) && (_index+length<bufferSize) )
+		//		if (((_index-length)>=0) && (_index+length<bufferSize) )
+		if (((_index-length)>=0) && (_index<bufferSize) )
 		{
 			index = _index;
 			indexMin = index-length;
@@ -67,9 +74,9 @@ namespace ofxPm
 			indexMax = index+length;
 		}
 		// if the case was out of bounds by maximum > bufferSize
-		else if ((_index+length)>=bufferSize)
+		else if ((_index)>=bufferSize)
 		{
-			index = (bufferSize-1)-length;
+			index = (bufferSize-1);
 			indexMin = index-length;
 			indexMax = index+length;
 		}
@@ -121,5 +128,13 @@ namespace ofxPm
 		return length;
 	}
 	
-	
+	//------------------------------------------------------
+
+	void AudioBufferSamplesMarker::setLength(int nSamples)
+	{
+		length = nSamples;
+		indexMin = index-length;
+		indexMax = index+length;
+		
+	}
 }

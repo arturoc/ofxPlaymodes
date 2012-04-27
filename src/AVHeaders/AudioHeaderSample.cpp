@@ -24,17 +24,23 @@ namespace ofxPm
 	{
 		index	= 0;
 		delay   = 0;
-		in		= 0;
-		out		= 0;
+//		in		= 0;
+//		out		= 0;
 		length	= 0;
 		pitch	= 1.0;
 		
 		playing		= false;
 		loopStart	= false;
+
+		isCrossfading = false;
 		lengthChanged = false;
+		inChanged = false;
+		nextLength = 0.0;
+		nextIn=0.0;
+		
 		loopMode	= OF_LOOP_NORMAL;
 		volume		= 1.0f;
-		isCrossfading = false;
+
 	}
 	
 	//------------------------------------------------------
@@ -54,21 +60,27 @@ namespace ofxPm
 		
 		index	= 0;
 		delay   = 0;
-		in		= 0;
-		out		= aBuffer->getSoundStreamBufferSize();
-		length	= out - in;
+		//in		= 0;
+		//out		= aBuffer->getSoundStreamBufferSize();
+//		length	= out - in;
 		pitch	= 1.0;
 		
 		playing		= false;
 		loopStart	= false;
+		
 		isCrossfading = false;
 		lengthChanged = false;
+		inChanged = false;
+		nextLength = 0.0;
+		nextIn=0.0;
+		
 		
 		loopMode	= OF_LOOP_NORMAL;
 		volume		= 1.0f;
 		
 		markIn.setup(int(0),buffer);
-		markOut.setup(aBuffer->getMaxSizeInSamples(),buffer);
+		markOut.setup(aBuffer->getUsedSizeInSamples(),buffer);
+		length	= markOut.getIndex()-markIn.getIndex();
 		
 		// addListener for testApp::update event -> this class update!
 		ofAddListener(ofEvents.update,this,&AudioHeaderSample::update);
@@ -91,11 +103,11 @@ namespace ofxPm
 	{
 		int audioBuffDrawPos = 90;
 		
-		float currentLength=float(index)/((float)this->aBuffer->getMaxSizeInSamples())*(float)(ofGetWidth()-PMDRAWSPACING*2);
-		float currentLengthInDeclick=float(markIn.getIndex()-markIn.getLength()*pitch)/((float)this->aBuffer->getMaxSizeInSamples())*(float)(ofGetWidth()-PMDRAWSPACING*2);
-		float currentLengthOutDeclick=float(markOut.getIndex()-markOut.getLength()*pitch)/((float)this->aBuffer->getMaxSizeInSamples())*(float)(ofGetWidth()-PMDRAWSPACING*2);
-		float oneLength=double(ofGetWidth()-PMDRAWSPACING*2)/(double(aBuffer->getMaxSizeInSamples()));
-		int bufferDrawSize = (float(aBuffer->sizeInSamples())/float(aBuffer->getMaxSizeInSamples())) * (ofGetWidth()-PMDRAWSPACING*2);
+		float currentLength=float(index)/((float)this->aBuffer->getUsedSizeInSamples())*(float)(ofGetWidth()-PMDRAWSPACING*2);
+		float currentLengthInDeclick=float(markIn.getIndex()-markIn.getLength()*pitch)/((float)this->aBuffer->getUsedSizeInSamples())*(float)(ofGetWidth()-PMDRAWSPACING*2);
+		float currentLengthOutDeclick=float(markOut.getIndex()-markOut.getLength()*pitch)/((float)this->aBuffer->getUsedSizeInSamples())*(float)(ofGetWidth()-PMDRAWSPACING*2);
+		float oneLength=double(ofGetWidth()-PMDRAWSPACING*2)/(double(aBuffer->getUsedSizeInSamples()));
+		int bufferDrawSize = (float(aBuffer->sizeInSamples())/float(aBuffer->getUsedSizeInSamples())) * (ofGetWidth()-PMDRAWSPACING*2);
 						
 		ofSetColor(0,255,255);
 		ofDrawBitmapString(ofToString(index),currentLength,PMDRAWELEMENTSY+10-audioBuffDrawPos);
@@ -135,7 +147,7 @@ namespace ofxPm
 			ofSetColor(255,0,0);
 		}
 		ofLine(currentLength+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos,currentLength+PMDRAWSPACING,PMDRAWELEMENTSY+10-audioBuffDrawPos+60);
-		
+		ofRect(PMDRAWSPACING,PMDRAWELEMENTSY,-100,10);
 		// we draw the lines of the crossfade area
 		ofSetColor(64,128,128);
 		ofSetLineWidth(1.0);
@@ -192,13 +204,20 @@ namespace ofxPm
 		AudioSample aSample = aBuffer->getAudioSample(index);
 		//printf("done NextAudioSample()...index %d || channels %d \n",index,aSample.getChannels());
 		
-		if(isPlaying()&&(int(index)>=markOut.getMin()))
+		if(isPlaying()&&(int(index)>markOut.getMin()))//&&(int(index)<markOut.getIndex()))
 		{
 			if(!isCrossfading) isCrossfading=true;
 			
 			int mixB = int(markIn.getMin()) + (int(index)-int(markOut.getMin()));
 			//printf("mixing index %d with mixB %d || mIn.min %d \n",int(index),int(mixB),int(markIn.getMin()));
 			aSample = crossfade(aSample,mixB,pct);
+			
+			// case to avoid the crossfading boolean to be always true
+			// when loops is as small as the crossfade region
+			//if (int(index)>=markIn.getIndex())
+			//{
+			//	isCrossfading=false;
+			//}
 		}
 		else if (isPlaying())
 		{
@@ -218,6 +237,7 @@ namespace ofxPm
 		float indexPosition = index;
 		unsigned int bufferSizeInSamples=aBuffer->sizeInSamples();
 		int oneSoundStreamBufferSize = aBuffer->getSoundStreamBufferSize();
+		
 		
 		//		if(playing) oneFrame=(TimeDiff)(1000000.0/fps/speed);
 		//		else oneFrame=(TimeDiff)(1000000.0/fps/1.0);
@@ -259,8 +279,8 @@ namespace ofxPm
 		// if header is playing and loopStart is requested, set position to inPoint or outPoint depending on speed's sign !
 		if(playing && loopStart)
 		{
-			if(pitch>0.0) indexPosition=in;
-			else indexPosition=out;
+			if(pitch>0.0) indexPosition=markIn.getIndex();
+			else indexPosition=markOut.getIndex();
 			loopStart=false;
 			//printf("avH::loopStart!\n");
 		}
@@ -372,29 +392,63 @@ namespace ofxPm
 	//------------------------------------------------------
 	void AudioHeaderSample::setInSamples(unsigned int inSamples)
 	{
+		// the incoming value is expressed as samples from origin=realTime(right side)
+		// we pass the value "v" to in&out markers as "maxSamples - v" !!
+		
+		// control bounds of inSamples
+		if (inSamples>=aBuffer->getUsedSizeInSamples()) inSamples = aBuffer->getUsedSizeInSamples()-1;
+		else if (inSamples <0) inSamples=0;
+		
+		//to keep tick count on renderer working
 		resetTick();
-		int auxIn = (aBuffer->getMaxSizeInSamples()-1)-inSamples; 
-		if ((auxIn) < 0 )
+
+		
+		int auxIn = (aBuffer->getUsedSizeInSamples()-1)-inSamples; 
+
+		printf("AHS::trying %d / aux %d",int(inSamples),int(auxIn));
+		
+		// we check the left border, we have to be carefull with the crossfading length
+		if ((auxIn) < markIn.getLength() )
 		{				
-			// if inPoint is less then 0 -> =0 
-			markIn.setIndex(0);
-			//this->in = 0;
+			// if inPoint is less then crossfadingLength -> =crossfadingLength 
+			markIn.setIndex(markIn.getLength());
 		}
 		else 
 		{
-			if (auxIn > aBuffer->getMaxSizeInSamples()-1-aBuffer->getSoundStreamBufferSize()) 
+			// now let's control the maximum to the right the inpoint could be.
+			// inpoint could be as close to real time as max(soundStreamBufferSize , crossfade length) 
+			int minValue = max(aBuffer->getSoundStreamBufferSize(),int(markIn.getLength()));
+			if (auxIn > aBuffer->getUsedSizeInSamples()-1-aBuffer->getSoundStreamBufferSize()) 
 			{
-				markIn.setIndex(aBuffer->getMaxSizeInSamples()-1-aBuffer->getSoundStreamBufferSize());
-				markOut.setIndex(this->in + aBuffer->getSoundStreamBufferSize());
+				markIn.setIndex(aBuffer->getUsedSizeInSamples()-1-aBuffer->getSoundStreamBufferSize());
+				markOut.setIndex(markIn.getIndex() + aBuffer->getSoundStreamBufferSize());
 				this->length = aBuffer->getSoundStreamBufferSize();
 			}
 			else 
 			{
+				
+//				if(!isCrossfading)
+//				{
+//					markOut.setIndex(markIn.getIndex() + this->length);
+//					// control out of bounds ...
+//					if(markOut.getIndex() < 0) markOut.setIndex(0);
+//					if(markOut.getIndex() > aBuffer->getMaxSizeInSamples()-1) markOut.setIndex(aBuffer->getMaxSizeInSamples()-1);
+//					
+//				}
+//				else if (isCrossfading)
+//				{
+//					nextLength = markIn.getIndex() + this->length;
+//					lengthChanged=true;
+//				}
+				
+				
+				
+				
 				markIn.setIndex(auxIn);
-				if((markIn.getIndex() + length) > aBuffer->getMaxSizeInSamples()-1)
+				if((markIn.getIndex() + length) > aBuffer->getUsedSizeInSamples()-1)
 				{
-					this->length = (aBuffer->getMaxSizeInSamples() - 1) - this->in;
-					markOut.setIndex((aBuffer->getMaxSizeInSamples() - 1));
+					this->length = (aBuffer->getUsedSizeInSamples() - 1) - markIn.getIndex();
+					markOut.setIndex((aBuffer->getUsedSizeInSamples() - 1));
 				}
 				else 
 				{
@@ -417,13 +471,13 @@ namespace ofxPm
 		
 		resetTick();
 
-		int auxOut = (aBuffer->getMaxSizeInSamples()-1)-outSamples; 
+		int auxOut = (aBuffer->getUsedSizeInSamples()-1)-outSamples; 
 		
-		if(auxOut > (aBuffer->getMaxSizeInSamples()-1)) 
+		if(auxOut > (aBuffer->getUsedSizeInSamples()-1)) 
 		{
-			markOut.setIndex(aBuffer->getMaxSizeInSamples()-1);
+			markOut.setIndex(aBuffer->getUsedSizeInSamples()-1);
 		}
-		else if (auxOut < (this->in + aBuffer->getSoundStreamBufferSize())) 
+		else if (auxOut < (markIn.getIndex() + aBuffer->getSoundStreamBufferSize())) 
 		{
 			markOut.setIndex(markIn.getIndex() + aBuffer->getSoundStreamBufferSize());
 
@@ -442,27 +496,38 @@ namespace ofxPm
 		
 		resetTick();
 		length = l;
-		// control the case where length is too small
-		if(length < aBuffer->getSoundStreamBufferSize()) length=aBuffer->getSoundStreamBufferSize();
-		// control the case where length goes beyond ranges
-		if ((this->in + length) > (aBuffer->getMaxSizeInSamples()-1)) 
-		{
-			length=(aBuffer->getMaxSizeInSamples()-1)-this->in;			
-		}
+		int minValue = max(aBuffer->getSoundStreamBufferSize(),int(markIn.getLength()));
+
 		
+		// control the case where length is too small
+		if(length < minValue)
+		{
+			length=minValue;
+		}
+		if ((markOut.getIndex()-length)<=markIn.getIndex())
+		{
+			markOut.setIndex(markIn.getIndex() + this->length);
+			// control out of bounds ...
+			if(markOut.getIndex() < 0) markOut.setIndex(0);
+			if(markOut.getIndex() > aBuffer->getUsedSizeInSamples()-1) markOut.setIndex(aBuffer->getUsedSizeInSamples()-1);			
+		}
+		// control the case where length goes beyond ranges
+		else if ((markIn.getIndex() + length) > (aBuffer->getUsedSizeInSamples()-1)) 
+		{
+			length=(aBuffer->getUsedSizeInSamples()-1)-markIn.getIndex();
+		}
 		if(!isCrossfading)
 		{
 			markOut.setIndex(markIn.getIndex() + this->length);
 			// control out of bounds ...
 			if(markOut.getIndex() < 0) markOut.setIndex(0);
-			if(markOut.getIndex() > aBuffer->getMaxSizeInSamples()-1) markOut.setIndex(aBuffer->getMaxSizeInSamples()-1);
-			printf("AQUI NO!!!!!\n");
+			if(markOut.getIndex() > aBuffer->getUsedSizeInSamples()-1) markOut.setIndex(aBuffer->getUsedSizeInSamples()-1);
+			
 		}
 		else if (isCrossfading)
 		{
 			nextLength = markIn.getIndex() + this->length;
 			lengthChanged=true;
-			printf("AQUI!!!!!!!\n");
 		}
 
 	}
@@ -594,10 +659,18 @@ namespace ofxPm
 			markOut.setIndex(nextLength);		
 			// control out of bounds ...
 			if(markOut.getIndex() < 0) markOut.setIndex(0);
-			if(markOut.getIndex() > aBuffer->getMaxSizeInSamples()-1) markOut.setIndex(aBuffer->getMaxSizeInSamples()-1);
+			if(markOut.getIndex() > aBuffer->getUsedSizeInSamples()-1) markOut.setIndex(aBuffer->getUsedSizeInSamples()-1);
 		}
 	 
 	 }
 
-
+	//------------------------------------------------------
+	void AudioHeaderSample::setDeClickLength(int nSamples)
+	{
+		// case where crossfade is b
+		
+		markOut.setLength(nSamples);
+		markIn .setLength(nSamples);
+	}
+	
 }

@@ -74,12 +74,11 @@ protected:
 	
     AudioBufferSamples * aBuffer;
 	TimeDiff		oneSample;
-
 	//TimeDiff delay;	
 	float			index;
 	unsigned int	delay;
-	unsigned int	in;
-	unsigned int	out;
+	//unsigned int	in;
+	//unsigned int	out;
 	unsigned int	length;
     float			fps;
 	float			pitch;
@@ -98,11 +97,14 @@ protected:
 	// this update will be called when testApp trows update event !
 	void			update(ofEventArgs &arg);
 
+	// bools and next values for control to avoid moving markers inside crossfade area
 	// indicates if we're crossfading for decliking process
 	bool			isCrossfading;
-	
+	// we kept the last value of the params to use it when crossfading ends.
 	bool			lengthChanged;
 	unsigned int	nextLength;
+	bool			inChanged;
+	unsigned int	nextIn;
 	
 	
 	
