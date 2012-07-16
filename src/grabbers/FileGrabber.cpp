@@ -17,18 +17,15 @@ FileGrabber::~FileGrabber() {
 	setUseTexture(false);
 }
 
-VideoFrame * FileGrabber::getNextVideoFrame(){
-    //newFrameEvent.init("PlayModes.VideoGrabber.newFrame");
-    VideoFrame * frame = VideoFrame::newVideoFrame(getPixelsRef());
-    return frame;
+VideoFrame FileGrabber::getNextVideoFrame(){
+    return VideoFrame::newVideoFrame(getPixelsRef());
 }
 
 void FileGrabber::update(){
 	ofVideoPlayer::update();
 	if(isFrameNew()){
-		VideoFrame * frame = getNextVideoFrame();
-		newFrameEvent.notify(this,*frame);
-		frame->release();
+		VideoFrame frame = getNextVideoFrame();
+		newFrameEvent.notify(this,frame);
 	}
 }
 

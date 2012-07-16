@@ -10,9 +10,7 @@
 namespace ofxPm{
 
 VideoRate::VideoRate()
-:back(0)
-,front(0)
-,source(0)
+:source(0)
 ,fps(30){
 	// TODO Auto-generated constructor stub
 
@@ -30,17 +28,17 @@ void VideoRate::setup(VideoSource & _source, float fps){
 	startThread(true,false);
 }
 
-VideoFrame * VideoRate::getNextVideoFrame(){
-	if(front) front->retain();
+VideoFrame VideoRate::getNextVideoFrame(){
 	Poco::ScopedLock<ofMutex> lock(mutexFront);
 	return front;
 }
 
 void VideoRate::newVideoFrame(VideoFrame & frame){
-	if(back) back->release();
+	cout << "new frame " << frame <<  endl;
 	mutex.lock();
-	back = &frame;
+	back = frame;
 	mutex.unlock();
+	cout << "end new frame" << endl;
 	//videoFrame->retain();
 }
 
@@ -56,22 +54,21 @@ void VideoRate::setFps(float _fps){
 void VideoRate::threadedFunction(){
 	while(isThreadRunning()){
 		unsigned long time = ofGetElapsedTimeMicros();
-		mutex.lock();
-		if(back){
-			VideoFrame * currFrame = back;
+		cout << back << endl;
+		if(back!=NULL){
+			mutex.lock();
+			VideoFrame currFrame = back;
 			mutex.unlock();
 
-			if(front) front->release();
 			mutexFront.lock();
-			front = VideoFrame::newVideoFrame(currFrame->getPixelsRef());
+			front = VideoFrame::newVideoFrame(currFrame.getPixelsRef());
 			mutexFront.unlock();
-			ofNotifyEvent(newFrameEvent,*front);
-		}else{
-			mutex.unlock();
+			ofNotifyEvent(newFrameEvent,front);
 		}
 		time = ofGetElapsedTimeMicros()-time;
 		long sleeptime =  1000000./fps-time;
 		if(sleeptime>0){
+			cout << sleeptime << endl;
 			usleep(sleeptime);
 		}
 	}

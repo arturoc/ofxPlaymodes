@@ -34,10 +34,9 @@ namespace ofxPm
 
 	void HeaderLooperRenderer::draw()
 	{
-		VideoFrame * frame = vHeader.getNextVideoFrame();
+		VideoFrame frame = vHeader.getNextVideoFrame();
 		if(frame!=NULL){
-			frame->getTextureRef().draw(0,0);
-			frame->release();
+			frame.getTextureRef().draw(0,0);
 		}
 		vHeader.draw();
 		
@@ -48,21 +47,11 @@ namespace ofxPm
 	{
 		
 		
-		VideoFrame * frame = vHeader.getNextVideoFrame();
-		//VideoFrame * frame2;
-		//if(vBuffer->size()>174) 
-		//	  frame2= vHeader.getVideoFrame(0);;
+		VideoFrame frame = vHeader.getNextVideoFrame();
 		if(frame!=NULL){
 			
-//			ofEnableBlendMode(OF_BLENDMODE_ADD);
-//			ofSetColor(128,128,128);
-//			if(vBuffer->size()>174)frame2->getTextureRef().draw(x,y,w,h);
-			
 			ofSetColor(vHeader.getOpacity(),vHeader.getOpacity(),vHeader.getOpacity());
-			frame->getTextureRef().draw(x,y,w,h);
-			frame->release();
-//			if(vBuffer->size()>174)frame2->release();
-			//ofDisableBlendMode();
+			frame.getTextureRef().draw(x,y,w,h);
 		}
 		vHeader.draw();
 		ofSetColor(255,255,255);

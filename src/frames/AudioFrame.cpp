@@ -121,4 +121,9 @@ ofMutex AudioFrame::poolMutex;
 	{
 		return data->averageValue;
 	}
+
+
+	AudioFrame::operator void*(){
+		return data.get();
+	}
 }

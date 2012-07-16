@@ -29,9 +29,7 @@ bool VideoGrabber::initGrabber(int w, int h){
 	return ret;
 }
 
-VideoFrame * VideoGrabber::getNextVideoFrame(){
-    //newFrameEvent.init("PlayModes.VideoGrabber.newFrame");
-    VideoFrame * frame = VideoFrame::newVideoFrame(getPixelsRef());
+VideoFrame VideoGrabber::getNextVideoFrame(){
     return frame;
 }
 
@@ -39,18 +37,16 @@ void VideoGrabber::update(){
 #ifndef TARGET_LINUX
 	ofVideoGrabber::update();
 	if(isFrameNew()){
-		VideoFrame * frame = getNextVideoFrame();
-		newFrameEvent.notify(this,*frame);
-		frame->release();
+		frame = VideoFrame::newVideoFrame(getPixelsRef());
+		newFrameEvent.notify(this,frame);
 	}
 
 #endif
 }
 
 void VideoGrabber::newFrame(ofPixels & pixels){
-	VideoFrame * frame = VideoFrame::newVideoFrame(pixels);
-	newFrameEvent.notify(this,*frame);
-	frame->release();
+	frame = VideoFrame::newVideoFrame(pixels);
+	newFrameEvent.notify(this,frame);
 }
 
 //------------------------------------------------------

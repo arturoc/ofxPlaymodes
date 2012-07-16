@@ -26,18 +26,16 @@ BasicVideoRenderer::~BasicVideoRenderer() {
 }
 
 void BasicVideoRenderer::draw(){
-	VideoFrame * frame = source->getNextVideoFrame();
+	VideoFrame frame = source->getNextVideoFrame();
 	if(frame!=NULL){
-		frame->getTextureRef().draw(0,0);
-		frame->release();
+		frame.getTextureRef().draw(0,0);
 	}
 }
 	
 void BasicVideoRenderer::draw(int x,int y,int w,int h){
-	VideoFrame * frame = source->getNextVideoFrame();
+	VideoFrame frame = source->getNextVideoFrame();
 	if(frame!=NULL){
-		frame->getTextureRef().draw(x,y,w,h);
-		frame->release();
+		frame.getTextureRef().draw(x,y,w,h);
 	}
 }
 	

@@ -18,7 +18,7 @@ public:
 
 	void setup(VideoSource & source, float fps=30);
 
-    VideoFrame * getNextVideoFrame();
+    VideoFrame getNextVideoFrame();
 	void newVideoFrame(VideoFrame & frame);
     float getFps();
     void setFps(float fps);
@@ -27,7 +27,7 @@ protected:
     void threadedFunction();
 
 private:
-    VideoFrame * back, * front;
+    VideoFrame back, front;
     VideoSource* source;
     float fps;
     ofMutex mutexFront;

@@ -29,6 +29,7 @@ public:
 	int         getChannels();
 	float       getAverageValue();
 
+	operator void*();
 	
 private:
 	class Obj;

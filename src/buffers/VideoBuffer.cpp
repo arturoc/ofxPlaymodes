@@ -46,13 +46,8 @@ void VideoBuffer::newVideoFrame(VideoFrame & frame){
     totalFrames++;
     if(size()==0)initTime=frame.getTimestamp();
     timeMutex.lock();
-    frames.push_back(&frame);
-    frame.retain();
+    frames.push_back(frame);
     while(size()>maxSize){
-        //delete buffer[times.front()];
-        //buffer.erase(times.front());
-        //cout << "releasing frame release count:"<<frames.front()->_useCountOfThisObject<<"\n";
-        frames.front()->release();
         frames.erase(frames.begin());
     }
     timeMutex.unlock();
@@ -62,7 +57,7 @@ void VideoBuffer::newVideoFrame(VideoFrame & frame){
 
 Timestamp VideoBuffer::getLastTimestamp(){
     if(size()>0)
-        return frames.back()->getTimestamp();
+        return frames.back().getTimestamp();
     else
         return Timestamp();
 }
@@ -89,43 +84,34 @@ float VideoBuffer::getFps(){
     return source->getFps();
 }
 
-VideoFrame * VideoBuffer::getVideoFrame(TimeDiff time){
-    VideoFrame * frame=NULL;
+VideoFrame VideoBuffer::getVideoFrame(TimeDiff time){
+    VideoFrame frame;
     if(size()>0){
         int frameback = CLAMP((int)((float)time/1000000.0*(float)getFps()),1,size());
         int currentPos = CLAMP(size()-frameback,0,size()-1);
         frame = frames[currentPos];
-        /*if(((float)time/1000000.0*(float)fps)<size() && ((float)time/1000000.0*(float)fps)>=0)
-            frame= frames[frames.size()-1-(int)((float)time/1000000.0*(float)fps)];
-        else if(((float)time/1000000.0*(float)fps)<0)
-            frame= frames[size()-1];
-        else
-            frame= frames[0];
-*/
-        frame->retain();
     }
 
     return frame;
 
 }
 
-VideoFrame * VideoBuffer::getVideoFrame(int position){
+VideoFrame VideoBuffer::getVideoFrame(int position){
     //return buffer.find(times[times.size()-position])->second;
     if(size()){
         position = CLAMP(position,0,size()-1);
-        frames[position]->retain();
         //cout << "frame " << position << " retained " << frames[position]->_useCountOfThisObject << "\n";
         return frames[position];
     }else{
-        return NULL;
+        return VideoFrame();
     }
 }
 
-VideoFrame * VideoBuffer::getVideoFrame(float pct){
+VideoFrame VideoBuffer::getVideoFrame(float pct){
     return getVideoFrame(getLastTimestamp()-(getInitTime()+getTotalTime()*pct));
 }
 
-VideoFrame * VideoBuffer::getNextVideoFrame(){
+VideoFrame VideoBuffer::getNextVideoFrame(){
     return getVideoFrame((int)size()-1);
 }
 
@@ -198,10 +184,6 @@ bool VideoBuffer::isStopped(){
 
 void VideoBuffer::clear(){
     while(!frames.empty()){
-        //delete buffer[times.front()];
-        //buffer.erase(times.front());
-        //cout << "releasing frame release count:"<<frames.front()->_useCountOfThisObject<<"\n";
-        frames.front()->release();
         frames.erase(frames.begin());
     }
 }

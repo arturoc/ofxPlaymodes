@@ -66,10 +66,9 @@ void VideoRenderer::draw(){
 }
 
 void VideoRenderer::drawNextFrame(){
-    VideoFrame * frame = source->getNextVideoFrame();
+    VideoFrame frame = source->getNextVideoFrame();
     if(frame!=NULL){
-        frame->getTextureRef().draw(0,0);
-        frame->release();
+        frame.getTextureRef().draw(0,0);
     }
 }
 

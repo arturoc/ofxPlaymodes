@@ -18,6 +18,7 @@ public:
 	virtual ~Frame();
 
 	Timestamp getTimestamp();
+	virtual operator void*()=0;
 
 protected:
 	void refreshTimestamp();

@@ -11,76 +11,92 @@ using Poco::ScopedLock;
 namespace ofxPm
 {
 int VideoFrame::total_num_frames=0;
-map<VideoFormat,vector<VideoFrame *> > VideoFrame::pool;
+map<VideoFormat,vector<ofPtr<VideoFrame::Obj> > > VideoFrame::pool;
 ofMutex VideoFrame::poolMutex;
 
-	VideoFrame::VideoFrame(const ofPixels & videoFrame) 
+class VideoFrame::Obj{
+public:
+	Obj()
+	:pixelsChanged(false)
 	{
-		pixels = videoFrame;
-		total_num_frames++;
-		pixelsChanged = true;
-		//cout << "total num frames: " << total_num_frames <<"\n";
 
+	}
+	Obj(const ofPixels & videoFrame)
+	:pixels(videoFrame)
+	,pixelsChanged(true)
+	{}
+
+    ofPixels pixels;
+    ofTexture texture;
+    bool pixelsChanged;
+};
+
+	VideoFrame::VideoFrame(const ofPixels & videoFrame) 
+	:data(new Obj(videoFrame)){
+		total_num_frames++;
+	}
+
+
+	VideoFrame::VideoFrame()
+	{
+		total_num_frames++;
 	}
 
 	VideoFrame::~VideoFrame() {
 		total_num_frames--;
 	}
 
-	VideoFrame * VideoFrame::newVideoFrame(const ofPixels & videoFrame){
-		VideoFrame * frame = NULL;
+	VideoFrame VideoFrame::newVideoFrame(const ofPixels & videoFrame){
 		VideoFormat format(videoFrame);
 		ScopedLock<ofMutex> lock(poolMutex);
 		if(!pool[format].empty()){
+			VideoFrame frame;
 			//cout << "returning frame from pool" << endl;
-			frame = pool[format].back();
-			frame->refreshTimestamp();
-			frame->pixels = videoFrame;
-			frame->pixelsChanged = true;
-			frame->retain();
+			frame.data = pool[format].back();
+			frame.refreshTimestamp();
+			frame.data->pixels = videoFrame;
+			frame.data->pixelsChanged = true;
 			pool[format].pop_back();
+			return frame;
 		}else{
-			//cout << "new frame" << endl;
-			frame = new VideoFrame(videoFrame);
+			return VideoFrame(videoFrame);
 		}
-		return frame;
 	}
 
-	void VideoFrame::release() {
-		ScopedLock<ofMutex> lock(*mutex);
-		_useCountOfThisObject--;
-		if(_useCountOfThisObject == 0) {
-			VideoFormat format(pixels);
-			poolMutex.lock();
-			pool[format].push_back(this);
-			poolMutex.unlock();
-		}
+
+
+	void VideoFrame::poolDeleter(VideoFrame::Obj * obj){
+		pool[VideoFormat(obj->pixels)].push_back(ofPtr<Obj>(obj,&VideoFrame::poolDeleter));
 	}
 
 	ofPixels & VideoFrame::getPixelsRef(){
-		return  pixels;
+		return  data->pixels;
 	}
 
 	ofTexture & VideoFrame::getTextureRef(){
-		if(!texture.isAllocated()){
-			texture.allocate(pixels.getWidth(),pixels.getHeight(),ofGetGlInternalFormat(pixels));
+		if(!data->texture.isAllocated()){
+			data->texture.allocate(data->pixels.getWidth(),data->pixels.getHeight(),ofGetGlInternalFormat(data->pixels));
 		}
-		if(pixelsChanged){
-			texture.loadData(pixels);
-			pixelsChanged = false;
+		if(data->pixelsChanged){
+			data->texture.loadData(data->pixels);
+			data->pixelsChanged = false;
 		}
-		return texture;
+		return data->texture;
 	}
 
 	int VideoFrame::getWidth(){
-		return pixels.getWidth();
+		return data->pixels.getWidth();
 	}
 
 	int VideoFrame::getHeight(){
-		return pixels.getHeight();
+		return data->pixels.getHeight();
 	}
 
 	int VideoFrame::getPoolSize(const VideoFormat & format){
 		return pool[format].size();
+	}
+
+	VideoFrame::operator void*(){
+		return data.get();
 	}
 	}

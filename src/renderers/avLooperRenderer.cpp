@@ -47,11 +47,10 @@ namespace ofxPm
 
 	void avLooperRenderer::draw()
 	{
-		VideoFrame * frame = vHeader.getNextVideoFrame();
+		VideoFrame frame = vHeader.getNextVideoFrame();
 		if(frame!=NULL){
 			// draw the frame texture to screen
-			frame->getTextureRef().draw(0,0);
-			frame->release();
+			frame.getTextureRef().draw(0,0);
 		}
 		// draw av header interfaces
 		vHeader.draw();
@@ -73,12 +72,11 @@ namespace ofxPm
 		//printf("avR ::DELAY is = %f || maxSize %d delayToVideo in ms = %f / index %d\n",float(maximumSizeInMs)-delayToVideo-float(videoOffsetInMs),maximumSizeInMs,delayToVideo,aHeader2.getIndex());
 		//printf("AVLR:: videoDelayMs :: %f \n",float(maximumSizeInMs)-delayToVideo-float(videoOffsetInMs));
 		
-		VideoFrame * frame = vHeader.getNextVideoFrame();
+		VideoFrame frame = vHeader.getNextVideoFrame();
 		if(frame!=NULL){
 			// draw the frame texture to screen
 			ofSetColor(vHeader.getOpacity(),vHeader.getOpacity(),vHeader.getOpacity());
-			frame->getTextureRef().draw(x,y,w,h);
-			frame->release();
+			frame.getTextureRef().draw(x,y,w,h);
 		}
 		
 		// draw av header interfaces

@@ -110,21 +110,21 @@ void VideoHeader::setFps(float fps){
 
 //------------------------------------------------------
 
-VideoFrame * VideoHeader::getVideoFrame(int index)
+VideoFrame VideoHeader::getVideoFrame(int index)
 {
 	buffer->lock();
 		int indexFrame = CLAMP(index,0,buffer->size()-1);
-		VideoFrame * frame = buffer->getVideoFrame(indexFrame);
+		VideoFrame frame = buffer->getVideoFrame(indexFrame);
 	buffer->unlock();
 	return frame;
 }
 		
 //------------------------------------------------------
-VideoFrame * VideoHeader::getNextVideoFrame(){
+VideoFrame VideoHeader::getNextVideoFrame(){
 
         buffer->lock();
 			currentPos=getNextPosition();
-			VideoFrame * frame = buffer->getVideoFrame(currentPos);
+			VideoFrame frame = buffer->getVideoFrame(currentPos);
         buffer->unlock();
         return frame;
 }

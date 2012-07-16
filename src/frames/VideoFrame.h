@@ -16,15 +16,13 @@
 #include <map>
 
 namespace ofxPm{
-class VideoFrame: public ofxObjCPointer, public ofxPm::Frame, public ofEventArgs {
+class VideoFrame: public ofxPm::Frame, public ofEventArgs {
     // create a video frame from an ofPixels
 	VideoFrame(const ofPixels & videoFrame);
-	VideoFrame(){}
 public:
-	static VideoFrame * newVideoFrame(const ofPixels & videoFrame);
+	VideoFrame();
+	static VideoFrame newVideoFrame(const ofPixels & videoFrame);
 	virtual ~VideoFrame();
-
-	void release();
 
     // returns pixels array
 	ofPixels & getPixelsRef();
@@ -33,16 +31,17 @@ public:
 	int getWidth();
 	int getHeight();
 
+	operator void*();
+
 	static int getPoolSize(const VideoFormat & format);
 
 private:
+	class Obj;
+	ofPtr<Obj> data;
     static int total_num_frames;
-    static map<VideoFormat,vector<VideoFrame *> > pool;
+    static map<VideoFormat,vector< ofPtr<Obj> >  > pool;
     static ofMutex poolMutex;
-
-    ofPixels pixels;
-    ofTexture texture;
-    bool pixelsChanged;
+    static void poolDeleter(Obj * obj);
 };
 }
 #endif /* VIDEOFRAME_H_ */

@@ -26,8 +26,8 @@ public:
 
     void setup(VideoBuffer & buffer);
     void draw();
-    VideoFrame *getNextVideoFrame();
-	VideoFrame *getVideoFrame(int index);
+    VideoFrame getNextVideoFrame();
+	VideoFrame getVideoFrame(int index);
     int getNextPosition();
     VideoBuffer *getBuffer();
 	
