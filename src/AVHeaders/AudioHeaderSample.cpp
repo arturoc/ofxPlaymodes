@@ -47,7 +47,7 @@ namespace ofxPm
 	
 	AudioHeaderSample::~AudioHeaderSample()
 	{
-		ofRemoveListener(ofEvents.update,this,&AudioHeaderSample::update);
+		ofRemoveListener(ofEvents().update,this,&AudioHeaderSample::update);
 	}
 	
 	//------------------------------------------------------
@@ -83,7 +83,7 @@ namespace ofxPm
 		length	= markOut.getIndex()-markIn.getIndex();
 		
 		// addListener for testApp::update event -> this class update!
-		ofAddListener(ofEvents.update,this,&AudioHeaderSample::update);
+		ofAddListener(ofEvents().update,this,&AudioHeaderSample::update);
 		
 		/*
 		printf("AHS_setup:: markIn index:%d   leng:%d    in:%d     out:%d \n",
@@ -103,14 +103,15 @@ namespace ofxPm
 	{
 		int audioBuffDrawPos = 90;
 		
-		float currentLength=float(index)/((float)this->aBuffer->getUsedSizeInSamples())*(float)(ofGetWidth()-PMDRAWSPACING*2);
+		
+		float currentLength=float(index-aBuffer->getUnusedSamples())/((float)this->aBuffer->getUsedSizeInSamples())*(float)(ofGetWidth()-PMDRAWSPACING*2);
 		float currentLengthInDeclick=float(markIn.getIndex()-markIn.getLength()*pitch)/((float)this->aBuffer->getUsedSizeInSamples())*(float)(ofGetWidth()-PMDRAWSPACING*2);
 		float currentLengthOutDeclick=float(markOut.getIndex()-markOut.getLength()*pitch)/((float)this->aBuffer->getUsedSizeInSamples())*(float)(ofGetWidth()-PMDRAWSPACING*2);
 		float oneLength=double(ofGetWidth()-PMDRAWSPACING*2)/(double(aBuffer->getUsedSizeInSamples()));
 		int bufferDrawSize = (float(aBuffer->sizeInSamples())/float(aBuffer->getUsedSizeInSamples())) * (ofGetWidth()-PMDRAWSPACING*2);
 						
-		ofSetColor(0,255,255);
-		ofDrawBitmapString(ofToString(index),currentLength,PMDRAWELEMENTSY+10-audioBuffDrawPos);
+		ofSetColor(0,255,50);
+		ofDrawBitmapString(ofToString(index-1-aBuffer->getUnusedSamples()),currentLength,PMDRAWELEMENTSY+10-audioBuffDrawPos);
 		
 		float	inPct  = double(markIn.getIndex())/double(aBuffer->sizeInSamples());//int(float(aBuffer->sizeInSamples()-1)*(double(in)/double(aBuffer->sizeInSamples())));
 		float	outPct = double(markOut.getIndex())/double(aBuffer->sizeInSamples());//int(float(aBuffer->size()-1)*(out));
@@ -347,13 +348,78 @@ namespace ofxPm
 		//		if (playing) nextPos= (buffer_size-1) - backpos;
 		//		else		 nextPos= (buffer_size-1) - (delay/oneFrame);
 		
-		if (playing) indexPosition= float(indexPosition);//indexPosition= (bufferSize-1) - backpos;
-		else		 indexPosition= float(bufferSizeInSamples-oneSoundStreamBufferSize) - delay + tickCount;
+//		if (playing) indexPosition= float(indexPosition);//indexPosition= (bufferSize-1) - backpos;
+//		else		 indexPosition= float(bufferSizeInSamples-oneSoundStreamBufferSize) - delay + tickCount;
+
+		//		else		 indexPosition= float(markIn.getIndex()) + tickCount;
+		if ((playing)&&(aBuffer->getIsStopped())) 
+		{
+			// PLAY i BUFF.FREEZED
+			// NORMAL PLAY IN LOOP SITUATION
+			indexPosition= float(indexPosition);//indexPosition= (bufferSize-1) - backpos;
+		}
+		else if ((playing)&&(!aBuffer->getIsStopped()))
+		{
+			// PLAY i BUFF.NO FREEZED
+			// ko !
+			indexPosition= float(indexPosition);
+			
+		}
+		else if ((!playing)&&(aBuffer->getIsStopped()))
+		{
+			// Ko Raro
+			// NO PLAY i BUFF.FREEZED
+			indexPosition= float(bufferSizeInSamples-oneSoundStreamBufferSize) - delay + tickCount;		
+		}
+		else if ((!playing)&&(!aBuffer->getIsStopped())) 
+		{
+			// Ok
+			// NO PLAY i BUFF. NO FREEZED
+			indexPosition= float(bufferSizeInSamples-oneSoundStreamBufferSize) - delay + tickCount;		
+		}
 		
 		indexPosition = CLAMP(indexPosition,0.0,float(bufferSizeInSamples-1));
 		
 		return indexPosition;
 	}
+	
+	
+	//------------------------------------------------------
+	void AudioHeaderSample::update(ofEventArgs &arg)
+	{
+		
+		if((!isCrossfading)&&(lengthChanged))
+		{
+			lengthChanged=false;			
+			// setting length()
+			markOut.setIndex(nextLength);		
+			// control out of bounds ...
+			if(markOut.getIndex() < 0) markOut.setIndex(0);
+			if(markOut.getIndex() > aBuffer->getUsedSizeInSamples()-1) markOut.setIndex(aBuffer->getUsedSizeInSamples()-1);
+		}
+		if((!isCrossfading)&&(inChanged))
+		{
+			inChanged=false;			
+			// setting length()
+			markIn.setIndex(nextIn);		
+			// control out of bounds ...
+			if(markIn.getIndex() < markIn.getLength()) markIn.setIndex(markIn.getLength());
+			if(markIn.getIndex() > aBuffer->getUsedSizeInSamples()-1) markIn.setIndex(aBuffer->getUsedSizeInSamples()-1);
+		}
+		
+	}
+	
+	//------------------------------------------------------
+	void AudioHeaderSample::updateTick() 
+	{
+		tickCount = (tickCount+1)%aBuffer->getSoundStreamBufferSize();
+		if ((playing)&&(!aBuffer->getIsStopped()))
+		{
+			index = index + pitch - 1.0;
+		}
+		else index = index + pitch;
+	}
+	
 	
 	//------------------------------------------------------
 	void AudioHeaderSample::setPitch(float p)
@@ -408,12 +474,12 @@ namespace ofxPm
 		printf("AHS::trying %d / aux %d",int(inSamples),int(auxIn));
 		
 		// we check the left border, we have to be carefull with the crossfading length
-		if ((auxIn) < markIn.getLength() )
+		if (((auxIn) < markIn.getLength() )&&(!isCrossfading)) 
 		{				
 			// if inPoint is less then crossfadingLength -> =crossfadingLength 
 			markIn.setIndex(markIn.getLength());
 		}
-		else 
+		else if (!isCrossfading)
 		{
 			// now let's control the maximum to the right the inpoint could be.
 			// inpoint could be as close to real time as max(soundStreamBufferSize , crossfade length) 
@@ -422,7 +488,7 @@ namespace ofxPm
 			{
 				markIn.setIndex(aBuffer->getUsedSizeInSamples()-1-aBuffer->getSoundStreamBufferSize());
 				markOut.setIndex(markIn.getIndex() + aBuffer->getSoundStreamBufferSize());
-				this->length = aBuffer->getSoundStreamBufferSize();
+				//this->length = aBuffer->getSoundStreamBufferSize();
 			}
 			else 
 			{
@@ -447,7 +513,7 @@ namespace ofxPm
 				markIn.setIndex(auxIn);
 				if((markIn.getIndex() + length) > aBuffer->getUsedSizeInSamples()-1)
 				{
-					this->length = (aBuffer->getUsedSizeInSamples() - 1) - markIn.getIndex();
+					//this->length = (aBuffer->getUsedSizeInSamples() - 1) - markIn.getIndex();
 					markOut.setIndex((aBuffer->getUsedSizeInSamples() - 1));
 				}
 				else 
@@ -457,7 +523,14 @@ namespace ofxPm
 
 			}
 
-		}			
+		}	
+		else if (isCrossfading)
+		{
+			
+			nextIn = markIn.getIndex();
+			inChanged=true;
+		}
+		
 	}
 	//------------------------------------------------------
 	unsigned int AudioHeaderSample::getOutSamples() 
@@ -614,12 +687,6 @@ namespace ofxPm
 		return(volume);
 	}
 	//------------------------------------------------------
-	void AudioHeaderSample::updateTick() 
-	{
-		tickCount = (tickCount+1)%aBuffer->getSoundStreamBufferSize();
-		index = index + pitch;
-	}
-	//------------------------------------------------------
 	void AudioHeaderSample::resetTick() 
 	{
 		tickCount = 0;
@@ -628,6 +695,11 @@ namespace ofxPm
 	int AudioHeaderSample::getIndex() 
 	{
 		return index;
+	}
+	//------------------------------------------------------
+	unsigned int AudioHeaderSample::getDelay() 
+	{
+		return delay;
 	}
 	//------------------------------------------------------
 	AudioSample AudioHeaderSample::crossfade(const AudioSample & sampleA,int mixB,float pct)
@@ -648,29 +720,30 @@ namespace ofxPm
 		
 	}
 	
-	//------------------------------------------------------
-	void AudioHeaderSample::update(ofEventArgs &arg)
-	{
-		
-		if((!isCrossfading)&&(lengthChanged))
-		{
-			lengthChanged=false;			
-			// setting length()
-			markOut.setIndex(nextLength);		
-			// control out of bounds ...
-			if(markOut.getIndex() < 0) markOut.setIndex(0);
-			if(markOut.getIndex() > aBuffer->getUsedSizeInSamples()-1) markOut.setIndex(aBuffer->getUsedSizeInSamples()-1);
-		}
-	 
-	 }
+	
 
 	//------------------------------------------------------
 	void AudioHeaderSample::setDeClickLength(int nSamples)
 	{
 		// case where crossfade is b
-		
+		printf("--");
 		markOut.setLength(nSamples);
 		markIn .setLength(nSamples);
 	}
 	
+	//-------------------------------------------------------
+	int AudioHeaderSample::getCrossfadingWidth()
+	{
+		return markIn.getLength();
+		
+	}
+
+	//-------------------------------------------------------
+	int AudioHeaderSample::getAudioBufferUnusedSamples()
+	{
+		return aBuffer->getUnusedSamples();
+		
+	}
+
+	//-------------------------------------------------------
 }

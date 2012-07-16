@@ -62,7 +62,10 @@ public:
 	float			getVolume(); 
 	void			setVolume(float opacity);
 	int				getIndex();
+	unsigned int	getDelay();
 	void			setDeClickLength(int t);
+	int				getCrossfadingWidth();
+	int				getAudioBufferUnusedSamples();
 	
 	// event related
 	//void			linkToVideoHeader(VideoHeader &vH);
@@ -101,8 +104,10 @@ protected:
 	// indicates if we're crossfading for decliking process
 	bool			isCrossfading;
 	// we kept the last value of the params to use it when crossfading ends.
+
 	bool			lengthChanged;
 	unsigned int	nextLength;
+	
 	bool			inChanged;
 	unsigned int	nextIn;
 	
