@@ -72,7 +72,6 @@ public:
 
 protected:
     deque<VideoFrame*> frames;
-    int     fps;
 
     long    totalFrames;
     Timestamp initTime;
@@ -81,6 +80,9 @@ protected:
 
     bool stopped;
     unsigned int maxSize;
+    int framesOneSec;
+    unsigned long microsOneSec;
+    int realFps;
 };
 }
 #endif /* VIDEOBUFFER_H_ */

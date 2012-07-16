@@ -14,19 +14,21 @@ VideoBuffer::VideoBuffer(VideoSource & source, int size) {
 
 VideoBuffer::VideoBuffer(){
 	source = NULL;
-	fps=0;
 	totalFrames=0;
 	stopped = false;
 	maxSize = 0;
+	microsOneSec=0;
+	realFps = 0;
+	framesOneSec = 0;
 }
 
 
 void VideoBuffer::setup(VideoSource & source, int size){
 	this->source=&source;
-	fps=source.getFps();
 	totalFrames=0;
 	maxSize = size;
 	resume();
+	microsOneSec=ofGetElapsedTimeMicros();
 }
 
 VideoBuffer::~VideoBuffer() {
@@ -34,6 +36,13 @@ VideoBuffer::~VideoBuffer() {
 }
 
 void VideoBuffer::newVideoFrame(VideoFrame & frame){
+	unsigned long time = frame.getTimestamp().epochMicroseconds();
+	framesOneSec++;
+	if(time-microsOneSec>=1000000){
+		realFps = framesOneSec;
+		framesOneSec = 0;
+		microsOneSec = time;
+	}
     totalFrames++;
     if(size()==0)initTime=frame.getTimestamp();
     timeMutex.lock();
@@ -77,15 +86,15 @@ unsigned int VideoBuffer::getMaxSize(){
 
 
 float VideoBuffer::getFps(){
-    return fps;
+    return source->getFps();
 }
 
 VideoFrame * VideoBuffer::getVideoFrame(TimeDiff time){
-    VideoFrame *frame=NULL;
+    VideoFrame * frame=NULL;
     if(size()>0){
-        int frameback = CLAMP((int)((float)time/1000000.0*(float)fps),1,size());
-        int currentPos=CLAMP(size()-frameback,0,size()-1);
-        frame= frames[currentPos];
+        int frameback = CLAMP((int)((float)time/1000000.0*(float)getFps()),1,size());
+        int currentPos = CLAMP(size()-frameback,0,size()-1);
+        frame = frames[currentPos];
         /*if(((float)time/1000000.0*(float)fps)<size() && ((float)time/1000000.0*(float)fps)>=0)
             frame= frames[frames.size()-1-(int)((float)time/1000000.0*(float)fps)];
         else if(((float)time/1000000.0*(float)fps)<0)
@@ -125,11 +134,7 @@ long VideoBuffer::getTotalFrames(){
 }
 
 float VideoBuffer::getRealFPS(){
-    if(size()>10)
-        return 10.0/(float)(frames.back()->getTimestamp()-frames[size()-11]->getTimestamp())*1000000.0;
-        //eloi : return 10.0/(float)(frames.back()->getTimestamp()-frames[size()-1]->getTimestamp())*1000000.0;
-    else
-        return 0;
+    return realFps;
 }
 
 
@@ -154,7 +159,7 @@ void VideoBuffer::draw(){
             ofDrawBitmapString(measureMessage,oneLength*i,695);
         }
 		 */
-		if(i%fps==0) 
+		if(i%(int)getFps()==0)
 		{
 			ofSetLineWidth(2.0);
 			ofSetColor(255,128,0);
