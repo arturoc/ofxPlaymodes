@@ -42,7 +42,7 @@ public:
 
     void stop();                                    // stop receiving new frames
     void resume();                                  // continue receiving new frames
-
+	bool getIsStopped();
 protected:
 	deque<AudioFrame>		frames;
 	

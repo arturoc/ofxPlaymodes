@@ -175,4 +175,9 @@ namespace ofxPm{
 	{
 		return unusedSamples;
 	}
+	bool AudioBufferSamples::getIsStopped()
+	{
+		return stopped;
+	}
+
 }
