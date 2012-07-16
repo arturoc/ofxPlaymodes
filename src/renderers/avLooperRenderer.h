@@ -31,11 +31,14 @@ public:
 	void				audioRequested(float * output, int bufferSize, int nChannels);
 	
 	void				setDelayMs(float ms);
+	void				setDelaySample(float ms);
 	void				setSpeed(float sp);
 	void				setOpacity(float value);
 	void				setInMs(float ms);
+	void				setInSamples(unsigned int s);
 	void				setOutMs(float ms);
 	void				setLengthMs(float ms);
+	void				setLengthSamples(unsigned int s);
 	void				setPlaying(bool b);
 	void				setLoopToStart();
 	void				setVideoOffsetInMs(int ms);

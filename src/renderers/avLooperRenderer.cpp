@@ -209,4 +209,17 @@ namespace ofxPm
     {
 		aHeader2.setDeClickLength(nSamples);
 	}
+	//------------------------------------------------------
+    void avLooperRenderer::setInSamples(unsigned int s)
+    {
+		aHeader2.setInSamples(s);
+		aHeader2.setDelaySamples(s);
+	}
+	//------------------------------------------------------
+	void avLooperRenderer::setLengthSamples(unsigned int s)
+	{
+		aHeader2.setLengthSamples(s);
+	}
+	
+	
 } //endNameSpace
