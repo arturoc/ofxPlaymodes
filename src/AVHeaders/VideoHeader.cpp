@@ -251,6 +251,7 @@ int VideoHeader::getNextPosition(){
 			
 			break;
 		default:
+			return 0;
 			break;
 	}
 }

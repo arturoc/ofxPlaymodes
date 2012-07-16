@@ -78,20 +78,20 @@ protected:
     float				fps;				// framerate
     float			position;			// position expresses number of frames since start
     int				currentPos;
-    float speed;
-    int delay;
-    float in, out;
-	int	opacity;
+    float 			speed;
+    int 			delay;
+    float 			in, out;
+	int				opacity;
 
 	//	OF_LOOP_NONE=0x01,
 	//	OF_LOOP_PALINDROME=0x02,
 	//	OF_LOOP_NORMAL=0x03
 
-    bool	playing;
-	int		loopMode;
-	bool	loopStart;
+    bool			playing;
+	int				loopMode;
+	bool			loopStart;
 	
-	int		driveMode; // 0 : based on time // 1 : based on audio which controls it through delay param.
+	int				driveMode; // 0 : based on time // 1 : based on audio which controls it through delay param.
 };
 }
 #endif // VIDEOHEADER_H_INCLUDED
