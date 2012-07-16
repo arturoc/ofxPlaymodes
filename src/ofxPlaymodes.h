@@ -9,6 +9,8 @@
 #include "AudioBuffer.h"
 #include "VideoBuffer.h"
 
+#include "VideoRate.h"
+
 
 #include "OscInterface.h"
 #include "HeaderLooperRenderer.h"
