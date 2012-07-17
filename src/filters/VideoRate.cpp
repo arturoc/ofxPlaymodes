@@ -34,12 +34,9 @@ VideoFrame VideoRate::getNextVideoFrame(){
 }
 
 void VideoRate::newVideoFrame(VideoFrame & frame){
-	cout << "new frame " << frame <<  endl;
 	mutex.lock();
 	back = frame;
 	mutex.unlock();
-	cout << "end new frame" << endl;
-	//videoFrame->retain();
 }
 
 float VideoRate::getFps(){
