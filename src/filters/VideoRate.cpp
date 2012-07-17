@@ -51,7 +51,6 @@ void VideoRate::setFps(float _fps){
 void VideoRate::threadedFunction(){
 	while(isThreadRunning()){
 		unsigned long time = ofGetElapsedTimeMicros();
-		cout << back << endl;
 		if(back!=NULL){
 			mutex.lock();
 			VideoFrame currFrame = back;
@@ -65,7 +64,6 @@ void VideoRate::threadedFunction(){
 		time = ofGetElapsedTimeMicros()-time;
 		long sleeptime =  1000000./fps-time;
 		if(sleeptime>0){
-			cout << sleeptime << endl;
 			usleep(sleeptime);
 		}
 	}
