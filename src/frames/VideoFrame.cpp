@@ -32,7 +32,7 @@ public:
 };
 
 	VideoFrame::VideoFrame(const ofPixels & videoFrame) 
-	:data(new Obj(videoFrame)){
+	:data(new Obj(videoFrame),&VideoFrame::poolDeleter){
 		total_num_frames++;
 	}
 

@@ -1,3 +1,7 @@
-#Sun Feb 12 12:37:28 CET 2012
 eclipse.preferences.version=1
-environment/project/cdt.managedbuild.toolchain.gnu.base.1918583185=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<environment append\="true" appendContributed\="true">\n<variable delimiter\="\:" name\="LC_ALL" operation\="append" value\="C"/>\n</environment>\n
+environment/project/cdt.managedbuild.toolchain.gnu.base.1918583185=
+environment/project/cdt.managedbuild.toolchain.gnu.base.1918583185/LC_ALL/delimiter=\:
+environment/project/cdt.managedbuild.toolchain.gnu.base.1918583185/LC_ALL/operation=append
+environment/project/cdt.managedbuild.toolchain.gnu.base.1918583185/LC_ALL/value=C
+environment/project/cdt.managedbuild.toolchain.gnu.base.1918583185/append=true
+environment/project/cdt.managedbuild.toolchain.gnu.base.1918583185/appendContributed=true

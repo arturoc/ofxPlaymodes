@@ -18,6 +18,7 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
+	ofSetColor(255);
 	renderer.draw();
 
 	header.draw();
@@ -27,7 +28,6 @@ void testApp::draw(){
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-
 	if(key==' '){
 		if(buffer.isStopped()){
 			buffer.resume();
@@ -45,7 +45,7 @@ void testApp::keyReleased(int key){
 //--------------------------------------------------------------
 void testApp::mouseMoved(int x, int y ){
 	float pct = float(x)/float(ofGetWidth());
-	header.setPct(pct);
+	header.setDelayPct(pct);
 }
 
 //--------------------------------------------------------------

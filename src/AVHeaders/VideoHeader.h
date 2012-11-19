@@ -75,12 +75,12 @@ protected:
     Timestamp		positionTS;
     TimeDiff		oneFrame;
 
-    float				fps;				// framerate
-    float			position;			// position expresses number of frames since start
+    double			fps;				// framerate
+    double			position;			// position expresses number of frames since start
     int				currentPos;
-    float 			speed;
+    double 			speed;
     int 			delay;
-    float 			in, out;
+    double 			in, out;
 	int				opacity;
 
 	//	OF_LOOP_NONE=0x01,

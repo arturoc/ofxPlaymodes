@@ -145,7 +145,8 @@ void VideoBuffer::draw(){
             ofDrawBitmapString(measureMessage,oneLength*i,695);
         }
 		 */
-		if(i%(int)getFps()==0)
+    	int fps = getFps();
+		if(fps && i%(int)fps==0)
 		{
 			ofSetLineWidth(2.0);
 			ofSetColor(255,128,0);

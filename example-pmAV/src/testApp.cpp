@@ -12,7 +12,10 @@ void testApp::setup()
 	vGrabber.initGrabber(1280,720);
 	vGrabber.setDeviceID(36);
 	vGrabber.setFps(25);
-	vBuffer.setup(vGrabber, 175);	
+
+	vRate.setup(vGrabber,30);
+
+	vBuffer.setup(vRate, 175);
 
 	aBufferSize=1024;
 	aSampleRate=96000;

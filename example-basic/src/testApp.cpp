@@ -9,7 +9,7 @@ void testApp::setup(){
 	vRenderer.resize(5);
 	for(int i=0;i<(int)vHeader.size();i++){
 		vHeader[i].setup(vBuffer);
-		vHeader[i].setDelay(500000*i);
+		vHeader[i].setDelayMs(500*i);
 		vRenderer[i].setup(vHeader[i]);
 	}
 	ofEnableAlphaBlending();

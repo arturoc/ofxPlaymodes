@@ -28,6 +28,7 @@ class testApp : public ofBaseApp{
 	
 	ofxPm::VideoGrabber			vGrabber;
 	ofxPm::AudioGrabber			aGrabber;
+	ofxPm::VideoRate			vRate;
 	ofxPm::VideoBuffer			vBuffer;
 	ofxPm::AudioBufferSamples	aBuffer;
 	ofxPm::avLooperRenderer		avRenderer;
@@ -49,7 +50,7 @@ class testApp : public ofBaseApp{
 	ofxOscSender			sender;
 	void					updateOsc();
 
-	// needed for gui ?À
+	// needed for gui ?ï¿½
 	float					guiDelay;
 	float					guiIn;
 	float					guiOut;
