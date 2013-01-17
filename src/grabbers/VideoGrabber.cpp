@@ -37,8 +37,9 @@ void VideoGrabber::update(){
 #ifndef TARGET_LINUX
 	ofVideoGrabber::update();
 	if(isFrameNew()){
-		frame = VideoFrame::newVideoFrame(getPixelsRef());
-		newFrameEvent.notify(this,frame);
+		newFrame(getPixelsRef());
+		/*frame = VideoFrame::newVideoFrame(getPixelsRef());
+		newFrameEvent.notify(this,frame);*/
 	}
 
 #endif
