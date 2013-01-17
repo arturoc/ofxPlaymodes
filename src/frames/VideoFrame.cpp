@@ -48,17 +48,20 @@ public:
 
 	VideoFrame VideoFrame::newVideoFrame(const ofPixels & videoFrame){
 		VideoFormat format(videoFrame);
-		ScopedLock<ofMutex> lock(poolMutex);
+		poolMutex.lock();
 		if(!pool[format].empty()){
 			VideoFrame frame;
 			//cout << "returning frame from pool" << endl;
 			frame.data = pool[format].back();
+			pool[format].pop_back();
+			poolMutex.unlock();
+
 			frame.refreshTimestamp();
 			frame.data->pixels = videoFrame;
 			frame.data->pixelsChanged = true;
-			pool[format].pop_back();
 			return frame;
 		}else{
+			poolMutex.unlock();
 			return VideoFrame(videoFrame);
 		}
 	}
@@ -66,7 +69,9 @@ public:
 
 
 	void VideoFrame::poolDeleter(VideoFrame::Obj * obj){
+		poolMutex.lock();
 		pool[VideoFormat(obj->pixels)].push_back(ofPtr<Obj>(obj,&VideoFrame::poolDeleter));
+		poolMutex.unlock();
 	}
 
 	ofPixels & VideoFrame::getPixelsRef(){
@@ -93,6 +98,7 @@ public:
 	}
 
 	int VideoFrame::getPoolSize(const VideoFormat & format){
+		ScopedLock<ofMutex> lock(poolMutex);
 		return pool[format].size();
 	}
 

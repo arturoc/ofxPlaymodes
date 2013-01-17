@@ -10,9 +10,17 @@ void testApp::setup(){
 	vRate.setup(grabber,fps);
 	vBuffer.setup(vRate,400);
 	vHeader.setup(vBuffer);
+	ofPixels blackPixels;
+	blackPixels.allocate(640,480,3);
+	blackPixels.set(0);
+	for(int i=0;i<400;i++){
+		VideoFrame videoFrame = VideoFrame::newVideoFrame(blackPixels);
+		videoFrame.getTextureRef();
+		vBuffer.newVideoFrame(videoFrame);
+	}
 	vHeader.setDelayMs(1000);
 
-	vRenderer1.setup(vRate);
+	vRenderer1.setup(grabber);
 	vRenderer2.setup(vHeader);
 	ofEnableAlphaBlending();
 	ofSetVerticalSync(true);
