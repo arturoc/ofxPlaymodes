@@ -20,6 +20,16 @@ public:
 	,height(pixels.getHeight())
 	,numChannels(pixels.getNumChannels()){}
 
+	VideoFormat(ofTexture & tex)
+	:width(tex.getWidth())
+	,height(tex.getHeight())
+	,numChannels(3){}
+
+	VideoFormat(ofFbo & fbo)
+	:width(fbo.getWidth())
+	,height(fbo.getHeight())
+	,numChannels(3){}
+
 	int width, height, numChannels;
 
 	bool operator<(const VideoFormat & f) const{

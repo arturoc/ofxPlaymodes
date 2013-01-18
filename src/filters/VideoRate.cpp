@@ -26,7 +26,8 @@ void VideoRate::setup(VideoSource & _source, float fps){
 	ofAddListener(source->newFrameEvent,this,&VideoRate::newVideoFrame);
 	setFps(fps);
 	front = _source.getNextVideoFrame();
-	startThread(true,false);
+	//startThread(true,false);
+	ofAddListener(ofEvents().update,this,&VideoRate::glThreadUpdate);
 }
 
 VideoFrame VideoRate::getNextVideoFrame(){
@@ -35,9 +36,9 @@ VideoFrame VideoRate::getNextVideoFrame(){
 }
 
 void VideoRate::newVideoFrame(VideoFrame & frame){
-	mutex.lock();
+	//mutex.lock();
 	back = frame;
-	mutex.unlock();
+	//mutex.unlock();
 }
 
 float VideoRate::getFps(){
@@ -57,11 +58,11 @@ void VideoRate::threadedFunction(){
 			VideoFrame currFrame = back;
 			mutex.unlock();
 
-			VideoFrame newFrame = VideoFrame::newVideoFrame(currFrame.getPixelsRef());
+			VideoFrame newFrame = VideoFrame::newVideoFrame(currFrame);
+
 			mutexFront.lock();
-			front = newFrame;
+			framesToSend.push(newFrame);
 			mutexFront.unlock();
-			ofNotifyEvent(newFrameEvent,front);
 		}
 		time = ofGetElapsedTimeMicros()-time;
 		long long sleeptime =  1000000./fps-time;
@@ -71,4 +72,17 @@ void VideoRate::threadedFunction(){
 	}
 }
 
+void VideoRate::glThreadUpdate(ofEventArgs & args){
+	int framesToSend = ofGetLastFrameTime()*fps+remainder;
+	remainder = (ofGetLastFrameTime()*fps+remainder)-framesToSend;
+
+	if(back!=NULL){
+		for(int i=0;i<framesToSend;i++){
+			VideoFrame newFrame = VideoFrame::newVideoFrame(back);
+			ofNotifyEvent(newFrameEvent,newFrame);
+		}
+	}else{
+		remainder += framesToSend;
+	}
+}
 }

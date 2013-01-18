@@ -19,9 +19,15 @@ namespace ofxPm{
 class VideoFrame: public ofxPm::Frame, public ofEventArgs {
     // create a video frame from an ofPixels
 	VideoFrame(const ofPixels & videoFrame);
+	VideoFrame(ofTexture & videoFrame);
+	VideoFrame(ofFbo & videoFrame);
 public:
 	VideoFrame();
 	static VideoFrame newVideoFrame(const ofPixels & videoFrame);
+	static VideoFrame newVideoFrame(ofTexture & videoFrame);
+	static VideoFrame newVideoFrame(ofFbo & videoFrame);
+	static VideoFrame newVideoFrame(VideoFrame videoFrame);
+
 	virtual ~VideoFrame();
 
     // returns pixels array
@@ -33,6 +39,8 @@ public:
 	int getHeight();
 
 	operator void*();
+
+	void setTextureOnly(bool texOnly);
 
 	static int getPoolSize(const VideoFormat & format);
 	static int getTotalNumFrames();

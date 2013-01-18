@@ -52,12 +52,12 @@ void VideoBuffer::newVideoFrame(VideoFrame & frame){
 	}
     totalFrames++;
     if(size()==0)initTime=frame.getTimestamp();
-    timeMutex.lock();
+    //timeMutex.lock();
     frames.push_back(frame);
     while(size()>maxSize){
         frames.erase(frames.begin());
     }
-    timeMutex.unlock();
+    //timeMutex.unlock();
     newFrameEvent.notify(this,frame);
 
 }
@@ -88,13 +88,14 @@ unsigned int VideoBuffer::getMaxSize(){
 
 
 float VideoBuffer::getFps(){
-    return source->getFps();
+    if(source) return source->getFps();
+    else return 0;
 }
 
 VideoFrame VideoBuffer::getVideoFrame(TimeDiff time){
     VideoFrame frame;
     if(size()>0){
-        int frameback = CLAMP((int)((float)time/1000000.0*(float)getFps()),1,size());
+        int frameback = CLAMP((int)((float)time/1000000.0*(float)getFps()),1,int(size()));
         int currentPos = CLAMP(size()-frameback,0,size()-1);
         frame = frames[currentPos];
     }
@@ -106,7 +107,7 @@ VideoFrame VideoBuffer::getVideoFrame(TimeDiff time){
 VideoFrame VideoBuffer::getVideoFrame(int position){
     //return buffer.find(times[times.size()-position])->second;
     if(size()){
-        position = CLAMP(position,0,size()-1);
+        position = CLAMP(position,0,int(size())-1);
         //cout << "frame " << position << " retained " << frames[position]->_useCountOfThisObject << "\n";
         return frames[position];
     }else{

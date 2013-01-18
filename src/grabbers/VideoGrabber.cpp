@@ -12,20 +12,10 @@ VideoGrabber::VideoGrabber(){
 }
 
 VideoGrabber::~VideoGrabber(){
-#ifdef TARGET_LINUX
-    ofGstVideoGrabber * gstVideoGrabber = (ofGstVideoGrabber*)getGrabber().get();
-    ofRemoveListener(gstVideoGrabber->getGstVideoUtils()->bufferEvent,this,&VideoGrabber::newFrame);
-#endif
 }
 
 bool VideoGrabber::initGrabber(int w, int h){
-	bool ret = ofVideoGrabber::initGrabber(w,h,false);
-#ifdef TARGET_LINUX
-	if(ret){
-		ofGstVideoGrabber * gstVideoGrabber = (ofGstVideoGrabber*)getGrabber().get();
-		ofAddListener(gstVideoGrabber->getGstVideoUtils()->bufferEvent,this,&VideoGrabber::newFrame);
-	}
-#endif
+	bool ret = ofVideoGrabber::initGrabber(w,h,true);
 	frame = VideoFrame::newVideoFrame(getPixelsRef());
 	return ret;
 }
@@ -35,17 +25,15 @@ VideoFrame VideoGrabber::getNextVideoFrame(){
 }
 
 void VideoGrabber::update(){
-#ifndef TARGET_LINUX
 	ofVideoGrabber::update();
 	if(isFrameNew()){
 		newFrame(getPixelsRef());
 	}
-
-#endif
 }
 
 void VideoGrabber::newFrame(ofPixels & pixels){
 	frame = VideoFrame::newVideoFrame(pixels);
+	frame.getTextureRef();
 	newFrameEvent.notify(this,frame);
 }
 

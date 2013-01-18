@@ -25,12 +25,15 @@ public:
 
 protected:
     void threadedFunction();
+    void glThreadUpdate(ofEventArgs & args);
 
 private:
     VideoFrame back, front;
     VideoSource* source;
-    float fps;
+    double fps;
     ofMutex mutexFront;
+    queue<VideoFrame> framesToSend;
+    double remainder;
 };
 }
 #endif /* VIDEORATE_H_ */

@@ -1,0 +1,4 @@
+ofxPlaymodes
+ofxOsc
+ofxGui
+ofxXmlSettings
