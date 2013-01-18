@@ -4,20 +4,13 @@ using namespace ofxPm;
 //--------------------------------------------------------------
 void testApp::setup(){
 	gui.setup();
-	gui.add(fps.setup("fps",30,1,200));
+	gui.add(fps.setup("fps",30,1,60));
+	gui.add(delay.setup("delay",1000,0,2000));
 
 	grabber.initGrabber(640,480);
 	vRate.setup(grabber,fps);
-	vBuffer.setup(vRate,400);
+	vBuffer.setup(vRate,400,true);
 	vHeader.setup(vBuffer);
-	ofPixels blackPixels;
-	blackPixels.allocate(640,480,3);
-	blackPixels.set(0);
-	for(int i=0;i<400;i++){
-		VideoFrame videoFrame = VideoFrame::newVideoFrame(blackPixels);
-		videoFrame.getTextureRef();
-		vBuffer.newVideoFrame(videoFrame);
-	}
 	vHeader.setDelayMs(1000);
 
 	vRenderer1.setup(grabber);
@@ -32,7 +25,7 @@ void testApp::update(){
 	grabber.update();
 	vRate.setFps(fps);
 	vHeader.setFps(fps);
-	vHeader.setDelayMs(1000);
+	vHeader.setDelayMs(delay);
 }
 
 //--------------------------------------------------------------
@@ -46,7 +39,9 @@ void testApp::draw(){
 	ofPopMatrix();
 	gui.draw();
 	ofDrawBitmapString("FPS: " + ofToString(int(ofGetFrameRate()))
-			+ " || cameraBuffer FPS " + ofToString(vBuffer.getRealFPS()),20,ofGetHeight()-80);
+			+ " || cameraBuffer FPS " + ofToString(vBuffer.getRealFPS())
+			+ " || videoframes pool size: " + ofToString(VideoFrame::getPoolSize(VideoFormat(640,480,3)))
+			+ " || total frames: " +ofToString(VideoFrame::getTotalNumFrames()),20,ofGetHeight()-80);
 }
 
 //--------------------------------------------------------------

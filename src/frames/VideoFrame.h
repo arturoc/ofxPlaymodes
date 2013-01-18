@@ -27,6 +27,7 @@ public:
     // returns pixels array
 	ofPixels & getPixelsRef();
 	ofTexture & getTextureRef();
+	ofFbo & getFboRef();
 
 	int getWidth();
 	int getHeight();
@@ -34,6 +35,7 @@ public:
 	operator void*();
 
 	static int getPoolSize(const VideoFormat & format);
+	static int getTotalNumFrames();
 
 private:
 	class Obj;

@@ -26,6 +26,7 @@ bool VideoGrabber::initGrabber(int w, int h){
 		ofAddListener(gstVideoGrabber->getGstVideoUtils()->bufferEvent,this,&VideoGrabber::newFrame);
 	}
 #endif
+	frame = VideoFrame::newVideoFrame(getPixelsRef());
 	return ret;
 }
 
@@ -38,8 +39,6 @@ void VideoGrabber::update(){
 	ofVideoGrabber::update();
 	if(isFrameNew()){
 		newFrame(getPixelsRef());
-		/*frame = VideoFrame::newVideoFrame(getPixelsRef());
-		newFrameEvent.notify(this,frame);*/
 	}
 
 #endif

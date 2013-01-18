@@ -34,5 +34,6 @@ class testApp : public ofBaseApp{
 
 		ofxPanel gui;
 		ofxIntSlider fps;
+		ofxIntSlider delay;
 
 };

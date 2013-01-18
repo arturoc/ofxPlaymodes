@@ -19,31 +19,31 @@ public:
 	Obj()
 	:pixelsChanged(false)
 	{
+		total_num_frames++;
 
 	}
 	Obj(const ofPixels & videoFrame)
 	:pixels(videoFrame)
 	,pixelsChanged(true)
-	{}
+	{
+		total_num_frames++;
+	}
 
     ofPixels pixels;
-    ofTexture texture;
+    ofFbo fbo;
     bool pixelsChanged;
 };
 
 	VideoFrame::VideoFrame(const ofPixels & videoFrame) 
 	:data(new Obj(videoFrame),&VideoFrame::poolDeleter){
-		total_num_frames++;
 	}
 
 
 	VideoFrame::VideoFrame()
 	{
-		total_num_frames++;
 	}
 
 	VideoFrame::~VideoFrame() {
-		total_num_frames--;
 	}
 
 	VideoFrame VideoFrame::newVideoFrame(const ofPixels & videoFrame){
@@ -79,14 +79,21 @@ public:
 	}
 
 	ofTexture & VideoFrame::getTextureRef(){
-		if(!data->texture.isAllocated()){
-			data->texture.allocate(data->pixels.getWidth(),data->pixels.getHeight(),ofGetGlInternalFormat(data->pixels));
+		static int numAllocations=0;
+		if(!data->fbo.isAllocated()){
+			cout << "allocating texture " << numAllocations << endl;
+			numAllocations++;
+			data->fbo.allocate(data->pixels.getWidth(),data->pixels.getHeight(),ofGetGlInternalFormat(data->pixels));
 		}
 		if(data->pixelsChanged){
-			data->texture.loadData(data->pixels);
+			data->fbo.getTextureReference().loadData(data->pixels);
 			data->pixelsChanged = false;
 		}
-		return data->texture;
+		return data->fbo.getTextureReference();
+	}
+
+	ofFbo & VideoFrame::getFboRef(){
+		return data->fbo;
 	}
 
 	int VideoFrame::getWidth(){
@@ -100,6 +107,11 @@ public:
 	int VideoFrame::getPoolSize(const VideoFormat & format){
 		ScopedLock<ofMutex> lock(poolMutex);
 		return pool[format].size();
+	}
+
+
+	int VideoFrame::getTotalNumFrames(){
+		return total_num_frames;
 	}
 
 	VideoFrame::operator void*(){

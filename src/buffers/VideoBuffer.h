@@ -32,7 +32,7 @@ public:
 	VideoBuffer();
 	virtual ~VideoBuffer();
 
-	void setup(VideoSource & source, int size);
+	void setup(VideoSource & source, int size, bool allocateOnSetup=false);
 
     // of working in threaded mode,
     // call buffer->lock() buffer->unlock()

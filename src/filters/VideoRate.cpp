@@ -25,6 +25,7 @@ void VideoRate::setup(VideoSource & _source, float fps){
 	source = &_source;
 	ofAddListener(source->newFrameEvent,this,&VideoRate::newVideoFrame);
 	setFps(fps);
+	front = _source.getNextVideoFrame();
 	startThread(true,false);
 }
 
@@ -50,19 +51,20 @@ void VideoRate::setFps(float _fps){
 
 void VideoRate::threadedFunction(){
 	while(isThreadRunning()){
-		unsigned long time = ofGetElapsedTimeMicros();
+		unsigned long long time = ofGetElapsedTimeMicros();
 		if(back!=NULL){
 			mutex.lock();
 			VideoFrame currFrame = back;
 			mutex.unlock();
 
+			VideoFrame newFrame = VideoFrame::newVideoFrame(currFrame.getPixelsRef());
 			mutexFront.lock();
-			front = VideoFrame::newVideoFrame(currFrame.getPixelsRef());
+			front = newFrame;
 			mutexFront.unlock();
 			ofNotifyEvent(newFrameEvent,front);
 		}
 		time = ofGetElapsedTimeMicros()-time;
-		long sleeptime =  1000000./fps-time;
+		long long sleeptime =  1000000./fps-time;
 		if(sleeptime>0){
 			usleep(sleeptime);
 		}

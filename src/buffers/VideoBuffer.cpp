@@ -23,10 +23,17 @@ VideoBuffer::VideoBuffer(){
 }
 
 
-void VideoBuffer::setup(VideoSource & source, int size){
+void VideoBuffer::setup(VideoSource & source, int size, bool allocateOnSetup){
 	this->source=&source;
 	totalFrames=0;
 	maxSize = size;
+	if(allocateOnSetup){
+		for(int i=0;i<size;i++){
+			VideoFrame videoFrame = VideoFrame::newVideoFrame(source.getNextVideoFrame().getPixelsRef());
+			videoFrame.getTextureRef();
+			newVideoFrame(videoFrame);
+		}
+	}
 	resume();
 	microsOneSec=ofGetElapsedTimeMicros();
 }
