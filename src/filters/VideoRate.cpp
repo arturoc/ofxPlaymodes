@@ -11,7 +11,8 @@ namespace ofxPm{
 
 VideoRate::VideoRate()
 :source(0)
-,fps(30){
+,fps(30)
+,remainder(0){
 	// TODO Auto-generated constructor stub
 
 }
@@ -54,14 +55,8 @@ void VideoRate::threadedFunction(){
 	while(isThreadRunning()){
 		unsigned long long time = ofGetElapsedTimeMicros();
 		if(back!=NULL){
-			mutex.lock();
-			VideoFrame currFrame = back;
-			mutex.unlock();
-
-			VideoFrame newFrame = VideoFrame::newVideoFrame(currFrame);
-
 			mutexFront.lock();
-			framesToSend.push(newFrame);
+			framesToSend.push(back);
 			mutexFront.unlock();
 		}
 		time = ofGetElapsedTimeMicros()-time;
@@ -73,16 +68,15 @@ void VideoRate::threadedFunction(){
 }
 
 void VideoRate::glThreadUpdate(ofEventArgs & args){
-	int framesToSend = ofGetLastFrameTime()*fps+remainder;
-	remainder = (ofGetLastFrameTime()*fps+remainder)-framesToSend;
+	double dFrames = ofGetLastFrameTime()*fps+remainder;
+	int framesToSend = dFrames;
+	remainder = dFrames-framesToSend;
 
 	if(back!=NULL){
 		for(int i=0;i<framesToSend;i++){
 			VideoFrame newFrame = VideoFrame::newVideoFrame(back);
 			ofNotifyEvent(newFrameEvent,newFrame);
 		}
-	}else{
-		remainder += framesToSend;
 	}
 }
 }

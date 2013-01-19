@@ -7,13 +7,14 @@ void testApp::setup(){
 	gui.add(fps.setup("fps",30,1,60));
 	gui.add(delay.setup("delay",1000,0,2000));
 
-	//grabber.setDeviceID(1);
+	grabber.setDeviceID(1);
+	grabber.setDesiredFrameRate(30);
+	grabber.setFps(30);
 	grabber.initGrabber(640,480);
-	//grabber.setUseTexture(false);
 	vHeader.setup(vBuffer);
 	vMixer.setup(grabber,vHeader);
-	vRate.setup(vMixer,fps);
-	vBuffer.setup(vRate,400,false);
+	//vRate.setup(vMixer,fps);
+	vBuffer.setup(vMixer,400,false);
 	vHeader.setDelayMs(1000);
 
 	vRenderer1.setup(grabber);

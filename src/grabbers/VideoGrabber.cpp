@@ -15,7 +15,7 @@ VideoGrabber::~VideoGrabber(){
 }
 
 bool VideoGrabber::initGrabber(int w, int h){
-	bool ret = ofVideoGrabber::initGrabber(w,h,true);
+	bool ret = ofVideoGrabber::initGrabber(w,h,false);
 	frame = VideoFrame::newVideoFrame(getPixelsRef());
 	return ret;
 }

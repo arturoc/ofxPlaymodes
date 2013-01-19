@@ -35,7 +35,7 @@ void VideoBuffer::setup(VideoSource & source, int size, bool allocateOnSetup){
 		}
 	}
 	resume();
-	microsOneSec=ofGetElapsedTimeMicros();
+	microsOneSec=-1;
 }
 
 VideoBuffer::~VideoBuffer() {
@@ -43,12 +43,14 @@ VideoBuffer::~VideoBuffer() {
 }
 
 void VideoBuffer::newVideoFrame(VideoFrame & frame){
-	unsigned long time = frame.getTimestamp().epochMicroseconds();
+	int64_t time = frame.getTimestamp().epochMicroseconds();
+	if(microsOneSec==-1) microsOneSec=time;
 	framesOneSec++;
-	if(time-microsOneSec>=1000000){
-		realFps = framesOneSec;
+	int64_t diff = time-microsOneSec;
+	if(diff>=1000000){
+		realFps = double(framesOneSec*1000000.)/double(diff);
 		framesOneSec = 0;
-		microsOneSec = time;
+		microsOneSec = time-(diff-1000000);
 	}
     totalFrames++;
     if(size()==0)initTime=frame.getTimestamp();

@@ -81,7 +81,7 @@ protected:
     bool stopped;
     unsigned int maxSize;
     int framesOneSec;
-    unsigned long microsOneSec;
+    int64_t microsOneSec;
     int realFps;
 };
 }
