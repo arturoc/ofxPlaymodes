@@ -8,12 +8,15 @@
 #include "VideoMixerGPU.h"
 using Poco::ScopedLock;
 
-#define STRINGIFY(A) #A
+#define STRINGIFY(...) #__VA_ARGS__
 
-static string fragmentMixSrc = STRINGIFY(
-		\#version 140\n
-		\#extension GL_ARB_texture_rectangle : enable\n
-        uniform sampler2DRect tex0;
+static string fragmentMixSrc =
+#ifdef TARGET_LINUX
+		"#version 140\n"
+		"#extension GL_ARB_texture_rectangle : enable\n"
+#endif
+        STRINGIFY(
+	uniform sampler2DRect tex0;
         uniform sampler2DRect tex1;
 
         void main (void){

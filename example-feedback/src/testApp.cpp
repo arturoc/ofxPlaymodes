@@ -13,8 +13,8 @@ void testApp::setup(){
 	grabber.initGrabber(640,480);
 	vHeader.setup(vBuffer);
 	vMixer.setup(grabber,vHeader);
-	//vRate.setup(vMixer,fps);
-	vBuffer.setup(vMixer,400,false);
+	vRate.setup(vMixer,fps);
+	vBuffer.setup(vRate,400,false);
 	vHeader.setDelayMs(1000);
 
 	vRenderer1.setup(grabber);
